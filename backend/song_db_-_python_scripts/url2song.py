@@ -86,6 +86,7 @@ def url2song(url):
     # connect to driver noder
     service = Service("song_db_-_python_scripts\chromedriver.exe")
     options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
     options.set_capability("browserVersion", "119.0.6045.200")
     #TODO also write the line to be activated once per week FLAMONGODB!!!
     chromedriver_autoinstaller.install() 
