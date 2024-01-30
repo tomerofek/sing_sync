@@ -1,5 +1,6 @@
 //TODO all room main features
 import { SongsQueue } from "./Queue";
+import { Song } from "./Song";
 
 export class Room {
     private roomManager : string;
@@ -36,8 +37,8 @@ export class Room {
     }
 
     // Method to skip the current song in the queue
-    skipCurrentSong(): void {
-        this.songsQueue.skipSong();
+    skipCurrentSong(): Song | undefined {
+        return this.songsQueue.skipSong();
     }
 
     // Method to remove a song from the queue by index
