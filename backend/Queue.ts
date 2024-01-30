@@ -1,3 +1,5 @@
+//List of stuff TODO : add custom song, reordering songs ? - nth , and voting system
+
 import { Song } from "./Song";
 import { MongoClient, Db , ObjectId} from 'mongodb';
 import { spawn, spawnSync } from "child_process";
@@ -73,6 +75,16 @@ export class Queue<T> {
     size(): number {
         return this.items.length;
     }
+    removeItemAtIndex(index : number) : void{
+      //checks if the item we want to remove is in the start or middle of the queue or in the end of it
+      if(index < this.items.length - 1){
+        //remove the item in the middle or start
+        this.items = this.items.slice(0,index).concat(this.items.slice(index + 1,this.items.length));
+      }else{
+        //remove only last item
+        this.items = this.items.slice(0,index);
+      }
+    }
 }
 //the queue of songs uses the Queue implementation
 export class SongsQueue{
@@ -109,20 +121,23 @@ export class SongsQueue{
     addToQueueFromUrl(url : string) : void {
       //let us first add the song to our songs database for future usage
       const songName_and_author = this.addToDBFromUrl(url).replace(/\n/g, '').trim().split('_');
-      songName_and_author[0] = songName_and_author[0].trim()
-      songName_and_author[1] = songName_and_author[1].trim()
+      songName_and_author[0] = songName_and_author[0].trim();
+      songName_and_author[1] = songName_and_author[1].trim();
       //lets create a new song object using what we added ( can change python code to make this step not needed)
       const song : Song = new Song(songName_and_author[0],songName_and_author[1]);
       this.songsQueue.enqueue(song);
     }
 
-
-    //skip song and returns the next song in the queue
-    skipSong() : Song {
+    //skip song and returns the next song in the queue - or undefined in case of an error/end of queue 
+    skipSong() : Song | undefined {
       this.songsQueue.dequeue();
       return this.songsQueue.peek();
       //TODO broadcast notification to the other users using express
-      
     }
     
+        //skip song and returns the next song in the queue - or undefined in case of an error/end of queue 
+        removeSong(indexToRemove : number) : void {
+          this.songsQueue.removeItemAtIndex(indexToRemove);
+          //TODO change the way the queue look for the other users
+        }
   }
