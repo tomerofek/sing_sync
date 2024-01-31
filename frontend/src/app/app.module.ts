@@ -13,10 +13,12 @@ import { AppComponent } from './app.component';
 // import { NotFoundComponent } from './components/partials/not-found/not-found.component';
 // import { LoginPageComponent } from './components/pages/login-page/login-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HomeViewComponent } from './components/pages/home-view/home-view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HomeViewComponent,
     // HeaderComponent,
     // HomeComponent,
     // SearchComponent,
