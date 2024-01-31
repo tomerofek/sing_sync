@@ -14,11 +14,17 @@ import { AppComponent } from './app.component';
 // import { LoginPageComponent } from './components/pages/login-page/login-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomeViewComponent } from './components/pages/home-view/home-view.component';
+import { RoomViewComponent } from './components/pages/room-view/room-view.component';
+import { SongContentComponent } from './components/partials/song-content/song-content.component';
+import { QueueComponent } from './components/partials/queue/queue.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeViewComponent,
+    RoomViewComponent,
+    SongContentComponent,
+    QueueComponent,
     // HeaderComponent,
     // HomeComponent,
     // SearchComponent,
