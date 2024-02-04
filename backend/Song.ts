@@ -1,11 +1,11 @@
 import { MongoClient, Db , ObjectId} from 'mongodb';
+import { Queue } from './Queue';
 // MongoDB connection URI
 //need to encrypt this password
 const uri = "mongodb+srv://final-project:kGSCzCjKDuKF7NGD@noder.2cvtm9i.mongodb.net/?retryWrites=true&w=majority";
 
 //getting songs from the db as JSON object - returns a promise
 async function getSongJSON(id : string): Promise<any> {
-    console.log(id)
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri);
       
@@ -20,11 +20,9 @@ async function getSongJSON(id : string): Promise<any> {
         // Fetch the JSON object from the collection (you can adjust the query as needed)
         //TODO add the id check
         //const id_for_db = new ObjectId(id)
-        console.log(id)
         const jsonObject = await collection.findOne({ _id: id } as any);
         if (jsonObject) {
           console.log('Retrieved JSON object:');
-          console.log(jsonObject);
           resolve(jsonObject);
         } else {
           console.log("banot")
@@ -57,6 +55,7 @@ async function getSongJSON(id : string): Promise<any> {
 
 
 export class Song {
+
     private songData: JSON | null; // JSON object containing song data
     private songName: string; // Name of the song
     private songAuthor: string; // Author of the song
@@ -73,17 +72,22 @@ export class Song {
         this.songAuthor = songAuthor;
         this.songName = songName;
         const id_for_db = songName + "_" + songAuthor;
-        getSongJSON(id_for_db).then((result) => {
-            this.songData = result;
-            console.log("untill when");
-        }).catch((error) => {
-            this.songData = null;
-            console.error('Promise rejected with error: ' + error);
-            throw error;
-
-          });
+        
     }
 
+    init_data(id_for_db : string, fun : any) {
+      getSongJSON(id_for_db).then((result) => {
+        this.songData = result;
+        console.log("untill when");
+        //below is what we do after the resolve
+        fun(this)
+    }).catch((error) => {
+        this.songData = null;
+        console.error('Promise rejected with error: ' + error);
+        throw error;
+
+      });
+    }
     isEmptyObject(obj: Record<string, any>): boolean {
         return Object.keys(obj).length === 0;
     }

@@ -7,6 +7,7 @@
         "build": "cd frontend && npm run build"
     },
     "dependencies": {
+        "async-mutex": "^0.4.1",
         "child_process": "^1.0.2",
         "mongodb": "^6.3.0"
     }
