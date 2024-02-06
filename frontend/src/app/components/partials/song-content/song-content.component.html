@@ -1,1 +1,22 @@
-<p>song-content works!</p>
+<div class="content">
+    <div class="switch-div">
+        <div class="p1">show chords:&emsp;</div>
+        <label class="switch">
+            <input type="checkbox">
+            <div class="slider" (click)="switchChords()"></div>
+            <div class="slider-card">
+              <div class="slider-card-face slider-card-front"></div>
+              <div class="slider-card-face slider-card-back"></div>
+            </div>
+        </label>
+    </div>
+    <div *ngIf="song && song.song_body.length" class="song-lines">
+        <ul>
+            <li *ngFor="let songLine of song.song_body">
+                <div *ngIf="songLine.type=='lyrics'; then LyricBlock; else ChordBlock"></div>
+                <ng-template #LyricBlock>1: {{songLine.content}}</ng-template>
+                <ng-template #ChordBlock>2: {{songLine.content}}</ng-template>
+            </li>
+        </ul>
+    </div>
+</div>
