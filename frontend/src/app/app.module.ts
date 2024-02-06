@@ -17,6 +17,11 @@ import { HomeViewComponent } from './components/pages/home-view/home-view.compon
 import { RoomViewComponent } from './components/pages/room-view/room-view.component';
 import { SongContentComponent } from './components/partials/song-content/song-content.component';
 import { QueueComponent } from './components/partials/queue/queue.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
+
 
 @NgModule({
   declarations: [
@@ -39,7 +44,9 @@ import { QueueComponent } from './components/partials/queue/queue.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NoopAnimationsModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

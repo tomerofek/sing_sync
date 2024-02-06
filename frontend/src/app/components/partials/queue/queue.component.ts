@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'queue',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class QueueComponent implements OnInit {
 
-  constructor() { }
+  firstInQ = 'יסמין - הפיל הכחול';
+  secondInQ = 'ערק - פאר טסי'
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  nav2queue(): void {
+    this.router.navigateByUrl('');
   }
 
 }
