@@ -10,7 +10,7 @@
             </div>
         </label>
     </div>
-    <div *ngIf="song && song.song_body.length" class="song-lines">
+    <div *ngIf="song && song.song_body && song.song_body.length" class="song-lines">
         <ul class="lines-ul">
             <li *ngFor="let songLine of song.song_body">
                 <div *ngIf="songLine.type=='lyrics'; then LyricBlock; else ChordBlock"></div>

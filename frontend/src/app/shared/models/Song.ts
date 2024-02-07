@@ -3,7 +3,7 @@ import { SongLine } from "./SongLine";
 export class Song{
     song_name!: string;
     song_author!: string;
-    song_body!: SongLine[];
+    song_body?: SongLine[];
 
     constructor(n:string, a:string, b: SongLine[]){
         this.song_name=n;
