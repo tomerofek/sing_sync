@@ -19,7 +19,7 @@ import { SongContentComponent } from './components/partials/song-content/song-co
 import { QueueComponent } from './components/partials/queue/queue.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { QueueViewComponent } from './components/pages/queue-view/queue-view.component';
 
 
 
@@ -30,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     RoomViewComponent,
     SongContentComponent,
     QueueComponent,
+    QueueViewComponent,
     // HeaderComponent,
     // HomeComponent,
     // SearchComponent,
