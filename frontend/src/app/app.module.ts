@@ -20,6 +20,7 @@ import { QueueComponent } from './components/partials/queue/queue.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { QueueViewComponent } from './components/pages/queue-view/queue-view.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -47,7 +48,8 @@ import { QueueViewComponent } from './components/pages/queue-view/queue-view.com
     HttpClientModule,
     ReactiveFormsModule,
     NoopAnimationsModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
