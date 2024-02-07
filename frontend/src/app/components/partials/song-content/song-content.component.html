@@ -11,11 +11,21 @@
         </label>
     </div>
     <div *ngIf="song && song.song_body.length" class="song-lines">
-        <ul>
+        <ul class="lines-ul">
             <li *ngFor="let songLine of song.song_body">
                 <div *ngIf="songLine.type=='lyrics'; then LyricBlock; else ChordBlock"></div>
-                <ng-template #LyricBlock>1: {{songLine.content}}</ng-template>
-                <ng-template #ChordBlock>2: {{songLine.content}}</ng-template>
+                <ng-template #LyricBlock>
+                    <p class="lyrics">{{songLine.content}}</p>
+                </ng-template>
+                <ng-template #ChordBlock>
+                    <div *ngIf="show_chords; then Chords; else Empty"></div>
+                    <ng-template #Chords>
+                        <p class="chords">{{songLine.content}}</p>
+                    </ng-template>
+                    <ng-template #Empty>
+                        <p class="invisible-chords">{{songLine.content}}</p>
+                    </ng-template>
+                </ng-template>
             </li>
         </ul>
     </div>

@@ -1,3 +1,36 @@
+.lyrics {
+  white-space: pre;
+  text-align: right;
+  font-family: Arial;
+  font-size: 1rem;
+}
+
+.chords {
+  white-space: pre;
+  text-align: right;
+  color: #c66372;
+  font-size: 0.84rem;
+  font-family: Arial;
+}
+
+.invisible-chords {
+  white-space: pre;
+  text-align: right;
+  color: #c66372;
+  font-size: 0.84rem;
+  font-family: Arial;
+  visibility: hidden;
+  height: auto;
+}
+
+.lines-ul {
+  list-style-type: none;
+}
+
+.lines-ul li {
+  margin-bottom:-10px;
+}
+
 .p1 {
     position: relative;
     right: 0;
