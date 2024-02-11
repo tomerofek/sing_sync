@@ -1,0 +1,30 @@
+.content {
+    margin-right: 20px
+}
+
+
+.next {
+    margin-bottom: 3px;
+}
+
+
+p {
+    margin-top: 2px;
+    margin-bottom: 0%;
+}
+
+.q2 {
+    font-size: small;
+    color: gray;
+}
+
+.buttons {
+    margin-top: 9px;
+}
+
+
+
+
+.add-icon {
+    float: right;
+}

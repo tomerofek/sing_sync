@@ -1,0 +1,17 @@
+<div class="content">
+    <h1 class="title">Queue</h1>
+    <div class="Q-notEmpty" *ngIf="currentSong">
+        <h2>Now playing</h2>
+        <ol>
+            <li class="currentSong" dir="rtl">{{currentSong.name}} - {{currentSong.author}}</li>
+        </ol>
+        <h2>Next up</h2>
+        <ol start="2">        
+            <li *ngFor="let song of queue" dir="rtl">{{song.name}} - {{song.author}}</li>
+        </ol>
+    </div>
+    <p class="Q-empty" *ngIf="!currentSong">
+        the queue is currently empty
+    </p>
+    
+</div>

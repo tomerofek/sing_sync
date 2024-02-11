@@ -1,1 +1,11 @@
-<p>queue works!</p>
+<div class="content">
+    <div class="info">
+        <h2 class="next">Next</h2>
+        <p class='q1' *ngIf="firstInQ">{{firstInQ.name}} - {{firstInQ.author}}</p>
+        <p class="q2" *ngIf="secondInQ">{{secondInQ.name}} - {{secondInQ.author}}</p>
+    </div>
+    <div class="buttons">
+        <mat-icon class='queue-view-icon' (click)="showQueueDialog()">queue_music</mat-icon>
+        <mat-icon class='add-icon'>queue</mat-icon>
+    </div>
+</div>
