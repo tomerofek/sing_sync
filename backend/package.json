@@ -15,6 +15,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.5",
+    "async-lock": "^1.4.1",
     "bcryptjs": "^2.4.3",
     "child_process": "^1.0.2",
     "cors": "^2.8.5",

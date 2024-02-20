@@ -75,7 +75,9 @@ export class Song {
         
     }
 
-    init_data(id_for_db : string, fun : any) {
+    //gets the id for the db and that callback function to what to do after object is initialized
+    init_data(fun : any) {
+      const id_for_db = this.getSongName() + "_" + this.getSongAuthor();
       getSongJSON(id_for_db).then((result) => {
         this.songData = result;
         console.log("untill when");

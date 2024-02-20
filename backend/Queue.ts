@@ -2,6 +2,7 @@ import { Song } from "./Song";
 import { MongoClient, Db , ObjectId} from 'mongodb';
 import {spawnSync } from "child_process";
 
+//TODO test to queue by song name and author and fix the queue to work thread safe - also lock on the add to queue functionalities
 //a simple queue implementation
 const uri = "mongodb+srv://final-project:kGSCzCjKDuKF7NGD@noder.2cvtm9i.mongodb.net/?retryWrites=true&w=majority";
 
@@ -82,9 +83,12 @@ export class SongsQueue{
     constructor() {
         this.songsQueue = new Queue(); // Initialize the songsQueue
     }
+
     //for user search function - return the list of results to user
     search_song(song_name : string, author_name : string) : any {
         return getSongNames(song_name,author_name).then((result) => {
+            //TODO add here calledback to calling function - probably send to user side - probably send to user side
+          
             console.log(result);
             return result;
         }).catch(error => {
@@ -98,30 +102,30 @@ export class SongsQueue{
       const pythonProcess = spawnSync('python',["backend\\song_db_-_python_scripts\\url2song.py",url]);
       if (pythonProcess.stdout && pythonProcess.stdout.length > 0) 
         return pythonProcess.stdout.toString();
-      
       console.log("Python Script Output:", pythonProcess.stdout?.toString());
       console.error("Python Script Errors:", pythonProcess.stderr?.toString());
-
-        
     }
 
     //add song using url to the db and insert to queue
     addToQueueFromUrl(url : string) : void {
       //let us first add the song to our songs database for future usage
       //TODO CHECK LINE ABOVE
+      console.log("hello");
       const songName_and_author = this.addToDBFromUrl(url).replace(/\n/g, '').trim().split('_');
       songName_and_author[0] = songName_and_author[0].trim()
       songName_and_author[1] = songName_and_author[1].trim()
       //lets create a new song object using what we added ( can change python code to make this step not needed)
       const song : Song = new Song(songName_and_author[0],songName_and_author[1]);
+      console.log(song);
       this.init_song_content_before_enqueue(song,songName_and_author[0],songName_and_author[1]);
       
     }
-            //skip song and returns the next song in the queue
+
+      //skip song and returns the next song in the queue
       init_song_content_before_enqueue(song : Song, song_name : string, song_author : string) : void{
-        song.init_data(song_name + "_" + song_author, this.addToQueue.bind(this) /* eyal found evil magic bind makes the function run on this object*/);
+        song.init_data(this.addToQueue.bind(this) /* eyal found evil magic bind makes the function run on this object*/);
         //print here is temp just for debugging
-        console.log(this.songsQueue.peek());
+        console.log(this.songsQueue.peek()?.getSongData());
         //TODO broadcast notification to the other users using express
        
       }
@@ -141,6 +145,12 @@ export class SongsQueue{
       return this.songsQueue.peek();
       //TODO broadcast notification to the other users using express
       
+    }
+
+
+    addToQueueByName(song_name : string, song_author : string) : void{
+      const song = new Song(song_name,song_author)
+      song.init_data(this.addToQueue.bind(this));
     }
     
   }
