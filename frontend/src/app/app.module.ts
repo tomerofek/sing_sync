@@ -24,6 +24,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AddSongViewComponent } from './components/pages/add-song-view/add-song-view.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AddSongNormalSearchComponent } from './components/partials/add-song-normal-search/add-song-normal-search.component';
+import { AddSongFromUrlComponent } from './components/partials/add-song-from-url/add-song-from-url.component';
 
 
 
@@ -36,7 +37,8 @@ import { AddSongNormalSearchComponent } from './components/partials/add-song-nor
     QueueComponent,
     QueueViewComponent,
     AddSongViewComponent,
-    AddSongNormalSearchComponent
+    AddSongNormalSearchComponent,
+    AddSongFromUrlComponent
     // HeaderComponent,
     // HomeComponent,
     // SearchComponent,

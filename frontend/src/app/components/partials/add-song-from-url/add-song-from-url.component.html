@@ -1,0 +1,21 @@
+<div class="content">
+    <div class="input-wrap">
+        <div class="input-bar">
+            <input #i type="text" class="url-input" (keyup.enter)="importSongFromURL(i.value)">
+            <button class="import-btn" (click)="importSongFromURL(i.value)">
+                <mat-icon>get_app</mat-icon>
+            </button>
+        </div>
+    </div>
+    <br>
+    <div class="supported-websites">
+        <p>supported websites:</p>
+        <ul>        
+            <li>
+                <a href="https://www.nagnu.co.il/" target="_blank">nagnu</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
