@@ -5,9 +5,9 @@ export class Song{
     song_author!: string;
     song_body?: SongLine[];
 
-    constructor(n:string, a:string, b: SongLine[]){
-        this.song_name=n;
-        this.song_author=a;
-        this.song_body=b;
+    constructor(name: string, author: string, body?: SongLine[]){
+        this.song_name = name;
+        this.song_author = author;
+        this.song_body = body;
     }
 }

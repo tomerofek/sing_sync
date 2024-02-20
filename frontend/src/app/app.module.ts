@@ -21,6 +21,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { QueueViewComponent } from './components/pages/queue-view/queue-view.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AddSongViewComponent } from './components/pages/add-song-view/add-song-view.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { AddSongNormalSearchComponent } from './components/partials/add-song-normal-search/add-song-normal-search.component';
 
 
 
@@ -32,6 +35,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     SongContentComponent,
     QueueComponent,
     QueueViewComponent,
+    AddSongViewComponent,
+    AddSongNormalSearchComponent
     // HeaderComponent,
     // HomeComponent,
     // SearchComponent,
@@ -49,7 +54,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     ReactiveFormsModule,
     NoopAnimationsModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

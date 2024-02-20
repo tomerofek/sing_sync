@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { QueueViewComponent } from '../../pages/queue-view/queue-view.component';
+import { AddSongViewComponent } from '../../pages/add-song-view/add-song-view.component';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class QueueComponent implements OnInit {
   }
 
   showAddSongDialog(): void {
+    this.dialog.open(AddSongViewComponent);
   }
 
 }

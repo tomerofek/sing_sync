@@ -1,0 +1,19 @@
+<div class="content">
+    <div class="search-wrap">
+        <div class="search-bar">
+            <input #s type="text" class="search-input" (keyup.enter)="searchSongs(s.value)">
+            <button class="search-btn" (click)="searchSongs(s.value)">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="search-results">
+        <ol>        
+            <li *ngFor="let song of results" dir="rtl" (click)="addSongToQ(song)">
+                {{song.song_name}} - {{song.song_author}}
+            </li>
+        </ol>
+    </div>
+</div>
+
+
