@@ -25,6 +25,7 @@ import { AddSongViewComponent } from './components/pages/add-song-view/add-song-
 import { MatTabsModule } from '@angular/material/tabs';
 import { AddSongNormalSearchComponent } from './components/partials/add-song-normal-search/add-song-normal-search.component';
 import { AddSongFromUrlComponent } from './components/partials/add-song-from-url/add-song-from-url.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -57,7 +58,8 @@ import { AddSongFromUrlComponent } from './components/partials/add-song-from-url
     NoopAnimationsModule,
     MatIconModule,
     MatDialogModule,
-    MatTabsModule
+    MatTabsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

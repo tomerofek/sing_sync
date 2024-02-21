@@ -9,6 +9,9 @@ import { Song } from 'src/app/shared/models/Song';
 export class AddSongNormalSearchComponent implements OnInit {
 
   results: Song[] = [];
+  name_input: string = '';
+  author_input: string = '';
+  search_type: string = 'name';
 
   constructor() {
     
@@ -17,13 +20,26 @@ export class AddSongNormalSearchComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  searchSongs(searchTerm: string) {
-    window.alert('searched for: ' + searchTerm);
+  searchSongs() {
+    window.alert(`searched for: ${this.name_input} - ${this.author_input}`);
+    this.name_input = ''; this.author_input = '';
     this.results = this.generateResults();
   }
 
   addSongToQ(song: Song){
     window.alert(`adding song:\n ${song.song_name} \n ${song.song_author}`);
+  }
+
+  updateSearchBar(option: string){
+    this.search_type = option;
+    switch(option){
+      case('name'):
+        this.author_input = '';
+        break;
+      case('author'):
+        this.name_input = '';
+        break;
+    }
   }
 
 
