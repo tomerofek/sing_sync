@@ -12,4 +12,16 @@ export class RoomViewComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  next_lines():void{
+
+  }
+
+  prev_lines():void{
+
+  }
+
+  next_song():void{
+    
+  }
+
 }
