@@ -9,8 +9,9 @@ import { Song } from 'src/app/shared/models/Song';
   styleUrls: ['./song-content.component.css']
 })
 export class SongContentComponent implements OnInit {
-  song:Song;
+  song?:Song;
   show_chords:boolean = false;
+  current_part_index?: number;
 
   constructor(activatedRoute:ActivatedRoute, songService:SongService,
           private router: Router) {
@@ -18,6 +19,8 @@ export class SongContentComponent implements OnInit {
       if(params.song) this.song = params.song;
     });*/
     this.song = songService.generate_test_Song();
+    this.current_part_index = this.getCurrentSongPartIndex();
+    console.log(this.current_part_index);
   }
 
   ngOnInit(): void {
@@ -26,6 +29,18 @@ export class SongContentComponent implements OnInit {
   switchChords():void{
     this.show_chords = !this.show_chords;
     //console.log(this.show_chords);
+  }
+
+  advance_song_part(){
+    if(this.current_part_index != undefined){
+      this.current_part_index++;
+    }
+      
+  }
+  
+  //should be a service function
+  getCurrentSongPartIndex(): number{
+    return 0;
   }
 
 }
