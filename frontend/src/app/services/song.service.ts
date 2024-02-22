@@ -1,13 +1,40 @@
 import { Injectable } from '@angular/core';
 import { Song } from '../shared/models/Song';
 import { SongLine } from '../shared/models/SongLine';
+import { HttpClient } from '@angular/common/http';
+import { Response } from '../shared/models/Response';
+import { GET_SONG_URL, GET_POSITION, ADVANCE_POSITION, PREVIOUS_POSITION, ADVANCE_SONG } from '../shared/constants/url';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class SongService {
 
-  constructor() { }
+  constructor(private httpClient:HttpClient) { }
+
+  get_song(room_id:string): Observable<Response<Song>>{
+    return this.httpClient.get<Response<Song>>(GET_SONG_URL + room_id);
+  }
+
+  get_position(room_id:string): Observable<Response<number>>{
+    return this.httpClient.get<Response<number>>(GET_POSITION + room_id);
+  }
+
+  advance_position(room_id:string): Observable<Response<number>>{
+    return this.httpClient.get<Response<number>>(ADVANCE_POSITION + room_id);
+  }
+
+  previous_position(room_id:string): Observable<Response<number>>{
+    return this.httpClient.get<Response<number>>(PREVIOUS_POSITION + room_id);
+  }
+
+  advance_song(room_id:string): Observable<Response<Song>>{
+    return this.httpClient.get<Response<Song>>(ADVANCE_SONG + room_id);
+  }
+  
+
 
   generate_test_song_lines():SongLine[]{
     return [
