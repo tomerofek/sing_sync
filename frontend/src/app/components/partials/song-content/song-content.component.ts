@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SongService } from 'src/app/services/song.service';
 import { Song } from 'src/app/shared/models/Song';
+import { SongLine } from 'src/app/shared/models/SongLine';
 
 @Component({
   selector: 'song-content',
@@ -35,12 +36,15 @@ export class SongContentComponent implements OnInit {
     if(this.current_part_index != undefined){
       this.current_part_index++;
     }
-      
   }
   
   //should be a service function
   getCurrentSongPartIndex(): number{
     return 0;
+  }
+
+  isEmptyLine(line: SongLine) : boolean{
+    return line.content == undefined || line.content == '';
   }
 
 }
