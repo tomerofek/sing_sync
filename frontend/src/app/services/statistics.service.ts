@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Song } from '../shared/models/Song';
 import { Response } from '../shared/models/Response';
-import { GET_WEEKLY_TOP_10 } from '../shared/constants/url';import { Observable } from 'rxjs';
-}
+import { GET_WEEKLY_TOP_10 } from '../shared/constants/url';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
