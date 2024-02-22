@@ -77,11 +77,13 @@ export class Song {
 
     //gets the id for the db and that callback function to what to do after object is initialized
     init_data() : any {
+      
       const id_for_db = this.getSongName() + "_" + this.getSongAuthor();
+      console.log("ho no " + id_for_db)
       return getSongJSON(id_for_db).then((result) => {
         this.songData = result;
         //below is what we do after the resolve
-        
+        console.log(this.songData)
     }).catch((error) => {
         this.songData = null;
         console.error('Promise rejected with error: ' + error);

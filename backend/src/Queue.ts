@@ -103,6 +103,7 @@ export class SongsQueue{
       const songName_and_author = this.addToDBFromUrl(url).replace(/\n/g, '').trim().split('_');
       songName_and_author[0] = songName_and_author[0].trim()
       songName_and_author[1] = songName_and_author[1].trim()
+      console.log("song name and author" + songName_and_author)
       //lets create a new song object using what we added ( can change python code to make this step not needed)
       const song : Song = new Song(songName_and_author[0],songName_and_author[1]);
       console.log(song);
@@ -114,6 +115,7 @@ export class SongsQueue{
     //adds a song to the database - the mongoDB from a given url
     addToDBFromUrl(url : string) : any {
       //using the python script we made for uploading the url to the databsae using shell activation
+      console.log(url);
       const pythonProcess = spawnSync('python',["backend\\src\\song_db_-_python_scripts\\url2song.py",url]);
       if (pythonProcess.stdout && pythonProcess.stdout.length > 0) 
         return pythonProcess.stdout.toString();
@@ -147,7 +149,7 @@ export class SongsQueue{
       
     }
 
-
+    //
     addToQueueByName(song_name : string, song_author : string) : void{
       const song = new Song(song_name,song_author)
       song.init_data();
