@@ -1,5 +1,5 @@
 {
-    "name": "sing-sync",
+    "name": "singsync",
     "version": "1.0.0",
     "scripts": {
         "start": "cd backend/built && node server.js",
