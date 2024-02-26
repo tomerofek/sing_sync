@@ -116,7 +116,7 @@ export class SongsQueue{
     addToDBFromUrl(url : string) : any {
       //using the python script we made for uploading the url to the databsae using shell activation
       console.log(url);
-      const pythonProcess = spawnSync('python',["backend\\src\\song_db_-_python_scripts\\url2song.py",url]);
+      const pythonProcess = spawnSync('python',["song_db_-_python_scripts\\url2song.py",url]);
       if (pythonProcess.stdout && pythonProcess.stdout.length > 0) 
         return pythonProcess.stdout.toString();
       console.log("Python Script Output:", pythonProcess.stdout?.toString());

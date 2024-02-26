@@ -79,7 +79,6 @@ export class Song {
     init_data() : any {
       
       const id_for_db = this.getSongName() + "_" + this.getSongAuthor();
-      console.log("ho no " + id_for_db)
       return getSongJSON(id_for_db).then((result) => {
         this.songData = result;
         //below is what we do after the resolve
