@@ -3,21 +3,20 @@ import { Queue,SongsQueue } from "./Queue"; // Assuming Queue is exported from a
 
 class Room {
     private songsQueue: SongsQueue;
+    //TODO make this thread safe
     private members: any[]; // Assuming your HTTP clients are stored as an array of objects
-    private current_position_in_song : number
     
     //this will be called upon host room
     constructor(host: any) {
         this.songsQueue = new SongsQueue();
         this.members = [];
-        this.current_position_in_song = 0;
         this.joinRoom(host);
     }
 
-    //returns current position in room
-    joinRoom(member: any): number {
+    //returns current position in room>
+    joinRoom(member: any): Number {
         this.members.push(member);
-        return this.current_position_in_song;
+        return this.songsQueue.get_current_position_in_song();
     }
 
     removeMember(member: any): void {

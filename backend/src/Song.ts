@@ -67,7 +67,6 @@ export class Song {
     //constructor using optional song param - if song not provided we search it
     
     constructor(songName: string, songAuthor: string) {
-        console.log("untill when");
         this.songData = null;
         this.songAuthor = songAuthor;
         this.songName = songName;

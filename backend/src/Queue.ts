@@ -30,7 +30,6 @@ async function getSongNames(song_name : string ,song_author : string): Promise<a
           const song_id_pairs = array_of_songs.map(song => {
             return {song_name : song.song_name, song_author : song.song_author};
         });
-          console.log("noder bseder");
           resolve(song_id_pairs);
         } else {
           
@@ -78,11 +77,18 @@ export class Queue<T> {
 //the queue of songs uses the Queue implementation
 export class SongsQueue{
     private songsQueue: Queue<Song>;
+    private current_position_in_song : number
 
     constructor() {
         this.songsQueue = new Queue(); // Initialize the songsQueue
+        this.current_position_in_song = 0;
     }
 
+
+    get_current_position_in_song() : number {
+      return this.current_position_in_song;
+    }
+    
     //for user search function - return the list of results to user
     search_song(song_name : string, author_name : string) : any {
         return getSongNames(song_name,author_name).then((result) => {
@@ -106,16 +112,16 @@ export class SongsQueue{
       console.log("song name and author" + songName_and_author)
       //lets create a new song object using what we added ( can change python code to make this step not needed)
       const song : Song = new Song(songName_and_author[0],songName_and_author[1]);
-      console.log(song);
       //the song in the queue might not be complete
       this.addToQueue(song)
       return this.init_song_content_before_enqueue(song,songName_and_author[0],songName_and_author[1]);
     }
 
+    //TODO change scraper to nodejs and make async upload to db 
     //adds a song to the database - the mongoDB from a given url
     addToDBFromUrl(url : string) : any {
       //using the python script we made for uploading the url to the databsae using shell activation
-      console.log(url);
+      console.log("entering python script for adding song to db from url");
       const pythonProcess = spawnSync('python',["song_db_-_python_scripts\\url2song.py",url]);
       if (pythonProcess.stdout && pythonProcess.stdout.length > 0) 
         return pythonProcess.stdout.toString();
@@ -123,18 +129,17 @@ export class SongsQueue{
       console.error("Python Script Errors:", pythonProcess.stderr?.toString());
     }
 
-      //skip song and returns the next song in the queue
+    //init the song content before adding it to the queue
       init_song_content_before_enqueue(song : Song, song_name : string, song_author : string) : any {
         return song.init_data();
       }
 
-      //skip song and returns the next song in the queue
+      //add song to the queue
       addToQueue(song : Song) : void{
         this.songsQueue.enqueue(song);
-        //print here is temp just for debugging
       }
 
-    //skip song and returns the next song in the queue
+    //skip song and returns the next song in the queue or undefined in case of empty queue
     skipSong() : Song | undefined{
       this.songsQueue.dequeue();
       return this.songsQueue.peek();
@@ -149,10 +154,16 @@ export class SongsQueue{
       
     }
 
-    //
-    addToQueueByName(song_name : string, song_author : string) : void{
+    //returns the next song in the queue
+    addToQueueByName(song_name : string, song_author : string) : Promise<any>{
       const song = new Song(song_name,song_author)
-      song.init_data();
+      //gets the promise to know when the action is over
+      const returnval = song.init_data();
+      //adds the song to the queue
+      this.addToQueue(song);
+      return returnval;
     }
+
+
     
   }
