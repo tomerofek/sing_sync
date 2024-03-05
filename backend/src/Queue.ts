@@ -73,6 +73,12 @@ export class Queue<T> {
     size(): number {
         return this.items.length;
     }
+
+    remove(index : number): void {
+        if (index !== -1) {
+            this.items.splice(index, 1);
+        }
+    }
 }
 //the queue of songs uses the Queue implementation
 export class SongsQueue{
@@ -141,12 +147,29 @@ export class SongsQueue{
 
     //skip song and returns the next song in the queue or undefined in case of empty queue
     skipSong() : Song | undefined{
+      //reset the current position in the song
+      this.current_position_in_song = 0;
+      //dequeue the current song
       this.songsQueue.dequeue();
+      //return the next song in the queue
       return this.songsQueue.peek();
       //TODO broadcast notification to the other users using express
     }
 
-    
+    advance_position_in_song() : number {
+      //returns the index which is the next part in the song (might want to change to status)
+      return this.current_position_in_song++;
+    }
+
+    //retuned -1 in case of error
+    previous_position_in_song() : number {
+      //returns the index which is the previous part in the song (might want to change to status)
+      if(this.current_position_in_song > 0){
+        return -1;
+      }
+      return this.current_position_in_song--;
+    }
+
     //returns the current song
     getCurrentSong() : Song | undefined{
       return this.songsQueue.peek();
@@ -163,7 +186,8 @@ export class SongsQueue{
       this.addToQueue(song);
       return returnval;
     }
-
-
     
+    remove_song_from_queue(song_to_remove_position : number) : void {
+      this.songsQueue.remove(song_to_remove_position);
+    }
   }
