@@ -23,8 +23,9 @@ async function add_song_author($: cheerio.Root, song_dict: ScrapedSong): Promise
     let author = title.children().eq(1).children().first().text().trim().replace('\n', '');
     song_dict.song_author = author;
 }
+
 async function add_song_lyrics($: cheerio.Root, song_dict: ScrapedSong): Promise<void> {
-  const song_body_element = $('.chords').first();
+  const song_body_element = $('.Chords_root__dhQIM').first();
   const song_lines: { type: string; content: string }[] = [];
 
   song_body_element.contents().each((_, node) => {
@@ -52,13 +53,7 @@ async function getSongData(url: string): Promise<ScrapedSong> {
 }
 
 async function url2song(url: string): Promise<ScrapedSong> {
-  const client = new MongoClient(database_url);
-  await client.connect();
-  const db = client.db('SingSync');
-  const song_collection = db.collection('songs');
-
   const song = await getSongData(url);
-  await client.close(); // Remember to close the MongoDB client
   return song;
 }
 
@@ -66,7 +61,7 @@ if (require.main === module) {
       const url = "https://www.nagnu.co.il/%D7%90%D7%A7%D7%95%D7%A8%D7%93%D7%99%D7%9D/%D7%A0%D7%95%D7%A2%D7%94_%D7%A7%D7%99%D7%A8%D7%9C,_%D7%A9%D7%92%D7%99%D7%90_%D7%A7%D7%A8%D7%99%D7%91,_%D7%A4%D7%95%D7%A8%D7%90%D7%91%D7%A8_%D7%AA%D7%9C_%D7%90%D7%91%D7%99%D7%91/%D7%A4%D7%A8%D7%95%D7%91%D7%95%D7%A7%D7%98%D7%99%D7%91%D7%99%D7%AA";
        if (url) {
         url2song(url)
-            .then(song => console.log(song.song_name))
+            .then(song => console.log(song.song_body))
             .catch(error => console.error('Error:', error));
     } else {
         console.error('Usage: node script.js <url>');
