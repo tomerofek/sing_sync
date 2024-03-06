@@ -1,34 +1,33 @@
-// import { Component, OnInit } from '@angular/core';
-// import { ActivatedRoute } from '@angular/router';
-// import { Observable } from 'rxjs';
-// import { FoodService } from 'src/app/services/food.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { FoodService } from 'src/app/services/food.service';
 // import { Food } from 'src/app/shared/models/Food';
+import { WebsocketService } from 'src/app/services/websocket.service'; // Import the SocketService
 
-// @Component({
-//   selector: 'app-home',
-//   templateUrl: './home.component.html',
-//   styleUrls: ['./home.component.css']
-// })
-// export class HomeComponent implements OnInit {
 
-//   foods: Food[] = [];
-//   constructor(private foodService: FoodService, activatedRoute: ActivatedRoute) {
-//     let foodsObservalbe:Observable<Food[]>;
-//     activatedRoute.params.subscribe((params) => {
-//       if (params.searchTerm)
-//         foodsObservalbe = this.foodService.getAllFoodsBySearchTerm(params.searchTerm);
-//       else if (params.tag)
-//         foodsObservalbe = this.foodService.getAllFoodsByTag(params.tag);
-//       else
-//         foodsObservalbe = foodService.getAll();
-
-//         foodsObservalbe.subscribe((serverFoods) => {
-//           this.foods = serverFoods;
-//         })
-//     })
-//   }
-
-//   ngOnInit(): void {
-//   }
-
-// }
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
+})
+export class HomeComponent implements OnInit {
+    broadcastMessage: string = '';
+    message: string = '';
+    constructor(
+      private foodService: FoodService,
+      private activatedRoute: ActivatedRoute,
+      private socketService: WebsocketService
+    ) {}
+  
+    ngOnInit(): void {
+      this.socketService.listenForBroadcasts();
+      this.socketService.broadcastReceived.subscribe((msg) => {
+        this.broadcastMessage = msg;
+      });
+    }
+  
+    sendHello(message: string) {
+        this.foodService.sendHello(message);
+    }
+  }
