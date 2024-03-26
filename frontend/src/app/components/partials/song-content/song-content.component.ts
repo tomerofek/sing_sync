@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SongService } from 'src/app/services/song.service';
 import { Song } from 'src/app/shared/models/Song';
@@ -9,10 +9,13 @@ import { SongLine } from 'src/app/shared/models/SongLine';
   templateUrl: './song-content.component.html',
   styleUrls: ['./song-content.component.css']
 })
-export class SongContentComponent implements OnInit {
+export class SongContentComponent implements OnInit, OnChanges {
   song?:Song;
   show_chords:boolean = false;
-  current_part_index?: number;
+  is_last_part?:boolean;
+  
+  @Input() current_part_index?: number;
+  @Output() onLastPartEvent = new EventEmitter<void>();
 
   constructor(activatedRoute:ActivatedRoute, songService:SongService,
           private router: Router) {
@@ -20,8 +23,12 @@ export class SongContentComponent implements OnInit {
       if(params.song) this.song = params.song;
     });*/
     this.song = songService.generate_test_Song();
-    this.current_part_index = this.getCurrentSongPartIndex();
-    console.log(this.current_part_index);
+    this.emitIfLastPart();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['current_part_index'])
+      this.emitIfLastPart();
   }
 
   ngOnInit(): void {
@@ -32,19 +39,17 @@ export class SongContentComponent implements OnInit {
     //console.log(this.show_chords);
   }
 
-  advance_song_part(){
-    if(this.current_part_index != undefined){
-      this.current_part_index++;
-    }
-  }
-  
-  //should be a service function
-  getCurrentSongPartIndex(): number{
-    return 0;
-  }
 
   isEmptyLine(line: SongLine) : boolean{
     return line.content == undefined || line.content == '';
   }
+
+  
+
+  emitIfLastPart(){
+    if(this.current_part_index != undefined && this.current_part_index + 1  == this.song?.song_body?.length)
+      this.onLastPartEvent.emit();
+  }
+
 
 }
