@@ -1,4 +1,5 @@
 <div class="content">
+    <button (click)="advance_song_part()">noder</button>
     <div class="switch-div">
         <div class="p1">show chords:&emsp;</div>
         <label class="switch">
@@ -10,12 +11,19 @@
             </div>
         </label>
     </div>
-    <div *ngIf="song && song.song_body && song.song_body.length" class="song-lines">
+    <div *ngIf="song && song.song_body && current_part_index != undefined" class="song-lines">
         <ul class="lines-ul">
-            <li *ngFor="let songLine of song.song_body">
+            <li *ngFor="let songLine of song.song_body[current_part_index]">
                 <div *ngIf="songLine.type=='lyrics'; then LyricBlock; else ChordBlock"></div>
                 <ng-template #LyricBlock>
-                    <p class="lyrics">{{songLine.content}}</p>
+                    <div *ngIf="!isEmptyLine(songLine); then NormalBlock; else EmptyBlock"></div>
+                    <ng-template #NormalBlock>
+                        <p class="lyrics">{{songLine.content}}</p>
+                    </ng-template>
+                    <ng-template #EmptyBlock>
+                        <br>
+                        <br>
+                    </ng-template>
                 </ng-template>
                 <ng-template #ChordBlock>
                     <div *ngIf="show_chords; then Chords; else Empty"></div>
