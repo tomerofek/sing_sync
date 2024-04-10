@@ -20,15 +20,15 @@
 
         <div class="main">
             <queue></queue>
-            <song-content></song-content>
+            <song-content (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index"></song-content>
         </div>
 
         <div class="navigation">
             <div class="filler"></div>
             <div class="buttons">
-                <mat-icon class="prev-page-btn" (click)="prev_lines()">chevron_left</mat-icon>
-                <mat-icon class="next-page-btn" (click)="next_lines()">chevron_right</mat-icon>
-                <mat-icon class="next-song-btn" (click)="next_song()">last_page</mat-icon>
+                <mat-icon *ngIf="current_song_part_index!=0" class="prev-page-btn" (click)="prev_lines()">chevron_left</mat-icon>
+                <mat-icon *ngIf="!is_last_song_part" class="next-page-btn" (click)="next_lines()">chevron_right</mat-icon>
+                <mat-icon *ngIf="has_next_song()" class="next-song-btn" (click)="next_song()">last_page</mat-icon>
             </div>
         </div>
 
