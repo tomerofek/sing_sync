@@ -1,32 +1,8 @@
 import { MongoClient, Db , ObjectId} from 'mongodb';
 import { Queue } from './Queue';
-import { WebScraper } from './WebScraper';
 // MongoDB connection URI
 //need to encrypt this password
 const uri = "mongodb+srv://final-project:kGSCzCjKDuKF7NGD@noder.2cvtm9i.mongodb.net/?retryWrites=true&w=majority";
-
-export async function add_song_to_db(songData : any) : Promise<any> {
-  const client = new MongoClient(uri);
-  return new Promise(async (resolve, reject) => {
-    try {
-      await client.connect();
-      console.log('Connected to MongoDB');
-      const database: Db = client.db("SingSync");
-      const collection = database.collection("songs");
-      // Insert the JSON object into the collection
-      const result = await collection.insertOne(songData);
-      console.log('Inserted JSON object with ID ' + result.insertedId);
-      resolve(result.insertedId);
-    } catch (error) {
-      reject(error);
-    } finally {
-      // Close the connection when done
-      await client.close();
-      console.log('MongoDB connection closed');
-    }
-  });
-}
-
 
 //getting songs from the db as JSON object - returns a promise
 async function getSongJSON(id : string): Promise<any> {
@@ -79,7 +55,7 @@ async function getSongJSON(id : string): Promise<any> {
 
 
 export class Song {
-    private webScraper : WebScraper;
+
     private songData: JSON | null; // JSON object containing song data
     private songName: string; // Name of the song
     private songAuthor: string; // Author of the song
@@ -91,7 +67,7 @@ export class Song {
     //constructor using optional song param - if song not provided we search it
     
     constructor(songName: string, songAuthor: string) {
-        this.webScraper = new WebScraper();
+        console.log("untill when");
         this.songData = null;
         this.songAuthor = songAuthor;
         this.songName = songName;
@@ -100,41 +76,20 @@ export class Song {
     }
 
     //gets the id for the db and that callback function to what to do after object is initialized
-    init_data() : any {
-      
+    init_data(fun : any) {
       const id_for_db = this.getSongName() + "_" + this.getSongAuthor();
-      return getSongJSON(id_for_db).then((result) => {
+      getSongJSON(id_for_db).then((result) => {
         this.songData = result;
+        console.log("untill when");
         //below is what we do after the resolve
-        console.log(this.songData)
+        fun(this)
     }).catch((error) => {
         this.songData = null;
         console.error('Promise rejected with error: ' + error);
         throw error;
+
       });
     }
-
-    scrape_song(url: string): Promise<void> {
-      return this.webScraper.url2song(url).then((result) => {
-          this.songData = JSON.parse(JSON.stringify(result)); // Parse back to JSON
-          console.log(this.songData);
-          this.songName = result.song_name;
-          this.songAuthor = result.song_author;
-      });
-  }
-
-
-
-/*
-    convertToJson(dataArray: { type: string; content: string }[]): JSON {
-      const tempJSON = {};
-      for (let i = 0; i < dataArray.length; i++) {
-        tempJSON += dataArray[i];
-      }
-      return JSON.stringify();
-    }
-    */
-
     isEmptyObject(obj: Record<string, any>): boolean {
         return Object.keys(obj).length === 0;
     }

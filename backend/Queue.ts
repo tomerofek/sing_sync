@@ -1,4 +1,4 @@
-import { Song, add_song_to_db } from "./Song";
+import { Song } from "./Song";
 import { MongoClient, Db , ObjectId} from 'mongodb';
 import {spawnSync } from "child_process";
 
@@ -11,6 +11,7 @@ async function getSongNames(song_name : string ,song_author : string): Promise<a
       const client = new MongoClient(uri);
       
       try {
+  
         await client.connect();
         console.log('Connected to MongoDB');
         const database: Db = client.db("SingSync");
@@ -30,6 +31,7 @@ async function getSongNames(song_name : string ,song_author : string): Promise<a
           const song_id_pairs = array_of_songs.map(song => {
             return {song_name : song.song_name, song_author : song.song_author};
         });
+          console.log("noder bseder");
           resolve(song_id_pairs);
         } else {
           
@@ -73,116 +75,80 @@ export class Queue<T> {
     size(): number {
         return this.items.length;
     }
-
-    remove(index : number): void {
-        if (index !== -1) {
-            this.items.splice(index, 1);
-        }
-    }
 }
 //the queue of songs uses the Queue implementation
 export class SongsQueue{
     private songsQueue: Queue<Song>;
-    private current_position_in_song : number
 
     constructor() {
         this.songsQueue = new Queue(); // Initialize the songsQueue
-        this.current_position_in_song = 0;
     }
 
-
-    get_current_position_in_song() : number {
-      return this.current_position_in_song;
-    }
-    
     //for user search function - return the list of results to user
     search_song(song_name : string, author_name : string) : any {
         return getSongNames(song_name,author_name).then((result) => {
-            //TODO add here calledback to calling function - probably send to user side - probably send to user side
-          
-            console.log(result);
+            //send response to user
             return result;
         }).catch(error => {
             throw new Error('An error occurred while processing the data');
     });
     }
 
-    
-    //add song using url to the db and insert to queue
-    async addToQueueFromUrl(url : string) : Promise<void> {
-      return new Promise(async (resolve) => {
-        //make empty song
-        const song = new Song("","");
-        //update song with the data from the url
-        await this.scrapeSong(url,song);
-        //the song in the queue might not be complete
-        this.addToQueue(song)
-        //add the song to the database
-        await add_song_to_db(song);
-        //this resolve is for debugging the song should be added to the queue by now
-        console.log(song);
-        resolve();
-      })
-
-    }
-
-    //TODO change scraper to nodejs and make async upload to db 
     //adds a song to the database - the mongoDB from a given url
-    scrapeSong(url : string, song : Song) : Promise<void> {
+    addToDBFromUrl(url : string) : any {
       //using the python script we made for uploading the url to the databsae using shell activation
-      return song.scrape_song(url)
-
+      const pythonProcess = spawnSync('python',["backend\\song_db_-_python_scripts\\url2song.py",url]);
+      if (pythonProcess.stdout && pythonProcess.stdout.length > 0) 
+        return pythonProcess.stdout.toString();
+      console.log("Python Script Output:", pythonProcess.stdout?.toString());
+      console.error("Python Script Errors:", pythonProcess.stderr?.toString());
     }
 
+    //add song using url to the db and insert to queue
+    addToQueueFromUrl(url : string) : void {
+      //let us first add the song to our songs database for future usage
+      //TODO CHECK LINE ABOVE
+      console.log("hello");
+      const songName_and_author = this.addToDBFromUrl(url).replace(/\n/g, '').trim().split('_');
+      songName_and_author[0] = songName_and_author[0].trim()
+      songName_and_author[1] = songName_and_author[1].trim()
+      //lets create a new song object using what we added ( can change python code to make this step not needed)
+      const song : Song = new Song(songName_and_author[0],songName_and_author[1]);
+      console.log(song);
+      this.init_song_content_before_enqueue(song,songName_and_author[0],songName_and_author[1]);
+      
+    }
 
-      //add song to the queue
+      //skip song and returns the next song in the queue
+      init_song_content_before_enqueue(song : Song, song_name : string, song_author : string) : void{
+        song.init_data(this.addToQueue.bind(this) /* eyal found evil magic bind makes the function run on this object*/);
+        //print here is temp just for debugging
+        console.log(this.songsQueue.peek()?.getSongData());
+        //TODO broadcast notification to the other users using express
+       
+      }
+
+      //skip song and returns the next song in the queue
       addToQueue(song : Song) : void{
         this.songsQueue.enqueue(song);
+        //print here is temp just for debugging
+        console.log(this.songsQueue.peek());
+        //TODO broadcast notification to the other users using express
+       
       }
 
-    //skip song and returns the next song in the queue or undefined in case of empty queue
+    //skip song and returns the next song in the queue
     skipSong() : Song | undefined{
-      //reset the current position in the song
-      this.current_position_in_song = 0;
-      //dequeue the current song
       this.songsQueue.dequeue();
-      //return the next song in the queue
-      return this.songsQueue.peek();
-      //TODO broadcast notification to the other users using express
-    }
-
-    advance_position_in_song() : number {
-      //returns the index which is the next part in the song (might want to change to status)
-      return this.current_position_in_song++;
-    }
-
-    //retuned -1 in case of error
-    previous_position_in_song() : number {
-      //returns the index which is the previous part in the song (might want to change to status)
-      if(this.current_position_in_song > 0){
-        return -1;
-      }
-      return this.current_position_in_song--;
-    }
-
-    //returns the current song
-    getCurrentSong() : Song | undefined{
       return this.songsQueue.peek();
       //TODO broadcast notification to the other users using express
       
     }
 
-    //returns the next song in the queue
-    addToQueueByName(song_name : string, song_author : string) : Promise<any>{
+
+    addToQueueByName(song_name : string, song_author : string) : void{
       const song = new Song(song_name,song_author)
-      //gets the promise to know when the action is over
-      const returnval = song.init_data();
-      //adds the song to the queue
-      this.addToQueue(song);
-      return returnval;
+      song.init_data(this.addToQueue.bind(this));
     }
     
-    remove_song_from_queue(song_to_remove_position : number) : void {
-      this.songsQueue.remove(song_to_remove_position);
-    }
   }

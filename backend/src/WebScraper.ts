@@ -18,12 +18,12 @@ export class WebScraper {
 
     async add_song_author($: cheerio.Root, song_dict: ScrapedSong): Promise<void> {
         const title = $('h1').first();
-        let author = title.children().eq(1).children().first().text().trim().replace('\n', '');
+        let author =  $('[itemprop="name"]').eq(2).text();
         song_dict.song_author = author;
     }
 
     async add_song_lyrics($: cheerio.Root, song_dict: ScrapedSong): Promise<void> {
-    const song_body_element = $('.Chords_root__dhQIM').first();
+    const song_body_element = $('.Chords_root__yZkBJ').first();
     const song_lines: { type: string; content: string }[] = [];
 
     song_body_element.contents().each((_, node) => {
