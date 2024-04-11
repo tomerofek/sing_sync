@@ -1,7 +1,8 @@
 //this does the web scraping but does NOT change the database
 
 import axios from 'axios';
-import cheerio from 'cheerio';
+//import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 
 interface ScrapedSong {
     song_name: string;
