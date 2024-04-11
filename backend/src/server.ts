@@ -4,14 +4,15 @@ dotenv.config();
 import path from "path";
 import express from "express";
 import cors from "cors";
+import roomRouter from "./routers/room.router";
 // import foodRouter from './routers/food.router';
 // import userRouter from "./routers/user.router";
-//import { dbConnect } from "./configs/database.config";
+import { dbConnect } from "./configs/database.config";
 
 import { Server } from "socket.io";
 import { createServer } from "http";
 
-//dbConnect();
+dbConnect();
 
 const app = express();
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use(cors({
     origin:["http://localhost:4200"]
 }));
 
+app.use("/api/room", roomRouter);
 // app.use("/api/foods", foodRouter);
 // app.use("/api/users", userRouter);
 

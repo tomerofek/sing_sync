@@ -14,6 +14,7 @@ import { WebsocketService } from 'src/app/services/websocket.service'; // Import
 export class HomeComponent implements OnInit {
     broadcastMessage: string = '';
     message: string = '';
+    songResponse: any;
     constructor(
       private foodService: FoodService,
       private activatedRoute: ActivatedRoute,
@@ -30,4 +31,11 @@ export class HomeComponent implements OnInit {
     sendHello(message: string) {
         this.foodService.sendHello(message);
     }
+    getSongFromUrl(roomId: string, url: string) {
+      this.foodService.getSongFromUrl(roomId, url).subscribe(response => {
+        this.songResponse = response;
+      });
+    }
+
+    
   }

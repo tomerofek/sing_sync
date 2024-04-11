@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 // import { FOODS_BY_SEARCH_URL, FOODS_BY_TAG_URL, FOODS_TAGS_URL, FOODS_URL, FOOD_BY_ID_URL } from '../shared/constants/url';
-import { HELLO_URL, ROOMS_URL } from '../shared/constants/url';
+import { BASE_URL, HELLO_URL, ROOMS_URL } from '../shared/constants/url';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +40,11 @@ sendHello(message: string) {
             .subscribe(response => {
                 console.log(response);
             });
+    }
+
+    getSongFromUrl(roomId: string, url: string): Observable<any> {
+      const encodedUrl = encodeURIComponent(url);
+      return this.http.get(`${BASE_URL}/api/room/get_song_from_url/${roomId}/${encodedUrl}`);
     }
 
 }
