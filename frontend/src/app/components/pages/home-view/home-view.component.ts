@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-view',
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeViewComponent implements OnInit {
 
-  constructor() { }
+  constructor(activatedRoute:ActivatedRoute,private router:Router) { }
 
   ngOnInit(): void {
+  }
+
+  goToRoom(room_id: string): void {
+    //console.log(room_id)
+    if(room_id){
+      this.router.navigateByUrl('/room/' + room_id);
+    }
+  }
+
+  goToStats(): void{
+    
   }
 
 }

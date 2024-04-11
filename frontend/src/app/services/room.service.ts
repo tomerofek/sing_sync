@@ -55,7 +55,7 @@ export class FakeRoomService implements IRoomService{
   constructor() { }
 
   join_room(room_id:string): Observable<Response<void>>{
-    throw new Error("Unimplemented");
+    return of({status: "ok"});
   }
 
   host_room(): Observable<Response<string>>{

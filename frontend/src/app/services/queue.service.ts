@@ -7,18 +7,52 @@ import { Response } from '../shared/models/Response';
 
 export interface IQueueService {
 
+  /**
+   * return the next 2 songs in the queue (if there are less then 2 then return them)
+   * @param room_id 
+   */
   get_top_queue(room_id:string): Observable<Response<Song[]>>;
 
+  /**
+   * return all the next songs in the queue
+   * @param room_id 
+   */
   get_all_queue(room_id:string): Observable<Response<Song[]>>;
 
+  /**
+   * move the song in from an old position to the new posotion in queue
+   * @param room_id 
+   * @param song_to_move_position 
+   * @param new_position 
+   */
   reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<void>>;
 
+  /**
+   * remove a song in the position provided from the queue
+   * @param room_id 
+   * @param song_to_remove_position 
+   */
   remove_song_from_queue(room_id:string, song_to_remove_position:number): Observable<Response<void>>;
 
+  /**
+   * search a song with the provided data from the data base
+   * @param song_name 
+   * @param song_author 
+   */
   search_song_from_db(song_name:string, song_author:string): Observable<Response<Song[]>>;
 
+  /**
+   * add a song to the queue
+   * @param room_id 
+   * @param song_id 
+   */
   add_song_to_queue(room_id:string, song_id:string): Observable<Response<void>>;
 
+  /**
+   * get a song from the provided url
+   * @param room_id 
+   * @param song_url 
+   */
   get_song_from_url(room_id:string, song_url:string): Observable<Response<Song[]>>;
 
   /*
@@ -138,10 +172,18 @@ export class RealQueueService implements IQueueService{
 
 export class FakeQueueService implements IQueueService{
 
-  constructor() { }
+  private queue_pos!: number;
+  constructor() {
+    this.queue_pos = 0;
+   }
 
   get_top_queue(room_id:string): Observable<Response<Song[]>>{
-    throw new Error("Unimplemented");
+    this.queue_pos++;
+    if(this.queue_pos==1)
+      return of({status: "ok", content: [new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2')]});
+    if(this.queue_pos==2)
+      return of({status: "ok", content: [new Song('שיר2','יוצר2')]});
+    return of({status: "ok", content: []});
   }
 
   get_all_queue(room_id:string): Observable<Response<Song[]>>{

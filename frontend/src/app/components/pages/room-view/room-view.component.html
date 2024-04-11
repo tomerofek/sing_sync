@@ -2,17 +2,17 @@
     <div class="content">
         <div class="top">
             <h1 class="roomid">
-                #room id
+                #{{room_id}}
             </h1>
             <div class="song-info">
                 <div>
-                    <h1 class="song-title">
-                        שם של שיר
+                    <h1 class="song-title" *ngIf="song && song.song_name">
+                        {{song.song_name}}
                     </h1>
                 </div>
                 <div>
-                    <p class="song-author">
-                        שם של זמר
+                    <p class="song-author" *ngIf="song && song.song_author">
+                        {{song.song_author}}
                     </p>
                 </div>
             </div>
@@ -20,7 +20,7 @@
 
         <div class="main">
             <queue></queue>
-            <song-content (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index"></song-content>
+            <song-content (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song"></song-content>
         </div>
 
         <div class="navigation">

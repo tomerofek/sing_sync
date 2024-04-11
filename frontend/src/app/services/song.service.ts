@@ -205,26 +205,38 @@ export class RealSongService implements ISongService {
 
 export class FakeSongService implements ISongService {
 
-  constructor() { }
+  private song_part!: number;
+  private song_num!: number;
+  constructor() {
+    this.song_part = 0;
+    this.song_num = 0;
+   }
 
   get_song(room_id:string): Observable<Response<Song>>{
-    throw new Error("Unimplemented");
+    if(this.song_num == 0)
+      return of({status: "ok", content: this.generate_test_Song()});
+    else
+      return of({status: "ok", content: this.generate_test_Song2()});
   }
 
   get_position(room_id:string): Observable<Response<number>>{
-    throw new Error("Unimplemented");
+    return of({status: "ok", content: this.song_part});
   }
 
   advance_position(room_id:string): Observable<Response<number>>{
-    throw new Error("Unimplemented");
+    this.song_part++;
+    return of({status: "ok", content: this.song_part});
   }
 
   previous_position(room_id:string): Observable<Response<number>>{
-    throw new Error("Unimplemented");
+    this.song_part--;
+    return of({status: "ok", content: this.song_part});
   }
 
   advance_song(room_id:string): Observable<Response<Song>>{
-    throw new Error("Unimplemented");
+    this.song_num++;
+    this.song_part = 0;
+    return of({status: "ok", content: this.generate_test_Song2()});
   }
   
 
@@ -279,5 +291,57 @@ export class FakeSongService implements ISongService {
 
   generate_test_Song():Song{
     return new Song("יפיופה","אייל גולן", this.generate_test_song_lines());
+  }
+
+  generate_test_song_lines2():SongLine[]{
+    return [
+        new SongLine("chords", "G\u200e                Dm\u200e                Am\u200e"),
+        new SongLine("lyrics", "2יפיופה, בואי אלי  תני לי נשיקה על השפתיים"),
+        new SongLine("chords", "Am\u200e          E\u200e                    G\u200e"),
+        new SongLine("lyrics", "2יפיופה    בואי נעוף הלילה לשמיים"),
+        new SongLine("lyrics", ""),
+        new SongLine("chords", "Am\u200e E\u200e  C\u200e         F\u200e       G\u200e       Am\u200e"),
+        new SongLine("lyrics", "2ראיתי בעיניך סימנים של מבוכה"),
+        new SongLine("chords", "Dm\u200e E\u200e      F\u200e      G\u200e        Am\u200e"),
+        new SongLine("lyrics", "2שמעעתי את השקט שלפני הסערה"),
+        new SongLine("chords", "Dm\u200e   C\u200e             G\u200e  Am\u200e             Dm\u200e"),
+        new SongLine("lyrics", "2תני לרגשות לפרוח   אהבה הושטי יד"),
+        new SongLine("chords", " E\u200e              Dm\u200e  Am\u200e              Dm\u200e"),
+        new SongLine("lyrics", "2חבקי אותי בכל הכוח    חיים רק פעם אחת"),
+        new SongLine("lyrics", ""),
+        new SongLine("chords", "G\u200e                Dm\u200e                Am\u200e"),
+        new SongLine("lyrics", "2יפיופה, בואי אלי  תני לי נשיקה על השפתיים"),
+        new SongLine("chords", "Am\u200e          E\u200e                    G\u200e"),
+        new SongLine("lyrics", "2יפיופה    בואי נעוף הלילה לשמיים"),
+        new SongLine("chords", "G\u200e                Dm\u200e                Am\u200e"),
+        new SongLine("lyrics", "2יפיופה, בואי אלי  תני לי נשיקה על השפתיים"),
+        new SongLine("chords", "Am\u200e          E\u200e                    G\u200e"),
+        new SongLine("lyrics", "2יפיופה    בואי נעוף הלילה לשמיים"),
+        new SongLine("lyrics", ""),
+        new SongLine("lyrics", ""),
+        new SongLine("chords", "|Am\u200e|F\u200e|Dm\u200e|E\u200e|Am\u200e|"),
+        new SongLine("lyrics", ""),
+        new SongLine("chords", "Am\u200e E\u200e  C\u200e      F\u200e           G\u200e         Am\u200e"),
+        new SongLine("lyrics", "2אולי את מתביישת אולי פוחדת מאהבה מאהבה"),
+        new SongLine("chords", "Dm\u200e E\u200e        F\u200e        G\u200e        Am\u200e"),
+        new SongLine("lyrics", "2הקשיבי ללב דלילה  אהבה הושטי יד"),
+        new SongLine("chords", "Dm\u200e      C\u200e          G\u200e  Am\u200e           Dm\u200e"),
+        new SongLine("lyrics", "2תני לרגשות לפרוח   אהבה הושטי יד"),
+        new SongLine("chords", " E\u200e              Dm\u200e  Am\u200e             Dm\u200e"),
+        new SongLine("lyrics", "2חבקי אותי בכל הכוח    חיים רק פעם אחת"),
+        new SongLine("lyrics", ""),
+        new SongLine("chords", "G\u200e                Dm\u200e                Am\u200e"),
+        new SongLine("lyrics", "2יפיופה, בואי אלי  תני לי נשיקה על השפתיים"),
+        new SongLine("chords", "Am\u200e          E\u200e                    G\u200e"),
+        new SongLine("lyrics", "2יפיופה    בואי נעוף הלילה לשמיים"),
+        new SongLine("chords", "G\u200e                Dm\u200e                Am\u200e"),
+        new SongLine("lyrics", "2יפיופה, בואי אלי  תני לי נשיקה על השפתיים"),
+        new SongLine("chords", "Am\u200e          E\u200e                    G\u200e"),
+        new SongLine("lyrics", "2יפיופה    בואי")
+        ];
+  }
+
+  generate_test_Song2():Song{
+    return new Song("2יפיופה","2אייל גולן", this.generate_test_song_lines2());
   }
 }

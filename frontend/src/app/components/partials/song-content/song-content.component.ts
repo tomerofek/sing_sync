@@ -10,11 +10,12 @@ import { SongLine } from 'src/app/shared/models/SongLine';
   styleUrls: ['./song-content.component.css']
 })
 export class SongContentComponent implements OnInit, OnChanges {
-  song?:Song;
+  //song?:Song;
   show_chords:boolean = false;
   is_last_part?:boolean;
   
   @Input() current_part_index?: number;
+  @Input() song?: Song;
   @Output() onLastPartEvent = new EventEmitter<void>();
 
   constructor(activatedRoute:ActivatedRoute, songService:SongService,
@@ -22,7 +23,7 @@ export class SongContentComponent implements OnInit, OnChanges {
     /*activatedRoute.params.subscribe((params) => {
       if(params.song) this.song = params.song;
     });*/
-    this.song = songService.generate_test_Song();
+    //this.song = songService.generate_test_Song();
     this.emitIfLastPart();
   }
 
