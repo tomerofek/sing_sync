@@ -25,12 +25,12 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.1",
     "socket.io": "^4.7.4",
-    "typescript": "^5.3.3"
-  },
-  "devDependencies": {
+    "typescript": "^5.3.3",
     "@types/axios": "^0.14.0",
     "@types/cheerio": "^0.22.35",
-    "@types/mongoose": "^5.11.97",
+    "@types/mongoose": "^5.11.97"
+  },
+  "devDependencies": {
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2"
   }
