@@ -45,6 +45,11 @@ async function getSongNames(song_name : string ,song_author : string): Promise<a
       }
     });
   }
+  //song info interface
+  export interface SongInfo {
+    songName: string;
+    songAuthor: string;
+  }
 
   //replace this class with thread safe one
 export class Queue<T> {
@@ -69,6 +74,17 @@ export class Queue<T> {
     peek(): T | undefined {
         return this.items.length > 0 ? this.items[0] : undefined;
     }
+
+    peek2and3Element(): T[] | undefined {
+      let top2Song : any[] = []
+      if(this.size() >= 3){
+        top2Song.push(this.items[1])
+        top2Song.push(this.items[2])
+      }else if(this.size() == 2){
+        top2Song.push(this.items[2])
+      }
+      return top2Song
+  }
 
     size(): number {
         return this.items.length;
@@ -169,7 +185,6 @@ export class SongsQueue{
     getCurrentSong() : Song | undefined{
       return this.songsQueue.peek();
       //TODO broadcast notification to the other users using express
-      
     }
 
     //returns the next song in the queue
@@ -181,8 +196,33 @@ export class SongsQueue{
       this.addToQueue(song);
       return returnval;
     }
-    
+    //removes song at position from the queue
     remove_song_from_queue(song_to_remove_position : number) : void {
       this.songsQueue.remove(song_to_remove_position);
     }
+
+    //returns the first 2 elements in the song queue
+    get_top2_songs() : any{
+      //array with 2 or less songs
+      let top2 = this.songsQueue.peek2and3Element()
+      if(top2?.length == 2){
+        let first_song: Song = top2[0] as Song;
+        let second_song: Song = top2[1] as Song;
+        return [this.make_songName_songAuthor_json(first_song), this.make_songName_songAuthor_json(second_song)]
+      }else if(top2?.length == 1){
+        let first_song: Song = top2[0] as Song;
+        return [this.make_songName_songAuthor_json(first_song)]
+      }else{
+        return []
+      }
+    }
+
+  
+    private make_songName_songAuthor_json(song: Song): SongInfo {
+      let songName = song.getSongName();
+      let songAuthor = song.getSongAuthor();
+      return { songName, songAuthor };
+    }
+
+
   }

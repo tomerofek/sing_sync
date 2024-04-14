@@ -1,38 +1,66 @@
 import { Song } from "./Song";
 import { Queue,SongsQueue } from "./Queue"; // Assuming Queue is exported from a separate file
+const redis = require('redis');
+
 
 class Room {
     private songsQueue: SongsQueue;
-    //TODO make this thread safe
-    private members: any[]; // Assuming your HTTP clients are stored as an array of objects
-    
+    private host: any;
+    private id :number;
+
     //this will be called upon host room
-    constructor(host: any) {
-        this.songsQueue = new SongsQueue();
-        this.members = [];
-        this.joinRoom(host);
+    constructor(host: any, id : number) {
+    //get current avalable id and increment
+    this.id = id;
+    this.songsQueue = new SongsQueue();
+    this.host = host;
     }
 
-    //returns current position in room>
-    joinRoom(member: any): Number {
-        this.members.push(member);
+    //returns room id 
+    get_room_id(){
+        return this.id;
+    }
+
+    //returns if join room worked (found the room)
+    join_room(): string {
+        return "ok";
+    }
+
+    //gets the current position in the current song
+    get_current_position(): number {
         return this.songsQueue.get_current_position_in_song();
     }
 
-    removeMember(member: any): void {
-        const index = this.members.indexOf(member);
-        if (index !== -1) {
-            this.members.splice(index, 1);
-        }
+    //returns the current song on the queue
+    get_current_song(): any { //returns json(song_name, song_author,song_body,status) 
+        return this.songsQueue.getCurrentSong();
     }
 
     add_song_from_url(url : string) : any {//returns a promise
         return this.songsQueue.addToQueueFromUrl(url);
     }
 
-    get_song(): any { //returns json(song_name, song_author,song_body,status) 
+    add_song_from_name_id(id : string) : any {//returns a promise
+        return this.songsQueue.addToQueueFromUrl(id);
+    }
+
+    advance_position() : number{
+        return this.songsQueue.advance_position_in_song();
+    }
+
+    previous_position() : number{
+        return this.songsQueue.previous_position_in_song();
+    }
+
+    advance_song() : any{
+        this.songsQueue.skipSong();
         return this.songsQueue.getCurrentSong();
     }
+
+    get_top_queue(room_id : string) : any{
+        this.songsQueue.get_top2_songs()
+    } 
+
 }
 
 export { Room };

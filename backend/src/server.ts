@@ -8,11 +8,13 @@ import roomRouter from "./routers/room.router";
 // import foodRouter from './routers/food.router';
 // import userRouter from "./routers/user.router";
 import { dbConnect } from "./configs/database.config";
-
 import { Server } from "socket.io";
 import { createServer } from "http";
+import { ROOMS_URL } from "./routers/urls";
 
 dbConnect();
+
+
 
 const app = express();
 app.use(express.json());
@@ -21,7 +23,8 @@ app.use(cors({
     origin:["http://localhost:4200"]
 }));
 
-app.use("/api/room", roomRouter);
+//adding usage to the room api
+app.use(ROOMS_URL, roomRouter);
 // app.use("/api/foods", foodRouter);
 // app.use("/api/users", userRouter);
 
