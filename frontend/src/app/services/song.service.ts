@@ -215,8 +215,10 @@ export class FakeSongService implements ISongService {
   get_song(room_id:string): Observable<Response<Song>>{
     if(this.song_num == 0)
       return of({status: "ok", content: this.generate_test_Song()});
-    else
+    else if(this.song_num == 1)
       return of({status: "ok", content: this.generate_test_Song2()});
+    else
+      return of({status: "ok", content: this.generate_test_Song3()});
   }
 
   get_position(room_id:string): Observable<Response<number>>{
@@ -236,7 +238,10 @@ export class FakeSongService implements ISongService {
   advance_song(room_id:string): Observable<Response<Song>>{
     this.song_num++;
     this.song_part = 0;
-    return of({status: "ok", content: this.generate_test_Song2()});
+    if(this.song_num == 1)
+      return of({status: "ok", content: this.generate_test_Song2()});
+    else
+      return of({status: "ok", content: this.generate_test_Song3()});
   }
   
 
@@ -343,5 +348,9 @@ export class FakeSongService implements ISongService {
 
   generate_test_Song2():Song{
     return new Song("2יפיופה","2אייל גולן", this.generate_test_song_lines2());
+  }
+
+  generate_test_Song3():Song{
+    return new Song("3יפיופה","2אייל גולן", this.generate_test_song_lines2());
   }
 }

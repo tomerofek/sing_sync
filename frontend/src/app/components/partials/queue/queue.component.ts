@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { QueueViewComponent } from '../../pages/queue-view/queue-view.component';
 import { AddSongViewComponent } from '../../pages/add-song-view/add-song-view.component';
+import { Song } from 'src/app/shared/models/Song';
 
 
 @Component({
@@ -11,24 +12,40 @@ import { AddSongViewComponent } from '../../pages/add-song-view/add-song-view.co
 })
 export class QueueComponent implements OnInit {
 
-  topOfQ : songDemo[] = [];
-  firstInQ;
-  secondInQ;
+  @Input() topOfQ? : Song[];
+  @Input() room_id!: string;
+  firstInQ?: Song;
+  secondInQ?: Song;
 
   constructor(private dialog: MatDialog) {
-    this.topOfQ = [ new songDemo('יסמין', 'הפיל הכחול'),
-                    new songDemo('ערק', 'פאר טסי')];
+    if(this.topOfQ !== undefined){
+      this.firstInQ = this.topOfQ.shift();
+      this.secondInQ = this.topOfQ.shift();
+    }
+  
+  }
 
-    this.firstInQ = this.topOfQ.shift();
-    this.secondInQ = this.topOfQ.shift();
-    
+  ngOnChanges(changes: SimpleChanges){
+    if(this.topOfQ !== undefined){
+      if(this.topOfQ.length > 1){
+        this.firstInQ = this.topOfQ[0];
+        this.secondInQ = this.topOfQ[1];
+      }
+      else if(this.topOfQ.length > 0){
+        this.firstInQ = this.topOfQ[0];
+        this.secondInQ = undefined;
+      } else{
+        this.firstInQ = undefined;
+        this.secondInQ = undefined;
+      }
+    }
   }
 
   ngOnInit(): void {
   }
 
   showQueueDialog(): void {
-    this.dialog.open(QueueViewComponent);
+    this.dialog.open(QueueViewComponent, {data:this.room_id});
   }
 
   showAddSongDialog(): void {
@@ -36,7 +53,7 @@ export class QueueComponent implements OnInit {
   }
 
 }
-
+/*
 class songDemo {
   name: string = '';
   author: string = '';
@@ -46,3 +63,4 @@ class songDemo {
     this.author = author;
   }
 }
+*/

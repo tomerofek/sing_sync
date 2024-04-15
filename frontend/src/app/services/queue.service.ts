@@ -182,12 +182,20 @@ export class FakeQueueService implements IQueueService{
     if(this.queue_pos==1)
       return of({status: "ok", content: [new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2')]});
     if(this.queue_pos==2)
-      return of({status: "ok", content: [new Song('שיר2','יוצר2')]});
+      return of({status: "ok", content: [new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3')]});
+    if(this.queue_pos==3)
+      return of({status: "ok", content: [new Song('שיר3','יוצר3')]});
     return of({status: "ok", content: []});
   }
 
   get_all_queue(room_id:string): Observable<Response<Song[]>>{
-    throw new Error("Unimplemented");
+    if(this.queue_pos==1)
+      return of({status: "ok", content: [new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3')]});
+    if(this.queue_pos==2)
+      return of({status: "ok", content: [new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3')]});
+    if(this.queue_pos==3)
+      return of({status: "ok", content: [new Song('שיר3','יוצר3')]});
+    return of({status: "ok", content: []});
   }
 
   reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<void>>{

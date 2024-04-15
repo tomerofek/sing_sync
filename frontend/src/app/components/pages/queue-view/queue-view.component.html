@@ -3,11 +3,11 @@
     <div class="Q-notEmpty" *ngIf="currentSong">
         <h2>Now playing</h2>
         <ol>
-            <li class="currentSong" dir="rtl">{{currentSong.name}} - {{currentSong.author}}</li>
+            <li class="currentSong" dir="rtl">{{currentSong.song_name}} - {{currentSong.song_author}}</li>
         </ol>
         <h2>Next up</h2>
         <ol start="2">        
-            <li *ngFor="let song of queue" dir="rtl">{{song.name}} - {{song.author}}</li>
+            <li *ngFor="let song of queue | slice:1" dir="rtl">{{song.song_name}} - {{song.song_author}}</li>
         </ol>
     </div>
     <p class="Q-empty" *ngIf="!currentSong">

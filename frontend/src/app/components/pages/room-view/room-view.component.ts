@@ -23,10 +23,12 @@ export class RoomViewComponent implements OnInit {
 
   constructor(activatedRoute:ActivatedRoute, roomService:RoomService,
     songService:SongService, queueService:QueueService, private router: Router) { 
-    activatedRoute.params.subscribe((params) => {
-      if(params.roomid) this.room_id = params.roomid;
-    });
-    //TODO: check if we got room id
+      activatedRoute.params.subscribe((params) => {
+        if(params.roomid) this.room_id = params.roomid;
+      });
+    this.songService = songService;
+    this.queueService = queueService;
+      //TODO: check if we got room id
     let res: Response<void> | null = null;
     roomService.join_room(this.room_id).subscribe(data => res = {...data});
     //TODO: place holder for now, need to show error message
@@ -51,8 +53,6 @@ export class RoomViewComponent implements OnInit {
     else{
       this.top_queue = (<Response<Song[]>>queueRes).content;
     }
-    this.songService = songService;
-    this.queueService = queueService;
     this.current_song_part_index = this.getCurrentSongPartIndex();
   }
 
@@ -137,7 +137,6 @@ export class RoomViewComponent implements OnInit {
     this.songService.get_position(this.room_id).subscribe(data => linesRes = {...data});
     //TODO
     if(linesRes === null || (<Response<number>>linesRes).status != 'ok'){
-      console.log('position error');
       return 0;
     }
     else{
