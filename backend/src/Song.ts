@@ -3,7 +3,7 @@ import { Queue } from './Queue';
 import { WebScraper } from './WebScraper';
 // MongoDB connection URI
 //need to encrypt this password
-const uri = "mongodb+srv://final-project:kGSCzCjKDuKF7NGD@noder.2cvtm9i.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://final-project:dbpassword@noder.2cvtm9i.mongodb.net/";
 
 export async function add_song_to_db(songData : any) : Promise<any> {
   const client = new MongoClient(uri);

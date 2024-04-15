@@ -4,7 +4,7 @@ import {spawnSync } from "child_process";
 
 //TODO test to queue by song name and author and fix the queue to work thread safe - also lock on the add to queue functionalities
 //a simple queue implementation
-const uri = "mongodb+srv://final-project:kGSCzCjKDuKF7NGD@noder.2cvtm9i.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://final-project:dbpassword@noder.2cvtm9i.mongodb.net/";
 
 async function getSongNames(song_name : string ,song_author : string): Promise<any> {
     return new Promise(async (resolve, reject) => {
