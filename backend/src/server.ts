@@ -4,18 +4,21 @@ dotenv.config();
 import path from "path";
 import express from "express";
 import cors from "cors";
-import roomRouter from "./routers/room.router";
-// import foodRouter from './routers/food.router';
-// import userRouter from "./routers/user.router";
 import { dbConnect } from "./configs/database.config";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import { ROOMS_URL } from "./routers/urls";
+import { QUEUES_URL, ROOMS_URL, SONGS_URL } from "./routers/urls";
+import { RoomController } from "./RoomController";
+
+//routers
+import roomRouter from "./routers/room.router";
+import songRouter from "./routers/song.router";
+import queueRouter from "./routers/queue.router";
 
 dbConnect();
 
 
-
+export const roomContoller = new RoomController()
 const app = express();
 app.use(express.json());
 app.use(cors({
@@ -25,8 +28,9 @@ app.use(cors({
 
 //adding usage to the room api
 app.use(ROOMS_URL, roomRouter);
-// app.use("/api/foods", foodRouter);
-// app.use("/api/users", userRouter);
+app.use(SONGS_URL, songRouter);
+app.use(QUEUES_URL, queueRouter);
+
 
 app.use(express.static("public"));
 app.get("*", (req, res) => {

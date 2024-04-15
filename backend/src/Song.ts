@@ -3,7 +3,7 @@ import { Queue } from './Queue';
 import { WebScraper } from './WebScraper';
 // MongoDB connection URI
 //need to encrypt this password
-const uri = "mongodb+srv://final-project:kGSCzCjKDuKF7NGD@noder.2cvtm9i.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://final-project:dbpassword@noder.2cvtm9i.mongodb.net/";
 
 export async function add_song_to_db(songData : any) : Promise<any> {
   const client = new MongoClient(uri);
@@ -15,7 +15,6 @@ export async function add_song_to_db(songData : any) : Promise<any> {
       const collection = database.collection("songs");
       // Insert the JSON object into the collection
       const result = await collection.insertOne(songData);
-      console.log('Inserted JSON object with ID ' + result.insertedId);
       resolve(result.insertedId);
     } catch (error) {
       reject(error);
@@ -100,13 +99,12 @@ export class Song {
     }
 
     //gets the id for the db and that callback function to what to do after object is initialized
-    init_data() : any {
+    init_data() : Promise<void> {
       
       const id_for_db = this.getSongName() + "_" + this.getSongAuthor();
       return getSongJSON(id_for_db).then((result) => {
         this.songData = result;
         //below is what we do after the resolve
-        console.log(this.songData)
     }).catch((error) => {
         this.songData = null;
         console.error('Promise rejected with error: ' + error);
@@ -117,7 +115,6 @@ export class Song {
     scrape_song(url: string): Promise<void> {
       return this.webScraper.url2song(url).then((result) => {
           this.songData = JSON.parse(JSON.stringify(result)); // Parse back to JSON
-          console.log(this.songData);
           this.songName = result.song_name;
           this.songAuthor = result.song_author;
       });

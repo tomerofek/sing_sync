@@ -4,10 +4,16 @@ import {spawnSync } from "child_process";
 
 //TODO test to queue by song name and author and fix the queue to work thread safe - also lock on the add to queue functionalities
 //a simple queue implementation
-const uri = "mongodb+srv://final-project:kGSCzCjKDuKF7NGD@noder.2cvtm9i.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://final-project:dbpassword@noder.2cvtm9i.mongodb.net/";
 
-async function getSongNames(song_name : string ,song_author : string): Promise<any> {
+export async function getSongNames(song_name : string ,song_author : string): Promise<any> {
     return new Promise(async (resolve, reject) => {
+
+      //legth check
+      if(song_name.length < 2 || song_author.length < 2){
+          reject(new Error("not enough characters to seach"));
+      }
+
       const client = new MongoClient(uri);
       
       try {
@@ -81,10 +87,14 @@ export class Queue<T> {
         top2Song.push(this.items[1])
         top2Song.push(this.items[2])
       }else if(this.size() == 2){
-        top2Song.push(this.items[2])
+        top2Song.push(this.items[1])
       }
       return top2Song
-  }
+    }
+
+    getQueue(): T[] {
+      return this.items;
+    }
 
     size(): number {
         return this.items.length;
@@ -115,8 +125,6 @@ export class SongsQueue{
     search_song(song_name : string, author_name : string) : any {
         return getSongNames(song_name,author_name).then((result) => {
             //TODO add here calledback to calling function - probably send to user side - probably send to user side
-          
-            console.log(result);
             return result;
         }).catch(error => {
             throw new Error('An error occurred while processing the data');
@@ -136,7 +144,6 @@ export class SongsQueue{
         //add the song to the database
         await add_song_to_db(song);
         //this resolve is for debugging the song should be added to the queue by now
-        console.log(song);
         resolve();
       })
 
@@ -188,7 +195,7 @@ export class SongsQueue{
     }
 
     //returns the next song in the queue
-    addToQueueByName(song_name : string, song_author : string) : Promise<any>{
+    addToQueueByName(song_name : string, song_author : string) : Promise<void>{
       const song = new Song(song_name,song_author)
       //gets the promise to know when the action is over
       const returnval = song.init_data();
@@ -196,9 +203,16 @@ export class SongsQueue{
       this.addToQueue(song);
       return returnval;
     }
+
     //removes song at position from the queue
     remove_song_from_queue(song_to_remove_position : number) : void {
-      this.songsQueue.remove(song_to_remove_position);
+      try {
+        // Attempt to remove the song from the queue
+        this.songsQueue.remove(song_to_remove_position);
+      } catch (error) {
+          // If an error occurs during removal, throw a new error
+          throw new Error("Failed to remove song from queue");
+      }
     }
 
     //returns the first 2 elements in the song queue
@@ -217,12 +231,22 @@ export class SongsQueue{
       }
     }
 
+    //returns a list with all songs names and authors
+    get_all_queue() : any{
+      let names_author_list = []
+      let queue = this.songsQueue.getQueue();
+      for(let i = 0; i < queue.length ; i++){
+        let current_song: Song = queue[i] as Song;
+        names_author_list.push(this.make_songName_songAuthor_json(current_song))
+      }
+      return names_author_list;
+    }
+
   
     private make_songName_songAuthor_json(song: Song): SongInfo {
       let songName = song.getSongName();
       let songAuthor = song.getSongAuthor();
       return { songName, songAuthor };
     }
-
 
   }

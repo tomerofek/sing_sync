@@ -1,13 +1,10 @@
 import { Router } from "express";
-import asyncHandler from 'express-async-handler';
-import { io } from "../server";
-import { Room } from "../Room";
-import { RoomController } from "../RoomController";
-import { GET_SONG_URL, GET_TOP_QUEUE, HOST_ROOM_URL, JOIN_ROOM_URL } from "./urls";
+import { HOST_ROOM_URL, JOIN_ROOM_URL, buildUrl } from "./urls";
 import { handle_get } from "./routerWrapper";
+import { roomContoller } from "../server";
+import asyncHandler from 'express-async-handler';
 
 const router = Router();
-const roomContoller = new RoomController();
 
 /*
 router.get("/get_song_from_url/:room_id/:url", asyncHandler(
@@ -27,29 +24,32 @@ router.get("/get_song_from_url/:room_id/:url", asyncHandler(
 
 // joins a room with the room_id if exists
 // if not exists returns a response with “Invalid ID” status
-const joinRoom = (paramsMap: { [key: string]: any }) => roomContoller.joinRoom(paramsMap['room_id'])
-handle_get(joinRoom, JOIN_ROOM_URL, 'room_id')
-
-// hosts a new room and returns a response with the new room_id
-router.get(HOST_ROOM_URL, asyncHandler(
+router.get(buildUrl(JOIN_ROOM_URL, 'room_id'), asyncHandler(
     async (req, res) => {
+        const room_id = req.params.room_id
         try {
-            const result = roomContoller.hostRoom('');
-            console.log(result)
-            res.send({status: 'ok', content: result})
-        } catch (error) {
-            res.send({status: 'error', content: error})
+            const result = roomContoller.joinRoom(room_id)
+            res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
+        } catch (error: any) {
+            res.send({status: 'error', content: error.message})
         }
     }
 ))
 
-// returns a response with the song that currently playing in the room with room_id
-// if not exists returns a response with “Invalid ID” status
-const getCurrentSong = (paramsMap: { [key: string]: any }) => roomContoller.get_current_song(paramsMap['room_id'])
-handle_get(getCurrentSong, GET_SONG_URL, 'room_id')
+// hosts a new room and returns a response with the new room_id
+router.get(buildUrl(HOST_ROOM_URL), asyncHandler(
+    async (req, res) => {
+        try {
+            const result = roomContoller.hostRoom('') //fixme
+            res.send({status: result ? 'ok' : 'error', content: result})
+        } catch (error: any) {
+            res.send({status: 'error', content: error.message})
+        }
+    }
+))
+
+
  
 
 
-
-   
-   export default router;
+export default router;

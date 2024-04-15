@@ -1,6 +1,5 @@
 import { Song } from "./Song";
 import { Queue,SongsQueue } from "./Queue"; // Assuming Queue is exported from a separate file
-const redis = require('redis');
 
 
 class Room {
@@ -36,11 +35,11 @@ class Room {
         return this.songsQueue.getCurrentSong();
     }
 
-    add_song_from_url(url : string) : any {//returns a promise
+    add_song_from_url(url : string) : Promise<void> {//returns a promise
         return this.songsQueue.addToQueueFromUrl(url);
     }
 
-    add_song_from_name_id(id : string) : any {//returns a promise
+    add_song_from_name_id(id : string) : Promise<any> {//returns a promise
         return this.songsQueue.addToQueueFromUrl(id);
     }
 
@@ -57,9 +56,22 @@ class Room {
         return this.songsQueue.getCurrentSong();
     }
 
-    get_top_queue(room_id : string) : any{
-        this.songsQueue.get_top2_songs()
+    get_top_queue() : any[]{
+        return this.songsQueue.get_top2_songs()
     } 
+
+    get_all_queue() : any[]{
+        return this.songsQueue.get_all_queue()
+    }
+
+    
+    remove_song_from_queue(song_to_remove_position : number){
+        this.songsQueue.remove_song_from_queue(song_to_remove_position);
+    }
+
+    add_song_to_queue(song_name : string ,song_author : string): Promise<void>{
+        return this.songsQueue.addToQueueByName(song_name,song_author)
+    }
 
 }
 
