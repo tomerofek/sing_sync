@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueueService } from 'src/app/services/queue.service';
+import { ResponseService } from 'src/app/services/response.service';
 import { RoomService } from 'src/app/services/room.service';
 import { SongService } from 'src/app/services/song.service';
 import { Response } from 'src/app/shared/models/Response';
@@ -20,38 +21,39 @@ export class RoomViewComponent implements OnInit {
   top_queue?: Song[];
   songService!: SongService;
   queueService!: QueueService;
+  responseService!: ResponseService;
 
-  constructor(activatedRoute:ActivatedRoute, roomService:RoomService,
+  constructor(activatedRoute:ActivatedRoute, roomService:RoomService, responseService:ResponseService,
     songService:SongService, queueService:QueueService, private router: Router) { 
       activatedRoute.params.subscribe((params) => {
         if(params.roomid) this.room_id = params.roomid;
       });
     this.songService = songService;
     this.queueService = queueService;
-      //TODO: check if we got room id
+    this.responseService = responseService;
     let res: Response<void> | null = null;
     roomService.join_room(this.room_id).subscribe(data => res = {...data});
     //TODO: place holder for now, need to show error message
-    if(res === null || (<Response<void>>res).status != 'ok'){
+    if(res === null || responseService.isError(res)){
       this.router.navigateByUrl('');
     }
     let songRes: Response<Song> | null = null;
     songService.get_song(this.room_id).subscribe(data => songRes = {...data});
     //TODO: display error message
-    if(songRes === null || (<Response<Song>>songRes).status != 'ok'){
+    if(songRes === null || responseService.isError(songRes)){
       
     }
     else{
-      this.song = (<Response<Song>>songRes).content;
+      this.song = responseService.getContent(songRes);
     }
     let queueRes: Response<Song[]> | null = null;
     queueService.get_top_queue(this.room_id).subscribe(data => queueRes = {...data});
     //TODO: display error message
-    if(queueRes === null || (<Response<Song[]>>queueRes).status != 'ok'){
+    if(queueRes === null || responseService.isError(queueRes)){
       
     }
     else{
-      this.top_queue = (<Response<Song[]>>queueRes).content;
+      this.top_queue = responseService.getContent(queueRes);
     }
     this.current_song_part_index = this.getCurrentSongPartIndex();
   }
@@ -63,11 +65,11 @@ export class RoomViewComponent implements OnInit {
     let linesRes: Response<number> | null = null;
     this.songService.advance_position(this.room_id).subscribe(data => linesRes = {...data});
     //TODO
-    if(linesRes === null || (<Response<number>>linesRes).status != 'ok'){
+    if(linesRes === null || this.responseService.isError(linesRes)){
       
     }
     else{
-      this.current_song_part_index = (<Response<number>>linesRes).content;
+      this.current_song_part_index = this.responseService.getContent(linesRes);
     }
     /*if(this.current_song_part_index != undefined)
       this.current_song_part_index++;*/
@@ -78,11 +80,11 @@ export class RoomViewComponent implements OnInit {
     let linesRes: Response<number> | null = null;
     this.songService.previous_position(this.room_id).subscribe(data => linesRes = {...data});
     //TODO
-    if(linesRes === null || (<Response<number>>linesRes).status != 'ok'){
+    if(linesRes === null || this.responseService.isError(linesRes)){
       
     }
     else{
-      this.current_song_part_index = (<Response<number>>linesRes).content;
+      this.current_song_part_index = this.responseService.getContent(linesRes);
     }
     /*if(this.current_song_part_index != undefined)
       this.current_song_part_index--;*/
@@ -96,29 +98,29 @@ export class RoomViewComponent implements OnInit {
       let songRes: Response<Song> | null = null;
       this.songService.advance_song(this.room_id).subscribe(data => songRes = {...data});
       //TODO: display error message
-      if(songRes === null || (<Response<Song>>songRes).status != 'ok'){
+      if(songRes === null || this.responseService.isError(songRes)){
         
       }
       else{
-        this.song = (<Response<Song>>songRes).content;
+        this.song = this.responseService.getContent(songRes);
       }
       let linesRes: Response<number> | null = null;
       this.songService.get_position(this.room_id).subscribe(data => linesRes = {...data});
       //TODO: display error message
-      if(linesRes === null || (<Response<number>>linesRes).status != 'ok'){
+      if(linesRes === null || this.responseService.isError(linesRes)){
         
       }
       else{
-        this.current_song_part_index = (<Response<number>>linesRes).content;
+        this.current_song_part_index = this.responseService.getContent(linesRes);
       }
       let queueRes: Response<Song[]> | null = null;
       this.queueService.get_top_queue(this.room_id).subscribe(data => queueRes = {...data});
       //TODO: display error message
-      if(queueRes === null || (<Response<Song[]>>queueRes).status != 'ok'){
+      if(queueRes === null || this.responseService.isError(queueRes)){
         
       }
       else{
-        this.top_queue = (<Response<Song[]>>queueRes).content;
+        this.top_queue = this.responseService.getContent(queueRes);
       }
     }
   }
@@ -136,16 +138,41 @@ export class RoomViewComponent implements OnInit {
     let linesRes: Response<number> | null = null;
     this.songService.get_position(this.room_id).subscribe(data => linesRes = {...data});
     //TODO
-    if(linesRes === null || (<Response<number>>linesRes).status != 'ok'){
+    if(linesRes === null || this.responseService.isError(linesRes)){
       return 0;
     }
     else{
-      return <number>((<Response<number>>linesRes).content);
+      return <number>this.responseService.getContent(linesRes);
     }
   }
 
   onLastSongPart(){
     this.is_last_song_part = true;
+  }
+
+  onSongAdd(){
+    if(!this.song){
+      let songRes: Response<Song> | null = null;
+      this.songService.get_song(this.room_id).subscribe(data => songRes = {...data});
+      //TODO: display error message
+      if(songRes === null || this.responseService.isError(songRes)){
+      
+      }
+      else{
+        this.song = this.responseService.getContent(songRes);
+      }
+    }
+    if(this.top_queue && this.top_queue.length<2){
+      let queueRes: Response<Song[]> | null = null;
+      this.queueService.get_top_queue(this.room_id).subscribe(data => queueRes = {...data});
+      //TODO: display error message
+      if(queueRes === null || this.responseService.isError(queueRes)){
+      
+      }
+      else{
+        this.top_queue = this.responseService.getContent(queueRes);
+      }
+    }
   }
   
   

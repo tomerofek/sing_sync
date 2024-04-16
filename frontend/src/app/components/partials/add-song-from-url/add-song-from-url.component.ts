@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'add-song-from-url',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-song-from-url.component.css']
 })
 export class AddSongFromUrlComponent implements OnInit {
+
+  @Input() room_id!: string;
 
   constructor() { }
 

@@ -13,13 +13,14 @@
             </button>
         </div>
     </div>
-    <div class="search-results">
+    <div class="search-results" *ngIf="found_results">
         <ol>        
             <li *ngFor="let song of results" dir="rtl" (click)="addSongToQ(song)">
                 {{song.song_name}} - {{song.song_author}}
             </li>
         </ol>
     </div>
+    <div class="search-results" *ngIf="!found_results">no results</div>
 </div>
 
 

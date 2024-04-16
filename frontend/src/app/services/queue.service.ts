@@ -44,9 +44,10 @@ export interface IQueueService {
   /**
    * add a song to the queue
    * @param room_id 
-   * @param song_id 
+   * @param song_name
+   * @param song_author
    */
-  add_song_to_queue(room_id:string, song_id:string): Observable<Response<void>>;
+  add_song_to_queue(room_id:string, song_name:string, song_author:string): Observable<Response<void>>;
 
   /**
    * get a song from the provided url
@@ -108,11 +109,11 @@ export class QueueService implements IQueueService{
     return this.fake.search_song_from_db(song_name, song_author);
   }
 
-  add_song_to_queue(room_id:string, song_id:string): Observable<Response<void>>{
+  add_song_to_queue(room_id:string, song_name:string, song_author: string): Observable<Response<void>>{
     if(this.real !== null){
-      return this.real.add_song_to_queue(room_id, song_id);
+      return this.real.add_song_to_queue(room_id, song_name, song_author);
     }
-    return this.fake.add_song_to_queue(room_id, song_id);
+    return this.fake.add_song_to_queue(room_id, song_name, song_author);
   }
 
   get_song_from_url(room_id:string, song_url:string): Observable<Response<Song[]>>{
@@ -154,8 +155,8 @@ export class RealQueueService implements IQueueService{
     return this.httpClient.get<Response<Song[]>>(SEARCH_SONG_FROM_DB + song_name + '/' + song_author);
   }
 
-  add_song_to_queue(room_id:string, song_id:string): Observable<Response<void>>{
-    return this.httpClient.get<Response<void>>(ADD_SONG_TO_QUEUE + room_id + '/' + song_id);
+  add_song_to_queue(room_id:string, song_name:string, song_author:string): Observable<Response<void>>{
+    return this.httpClient.get<Response<void>>(ADD_SONG_TO_QUEUE + room_id + '/' + song_name + '/' + song_author);
   }
 
   get_song_from_url(room_id:string, song_url:string): Observable<Response<Song[]>>{
@@ -207,11 +208,11 @@ export class FakeQueueService implements IQueueService{
   }
 
   search_song_from_db(song_name:string, song_author:string): Observable<Response<Song[]>>{
-    throw new Error("Unimplemented");
+    return of({status:"ok", content:[new Song("song1","author1"), new Song("song2","author2")]})
   }
 
-  add_song_to_queue(room_id:string, song_id:string): Observable<Response<void>>{
-    throw new Error("Unimplemented");
+  add_song_to_queue(room_id:string, song_name:string, song_author:string): Observable<Response<void>>{
+    return of({status:"ok"});
   }
 
   get_song_from_url(room_id:string, song_url:string): Observable<Response<Song[]>>{

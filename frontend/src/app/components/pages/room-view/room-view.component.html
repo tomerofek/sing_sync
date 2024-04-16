@@ -19,7 +19,7 @@
         </div>
 
         <div class="main">
-            <queue [topOfQ]="top_queue" [room_id]="room_id"></queue>
+            <queue (onSongAddEvent)="onSongAdd()" [topOfQ]="top_queue" [room_id]="room_id"></queue>
             <song-content (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song"></song-content>
         </div>
 

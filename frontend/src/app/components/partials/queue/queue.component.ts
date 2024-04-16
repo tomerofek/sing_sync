@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { QueueViewComponent } from '../../pages/queue-view/queue-view.component';
 import { AddSongViewComponent } from '../../pages/add-song-view/add-song-view.component';
@@ -14,13 +14,23 @@ export class QueueComponent implements OnInit {
 
   @Input() topOfQ? : Song[];
   @Input() room_id!: string;
+  @Output() onSongAddEvent = new EventEmitter<void>();
   firstInQ?: Song;
   secondInQ?: Song;
 
   constructor(private dialog: MatDialog) {
     if(this.topOfQ !== undefined){
-      this.firstInQ = this.topOfQ.shift();
-      this.secondInQ = this.topOfQ.shift();
+      if(this.topOfQ.length > 1){
+        this.firstInQ = this.topOfQ[0];
+        this.secondInQ = this.topOfQ[1];
+      }
+      else if(this.topOfQ.length > 0){
+        this.firstInQ = this.topOfQ[0];
+        this.secondInQ = undefined;
+      } else{
+        this.firstInQ = undefined;
+        this.secondInQ = undefined;
+      }
     }
   
   }
@@ -49,7 +59,11 @@ export class QueueComponent implements OnInit {
   }
 
   showAddSongDialog(): void {
-    this.dialog.open(AddSongViewComponent);
+    const dialogRef = this.dialog.open(AddSongViewComponent, {data:this.room_id});
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+        this.onSongAddEvent.emit();
+    })
   }
 
 }
