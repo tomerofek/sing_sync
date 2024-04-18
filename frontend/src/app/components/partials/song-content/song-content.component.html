@@ -10,9 +10,9 @@
             </div>
         </label>
     </div>
-    <div *ngIf="song && song.song_body && current_part_index != undefined" class="song-lines">
+    <div *ngIf="song && song.song_parted_body && current_part_index != undefined" class="song-lines">
         <ul class="lines-ul">
-            <li *ngFor="let songLine of song.song_body[current_part_index]">
+            <li *ngFor="let songLine of song.song_parted_body[current_part_index]">
                 <div *ngIf="songLine.type=='lyrics'; then LyricBlock; else ChordBlock"></div>
                 <ng-template #LyricBlock>
                     <div *ngIf="!isEmptyLine(songLine); then NormalBlock; else EmptyBlock"></div>

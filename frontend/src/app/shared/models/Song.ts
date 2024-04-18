@@ -3,24 +3,31 @@ import { SongLine } from "./SongLine";
 export class Song{
     song_name!: string;
     song_author!: string;
-    song_body?: SongLine[][];
+    song_body?: SongLine[];
+    song_parted_body?: SongLine[][];
+    
 
     constructor(name: string, author: string, body?: SongLine[]){
         this.song_name = name;
         this.song_author = author;
+        this.song_body = body;
+        this.song_parted_body = [];
         if(body){
-            this.separate_body(body);
+            this.separate_body();
         }
     }
 
-    private separate_body(body: SongLine[]){
+    separate_body(){
+        if(this.song_parted_body || !this.song_body)
+            return;
+
         var max_visible_lines = 12;
         var min_visible_lines = 6;
-        this.song_body = [];
+        this.song_parted_body = [];
 
         var current_part : SongLine[] = [];
         var last_line : SongLine;
-        body.forEach(line => {
+        this.song_body.forEach(line => {
             if(current_part.length == 0 && this.isEmptyLine(line))
                 return;
 
@@ -29,7 +36,7 @@ export class Song{
                     current_part.push(line);
                     
             else{
-                this.song_body?.push(current_part);
+                this.song_parted_body?.push(current_part);
                 current_part = this.isEmptyLine(line) ? [] : [line];
             }
 
@@ -38,7 +45,7 @@ export class Song{
         });
 
         if(current_part.length > 0)
-            this.song_body?.push(current_part);
+            this.song_parted_body?.push(current_part);
     }
 
     private isEmptyLine(line: SongLine) : boolean{

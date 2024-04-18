@@ -48,7 +48,7 @@ export class SongContentComponent implements OnInit, OnChanges {
   
 
   emitIfLastPart(){
-    if(this.current_part_index != undefined && this.current_part_index + 1  == this.song?.song_body?.length)
+    if(this.current_part_index != undefined && this.current_part_index + 1  == this.song?.song_parted_body?.length)
       this.onLastPartEvent.emit();
   }
 

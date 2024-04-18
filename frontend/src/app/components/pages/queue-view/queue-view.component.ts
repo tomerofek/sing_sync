@@ -23,16 +23,17 @@ export class QueueViewComponent implements OnInit {
     this.queueService = queueService;
     this.responseService = responseService;
     let res: Response<Song[]> | null = null;
-    queueService.get_all_queue(this.room_id).subscribe(data => res = {...data});
-    //TODO: place holder for now, need to show error message
-    if(res === null || responseService.isError(res)){
-
-    } else{
-      this.queue = responseService.getContent(res) ?? [];
-    }
-    if(this.queue.length > 0)
-      this.currentSong = this.queue[0];
-   }
+    queueService.get_all_queue(this.room_id).subscribe(data => {res = {...data}
+      //TODO: place holder for now, need to show error message
+      if(res === null || responseService.isError(res)){
+  
+      } else{
+        this.queue = responseService.getContent(res) ?? [];
+      }
+      if(this.queue.length > 0)
+        this.currentSong = this.queue[0];
+     });
+  }
 
   ngOnInit(): void {
   }

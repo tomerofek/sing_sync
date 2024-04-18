@@ -47,6 +47,8 @@ export class RoomViewComponent implements OnInit {
       }
       else{
         this.song = responseService.getContent(songRes);
+        console.log(this.song);
+        this.song?.separate_body();
       }
     });
     let queueRes: Response<Song[]> | null = null;
