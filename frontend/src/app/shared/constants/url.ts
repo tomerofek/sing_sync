@@ -1,6 +1,6 @@
 import { environment } from "src/environments/environment";
 
-const BASE_URL = environment.production? '' : 'http://localhost:5000';
+export const BASE_URL = environment.production? '' : 'http://localhost:5000';
 
 // export const FOODS_URL = BASE_URL + '/api/foods';
 // export const FOODS_TAGS_URL = FOODS_URL + '/tags';
@@ -10,7 +10,7 @@ const BASE_URL = environment.production? '' : 'http://localhost:5000';
 
 export const ROOMS_URL = BASE_URL + '/api/rooms';
 export const JOIN_ROOM_URL = ROOMS_URL + '/join_room/';
-export const HOST_ROOM_URL = ROOMS_URL + '/host_toom';
+export const HOST_ROOM_URL = ROOMS_URL + '/host_room';
 
 export const SONGS_URL = BASE_URL + '/api/songs';
 export const GET_SONG_URL = SONGS_URL + '/get_song/';

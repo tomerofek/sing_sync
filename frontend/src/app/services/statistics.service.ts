@@ -16,7 +16,7 @@ export class StatisticsService implements IStatisticsService{
   private real: IStatisticsService | null;
   private fake: IStatisticsService;
   constructor(private httpClient:HttpClient) {
-    this.real = null;
+    this.real = new StatisticsService(httpClient);
     this.fake = new FakeStatisticsService();
    }
 
