@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { HOST_ROOM_URL, JOIN_ROOM_URL, buildUrl } from "./urls";
 import { handle_get } from "./routerWrapper";
-import { roomContoller } from "../server";
+import { roomContoller, io } from "../server";
 import asyncHandler from 'express-async-handler';
 
 const router = Router();

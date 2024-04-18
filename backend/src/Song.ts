@@ -82,7 +82,7 @@ export class Song {
     private songData: JSON | null; // JSON object containing song data
     private songName: string; // Name of the song
     private songAuthor: string; // Author of the song
-
+    private songBody : any // list of JSON - each is a line
 
 
 
@@ -104,6 +104,8 @@ export class Song {
       const id_for_db = this.getSongName() + "_" + this.getSongAuthor();
       return getSongJSON(id_for_db).then((result) => {
         this.songData = result;
+        this.songBody = this.songData
+        console.log(this);
         //below is what we do after the resolve
     }).catch((error) => {
         this.songData = null;
@@ -115,6 +117,7 @@ export class Song {
     scrape_song(url: string): Promise<void> {
       return this.webScraper.url2song(url).then((result) => {
           this.songData = JSON.parse(JSON.stringify(result)); // Parse back to JSON
+          this.songBody = this.songData;
           this.songName = result.song_name;
           this.songAuthor = result.song_author;
       });

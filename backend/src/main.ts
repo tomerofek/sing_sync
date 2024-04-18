@@ -12,11 +12,11 @@ const queUWU = new SongsQueue();
 
 //easy
 //console.log((queUWU.getCurrentSong()));
-//queUWU.addToQueueFromUrl(url);
+queUWU.addToQueueFromUrl(url);
 
 //queUWU.search_song("","חגים ומועדים");
 
-//queUWU.addToQueueByName(" (פסח) מה נשתנה","חגים ומועדים" );
+queUWU.addToQueueByName(" (פסח) מה נשתנה","חגים ומועדים" );
 
 
 
@@ -29,7 +29,4 @@ const encodedUrl = encodeURIComponent(url);
 
 const roomController = new RoomController()
 roomController.hostRoom("");
-roomController.add_song_to_queue("0","38","פאר טסי")
-roomController.add_song_to_queue("0","38","פאר טסי")
-roomController.add_song_to_queue("0","38","פאר טסי")
-roomController.get_song_from_url("0",url).then(() => console.log(roomController.get_top_queue("0")))
+

@@ -10,7 +10,7 @@ export async function getSongNames(song_name : string ,song_author : string): Pr
     return new Promise(async (resolve, reject) => {
 
       //legth check
-      if(song_name.length < 2 || song_author.length < 2){
+      if(song_name.length < 2 && song_author.length < 2){
           reject(new Error("not enough characters to seach"));
       }
 
