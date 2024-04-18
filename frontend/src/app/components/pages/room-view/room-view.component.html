@@ -1,0 +1,36 @@
+<div class="back">
+    <div class="content">
+        <div class="top">
+            <h1 class="roomid">
+                #{{room_id}}
+            </h1>
+            <div class="song-info">
+                <div>
+                    <h1 class="song-title" *ngIf="song && song.song_name">
+                        {{song.song_name}}
+                    </h1>
+                </div>
+                <div>
+                    <p class="song-author" *ngIf="song && song.song_author">
+                        {{song.song_author}}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main">
+            <queue (onSongAddEvent)="onSongAdd()" [topOfQ]="top_queue" [room_id]="room_id"></queue>
+            <song-content (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song"></song-content>
+        </div>
+
+        <div class="navigation">
+            <div class="filler"></div>
+            <div class="buttons">
+                <mat-icon *ngIf="current_song_part_index!=0" class="prev-page-btn" (click)="prev_lines()">chevron_left</mat-icon>
+                <mat-icon *ngIf="!is_last_song_part" class="next-page-btn" (click)="next_lines()">chevron_right</mat-icon>
+                <mat-icon *ngIf="has_next_song()" class="next-song-btn" (click)="next_song()">last_page</mat-icon>
+            </div>
+        </div>
+
+    </div>
+</div>

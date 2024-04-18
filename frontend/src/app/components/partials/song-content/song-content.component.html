@@ -1,0 +1,39 @@
+<div class="content">
+    <div class="switch-div">
+        <div class="p1">show chords:&emsp;</div>
+        <label class="switch">
+            <input type="checkbox">
+            <div class="slider" (click)="switchChords()"></div>
+            <div class="slider-card">
+              <div class="slider-card-face slider-card-front"></div>
+              <div class="slider-card-face slider-card-back"></div>
+            </div>
+        </label>
+    </div>
+    <div *ngIf="song && song.song_body && current_part_index != undefined" class="song-lines">
+        <ul class="lines-ul">
+            <li *ngFor="let songLine of song.song_body[current_part_index]">
+                <div *ngIf="songLine.type=='lyrics'; then LyricBlock; else ChordBlock"></div>
+                <ng-template #LyricBlock>
+                    <div *ngIf="!isEmptyLine(songLine); then NormalBlock; else EmptyBlock"></div>
+                    <ng-template #NormalBlock>
+                        <p class="lyrics">{{songLine.content}}</p>
+                    </ng-template>
+                    <ng-template #EmptyBlock>
+                        <br>
+                        <br>
+                    </ng-template>
+                </ng-template>
+                <ng-template #ChordBlock>
+                    <div *ngIf="show_chords; then Chords; else Empty"></div>
+                    <ng-template #Chords>
+                        <p class="chords">{{songLine.content}}</p>
+                    </ng-template>
+                    <ng-template #Empty>
+                        <p class="invisible-chords">{{songLine.content}}</p>
+                    </ng-template>
+                </ng-template>
+            </li>
+        </ul>
+    </div>
+</div>

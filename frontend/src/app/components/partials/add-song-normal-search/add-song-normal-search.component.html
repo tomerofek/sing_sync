@@ -1,0 +1,26 @@
+<div class="content">
+    <div class="search-wrap">
+        <div class="search-bar">
+            <select #s name="search by" id="by" class="search-type" (change)="updateSearchBar(s.value)">
+                <option value="name" class="op">name</option>
+                <option value="author">author</option>
+                <option value="both">both</option>
+            </select>
+            <input *ngIf="search_type != 'author'" type="text" [(ngModel)]="name_input" class="search-input" (keyup.enter)="searchSongs()" placeholder="song name">
+            <input *ngIf="search_type != 'name'" type="text" [(ngModel)]="author_input" class="search-input" (keyup.enter)="searchSongs()" placeholder="song author">
+            <button class="search-btn" (click)="searchSongs()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="search-results" *ngIf="found_results">
+        <ol>        
+            <li *ngFor="let song of results" dir="rtl" (click)="addSongToQ(song)">
+                {{song.song_name}} - {{song.song_author}}
+            </li>
+        </ol>
+    </div>
+    <div class="search-results" *ngIf="!found_results">no results</div>
+</div>
+
+
