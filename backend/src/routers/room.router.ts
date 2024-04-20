@@ -41,7 +41,7 @@ router.get(buildUrl(HOST_ROOM_URL), asyncHandler(
     async (req, res) => {
         try {
             const result = roomContoller.hostRoom('') //fixme
-            res.send({status: result ? 'ok' : 'error', content: result})
+            res.send({status: result != undefined ? 'ok' : 'error', content: result})
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
         }

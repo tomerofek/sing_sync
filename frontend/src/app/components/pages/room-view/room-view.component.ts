@@ -36,6 +36,8 @@ export class RoomViewComponent implements OnInit {
     roomService.join_room(this.room_id).subscribe(data => {res = {...data}
       //TODO: place holder for now, need to show error message
       if(res === null || responseService.isError(res)){
+        console.log('error in getting song in constructor');
+        console.log(res);
         this.router.navigateByUrl('');
       }
     });
@@ -43,19 +45,22 @@ export class RoomViewComponent implements OnInit {
     songService.get_song(this.room_id).subscribe(data => {songRes = {...data}
       //TODO: display error message
       if(songRes === null || responseService.isError(songRes)){
-        
+        console.log('error in getting position in constructor');
+        console.log(songRes);
       }
       else{
         this.song = responseService.getContent(songRes);
-        console.log(this.song);
-        this.song?.separate_body();
+        //console.log(this.song);
+        if(this.song)
+          this.song = this.songService.separate_song_body(this.song);
       }
     });
     let queueRes: Response<Song[]> | null = null;
     queueService.get_top_queue(this.room_id).subscribe(data => {queueRes = {...data}
       //TODO: display error message
       if(queueRes === null || responseService.isError(queueRes)){
-        
+        console.log('error in getting top_queue in constructor');
+        console.log(queueRes);
       }
       else{
         this.top_queue = responseService.getContent(queueRes);
@@ -74,7 +79,8 @@ export class RoomViewComponent implements OnInit {
     this.songService.advance_position(this.room_id).subscribe(data => {linesRes = {...data}
       //TODO
       if(linesRes === null || this.responseService.isError(linesRes)){
-        
+        console.log('error in getting position in next_lines click');
+        console.log(linesRes);
       }
       else{
         this.current_song_part_index = this.responseService.getContent(linesRes);
@@ -90,7 +96,8 @@ export class RoomViewComponent implements OnInit {
     this.songService.previous_position(this.room_id).subscribe(data => {linesRes = {...data}
       //TODO
       if(linesRes === null || this.responseService.isError(linesRes)){
-        
+        console.log('error in getting position in new song');
+        console.log(linesRes);
       }
       else{
         this.current_song_part_index = this.responseService.getContent(linesRes);
@@ -111,17 +118,21 @@ export class RoomViewComponent implements OnInit {
       this.songService.advance_song(this.room_id).subscribe(data => {songRes = {...data}
         //TODO: display error message
         if(songRes === null || this.responseService.isError(songRes)){
-          
+          console.log('error in getting song in next_song click');
+          console.log(songRes);
         }
         else{
           this.song = this.responseService.getContent(songRes);
+          if(this.song)
+            this.song = this.songService.separate_song_body(this.song);
         }
       });
       let linesRes: Response<number> | null = null;
       this.songService.get_position(this.room_id).subscribe(data => {linesRes = {...data}
         //TODO: display error message
         if(linesRes === null || this.responseService.isError(linesRes)){
-          
+          console.log('error in getting position in next_song click');
+          console.log(linesRes);
         }
         else{
           this.current_song_part_index = this.responseService.getContent(linesRes);
@@ -131,7 +142,8 @@ export class RoomViewComponent implements OnInit {
       this.queueService.get_top_queue(this.room_id).subscribe(data => {queueRes = {...data}
         //TODO: display error message
         if(queueRes === null || this.responseService.isError(queueRes)){
-          
+          console.log('error in getting top_queue in next_song click');
+          console.log(queueRes);
         }
         else{
           this.top_queue = this.responseService.getContent(queueRes);
@@ -155,6 +167,8 @@ export class RoomViewComponent implements OnInit {
         const linesRes: Response<number> = {...data};
         //TODO
         if(linesRes === null || this.responseService.isError(linesRes)){
+          console.log('error in getting position in getCurrentSongPartIndex');
+          console.log(linesRes);
           return 0;
         }
         else{
@@ -169,29 +183,46 @@ export class RoomViewComponent implements OnInit {
   }
 
   onSongAdd(){
+    console.log('about to update song');
+    console.log(this.song);
     if(!this.song){
       let songRes: Response<Song> | null = null;
       this.songService.get_song(this.room_id).subscribe(data => {songRes = {...data}
         //TODO: display error message
         if(songRes === null || this.responseService.isError(songRes)){
-        
+          console.log('error in getting song in new song');
+          console.log(songRes);
         }
         else{
           this.song = this.responseService.getContent(songRes);
         }
+        let posRes: Response<number> | null = null;
+        this.songService.get_position(this.room_id).subscribe(data => {posRes = {...data}
+          //TODO: display error message
+          if(posRes === null || this.responseService.isError(posRes)){
+            console.log('error in getting position in new song');
+            console.log(posRes);
+          }
+          else{
+            this.current_song_part_index = this.responseService.getContent(posRes);
+          }
+        });
       });
       
     }
     if(this.top_queue && this.top_queue.length<2){
       let queueRes: Response<Song[]> | null = null;
-      this.queueService.get_top_queue(this.room_id).subscribe(data => queueRes = {...data});
-      //TODO: display error message
-      if(queueRes === null || this.responseService.isError(queueRes)){
-      
-      }
-      else{
-        this.top_queue = this.responseService.getContent(queueRes);
-      }
+      this.queueService.get_top_queue(this.room_id).subscribe(data => {
+        queueRes = {...data}
+        //TODO: display error message
+        if(queueRes === null || this.responseService.isError(queueRes)){
+          console.log('error in getting top_queue in new song');
+          console.log(queueRes);
+        }
+        else{
+          this.top_queue = this.responseService.getContent(queueRes);
+        }  
+      });
     }
   }
   

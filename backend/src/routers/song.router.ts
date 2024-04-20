@@ -33,8 +33,10 @@ router.get(buildUrl(GET_POSITION, 'room_id'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
         try {
+            console.log(`[LOG] recieved GET POSITOIN request. params: ${room_id}`)
             const result = roomContoller.get_current_position(room_id)
-            res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
+            res.send({status: result != undefined ? 'ok' : 'error', content: result}) //FIX ME
+            console.log('[LOG] result: ' + result)
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
         }
@@ -48,8 +50,10 @@ router.get(buildUrl(ADVANCE_POSITION, 'room_id'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
         try {
+            console.log(`[LOG] recieved ADVANCE_POSITION request. params: ${room_id}`)
             const result = roomContoller.advance_position(room_id)
-            res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
+            res.send({status: result != undefined ? 'ok' : 'error', content: result}) //FIX ME
+            console.log('[LOG] result: ' + result)
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
         }
@@ -62,8 +66,10 @@ router.get(buildUrl(PREVIOUS_POSITION, 'room_id'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
         try {
+            console.log(`[LOG] recieved PREVIOUS_POSITION request. params: ${room_id}`)
             const result = roomContoller.previous_position(room_id)
-            res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
+            res.send({status: result != undefined ? 'ok' : 'error', content: result}) //FIX ME
+            console.log('[LOG] result: ' + result)
         } catch (error) {
             res.send({status: 'error', content: error})
         }
@@ -76,8 +82,10 @@ router.get(buildUrl(ADVANCE_SONG, 'room_id'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
         try {
+            console.log(`[LOG] recieved ADVANCE_SONG request. params: ${room_id}`)
             const result = roomContoller.advance_song(room_id)
             res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
+            console.log('[LOG] result: ' + result)
         } catch (error) {
             res.send({status: 'error', content: error})
         }

@@ -12,11 +12,14 @@ export class Song{
         this.song_author = author;
         this.song_body = body;
         this.song_parted_body = [];
+        /*
         if(body){
             this.separate_body();
         }
+        */
     }
 
+    /*
     separate_body(){
         if(this.song_parted_body || !this.song_body)
             return;
@@ -51,5 +54,6 @@ export class Song{
     private isEmptyLine(line: SongLine) : boolean{
         return line.content == undefined || line.content == '';
     }
+    */
 }
 
