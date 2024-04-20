@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { QueueService } from 'src/app/services/queue.service';
 import { ResponseService } from 'src/app/services/response.service';
@@ -22,20 +22,21 @@ export class QueueViewComponent implements OnInit {
     this.room_id = room_id;
     this.queueService = queueService;
     this.responseService = responseService;
+    
+  }
+
+  ngOnInit(): void {
     let res: Response<Song[]> | null = null;
-    queueService.get_all_queue(this.room_id).subscribe(data => {res = {...data}
+    this.queueService.get_all_queue(this.room_id).subscribe(data => {res = {...data}
       //TODO: place holder for now, need to show error message
-      if(res === null || responseService.isError(res)){
+      if(res === null || this.responseService.isError(res)){
   
       } else{
-        this.queue = responseService.getContent(res) ?? [];
+        this.queue = this.responseService.getContent(res) ?? [];
       }
       if(this.queue.length > 0)
         this.currentSong = this.queue[0];
      });
-  }
-
-  ngOnInit(): void {
   }
 
 }
