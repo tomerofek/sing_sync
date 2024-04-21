@@ -15,12 +15,12 @@ router.get(buildUrl(GET_SONG_URL, 'room_id'), asyncHandler(
         try {
             console.log(`[LOG] recieved GET SONG request. params: ${room_id}`)
             const result : Song = roomContoller.get_current_song(room_id)
-            let song_body = result.getSongData();
+            let song_body = result.getSongBody();
             let song_name = result.getSongName();
             let song_author = result.getSongAuthor();
-            let json_to_send = {}
+            let json_to_send = {song_name : song_name, song_author : song_author, song_body : song_body}
             console.log('[LOG] result: ' + result)
-            res.send({status: result ? 'ok' : 'error', content: "lol"}) //FIX ME
+            res.send({status: json_to_send ? 'ok' : 'error', content: "lol"}) //FIX ME
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
         }

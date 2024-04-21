@@ -79,7 +79,7 @@ async function getSongJSON(id : string): Promise<any> {
 
 export class Song {
     private webScraper : WebScraper;
-    private songData: JSON | null; // JSON object containing song data
+    private songData: any; // JSON object containing song data
     private songName: string; // Name of the song
     private songAuthor: string; // Author of the song
     private songBody : any // list of JSON - each is a line
@@ -104,8 +104,7 @@ export class Song {
       const id_for_db = this.getSongName() + "_" + this.getSongAuthor();
       return getSongJSON(id_for_db).then((result) => {
         this.songData = result;
-        this.songBody = this.songData
-        console.log(this);
+        this.songBody = this.songData['song_body']
         //below is what we do after the resolve
     }).catch((error) => {
         this.songData = null;
@@ -154,6 +153,10 @@ export class Song {
         return this.songAuthor;
     }
 
+    getSongBody(): any {
+      return this.songBody;
+    }
+    
     // Method to set the JSON object of the song data
     setSongData(newSongData: JSON): void {
         this.songData = newSongData;
