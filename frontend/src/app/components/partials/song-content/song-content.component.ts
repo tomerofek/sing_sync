@@ -30,6 +30,12 @@ export class SongContentComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['current_part_index'])
       this.emitIfLastPart();
+    if(changes['song']){
+      //console.log('ngOnChanges in SongContentComponent', changes);
+      //console.log('song changes:');
+      //console.log(this.song);
+    }
+      
   }
 
   ngOnInit(): void {
@@ -48,7 +54,7 @@ export class SongContentComponent implements OnInit, OnChanges {
   
 
   emitIfLastPart(){
-    if(this.current_part_index != undefined && this.current_part_index + 1  == this.song?.song_body?.length)
+    if(this.current_part_index != undefined && this.current_part_index + 1  == this.song?.song_parted_body?.length)
       this.onLastPartEvent.emit();
   }
 

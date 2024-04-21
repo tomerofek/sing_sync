@@ -176,16 +176,16 @@ export class SongsQueue{
 
     advance_position_in_song() : number {
       //returns the index which is the next part in the song (might want to change to status)
-      return this.current_position_in_song++;
+      return ++this.current_position_in_song;
     }
 
-    //retuned -1 in case of error
+    //throw error if position <= 0
     previous_position_in_song() : number {
       //returns the index which is the previous part in the song (might want to change to status)
-      if(this.current_position_in_song > 0){
-        return -1;
-      }
-      return this.current_position_in_song--;
+      if(this.current_position_in_song <= 0)
+        throw new Error("there is no previous position");
+      
+      return --this.current_position_in_song;
     }
 
     //returns the current song

@@ -32,8 +32,6 @@ export class HomeViewComponent implements OnInit {
         window.alert(res === null ? "response is null" : this.responseService.getContent(res));
       }
       else{
-        console.log('noder');
-        console.log(res);
         this.router.navigateByUrl('/room/' + this.responseService.getContent(res));
       }
     });

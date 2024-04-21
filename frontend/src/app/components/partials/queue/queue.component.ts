@@ -10,7 +10,7 @@ import { Song } from 'src/app/shared/models/Song';
   templateUrl: './queue.component.html',
   styleUrls: ['./queue.component.css']
 })
-export class QueueComponent implements OnInit {
+export class QueueComponent implements OnInit, OnChanges {
 
   @Input() topOfQ? : Song[];
   @Input() room_id!: string;
@@ -19,35 +19,15 @@ export class QueueComponent implements OnInit {
   secondInQ?: Song;
 
   constructor(private dialog: MatDialog) {
-    if(this.topOfQ !== undefined){
-      if(this.topOfQ.length > 1){
-        this.firstInQ = this.topOfQ[0];
-        this.secondInQ = this.topOfQ[1];
-      }
-      else if(this.topOfQ.length > 0){
-        this.firstInQ = this.topOfQ[0];
-        this.secondInQ = undefined;
-      } else{
-        this.firstInQ = undefined;
-        this.secondInQ = undefined;
-      }
-    }
-  
+    //if topOfQ is undefined or dosn't have an element in a spesific index then the corresponding variable will be undefined.
+    this.firstInQ = this.topOfQ?.[0];
+    this.secondInQ = this.topOfQ?.[1];
   }
 
   ngOnChanges(changes: SimpleChanges){
-    if(this.topOfQ !== undefined){
-      if(this.topOfQ.length > 1){
-        this.firstInQ = this.topOfQ[0];
-        this.secondInQ = this.topOfQ[1];
-      }
-      else if(this.topOfQ.length > 0){
-        this.firstInQ = this.topOfQ[0];
-        this.secondInQ = undefined;
-      } else{
-        this.firstInQ = undefined;
-        this.secondInQ = undefined;
-      }
+    if(changes['topOfQ']){
+      this.firstInQ = this.topOfQ?.[0];
+      this.secondInQ = this.topOfQ?.[1];
     }
   }
 
