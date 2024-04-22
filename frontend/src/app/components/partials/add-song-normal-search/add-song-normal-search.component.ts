@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
+import { NotificationService } from 'src/app/services/notification.service';
 import { QueueService } from 'src/app/services/queue.service';
 import { ResponseService } from 'src/app/services/response.service';
 import { SongService } from 'src/app/services/song.service';
@@ -19,15 +21,11 @@ export class AddSongNormalSearchComponent implements OnInit {
   search_type: string = 'name';
   @Input() room_id!: string;
   @Output() onSongAddEvent = new EventEmitter<void>();
-  songService!: SongService;
-  queueService!: QueueService;
-  responseService!: ResponseService;
   found_results: boolean = true;
 
-  constructor(songService:SongService, queueService:QueueService, responseService:ResponseService) {
-    this.songService = songService;
-    this.queueService = queueService;
-    this.responseService = responseService;
+  constructor(private songService:SongService, private queueService:QueueService, private responseService:ResponseService,
+    private snackBar: MatSnackBar, private notificationService: NotificationService) {
+
   }
 
   ngOnInit(): void {
@@ -39,9 +37,7 @@ export class AddSongNormalSearchComponent implements OnInit {
     let songRes: Response<Song[]> | null = null;
     this.queueService.search_song_from_db(name,author).subscribe(data => {
       songRes = {...data}
-      //console.log(songRes)
-      //console.log(this.responseService.getContent(songRes))
-      //TODO: display error message
+      // TODO: show error message
       if(songRes === null || this.responseService.isError(songRes)){
         this.results = [];
       }
@@ -53,22 +49,6 @@ export class AddSongNormalSearchComponent implements OnInit {
       this.name_input = ''; this.author_input = '';
     });
 
-
-
-
-
-
-
-
-
-    /*
-    this.normal_search_service_call().subscribe(data => {
-      this.results = {...data}
-      this.found_results = this.results.length !== 0
-      this.name_input = ''; this.author_input = '';
-      console.log(data);
-      console.log({...data});
-    })*/
     
   }
 
@@ -76,12 +56,13 @@ export class AddSongNormalSearchComponent implements OnInit {
     let res: Response<void> | null = null;
     this.queueService.add_song_to_queue(this.room_id,song.song_name,song.song_author).subscribe(data => {
       res = {...data}
-      //TODO: display error message
       if(res === null || this.responseService.isError(res)){
+        this.notificationService.openSnackBarError(this.snackBar, res==null ? 'Error: null response' : `Error: ${this.responseService.getError(res)}`);
         
       } else{
-        //TODO: display success message
         this.onSongAddEvent.emit();
+        this.notificationService.openSnackBar(this.snackBar, `added ${song.song_name} - ${song.song_author}`);
+        
       }
     });
   }
@@ -98,26 +79,5 @@ export class AddSongNormalSearchComponent implements OnInit {
     }
   }
 
-  private normal_search_service_call(): Observable<Song[]>{
-    return new Observable<Song[]>((observer) => {
-      let name: string = this.name_input === '' ? '$' : this.name_input;
-      let author: string = this.author_input === '' ? '$' : this.author_input;
-      let songRes: Response<Song[]> | null = null;
-      this.queueService.search_song_from_db(name,author).subscribe(data => {
-        songRes = {...data}
-        //console.log(songRes)
-        //console.log(this.responseService.getContent(songRes))
-        //TODO: display error message
-        if(songRes === null || this.responseService.isError(songRes)){
-          return [];
-        }
-        else{
-          return this.responseService.getContent(songRes) ?? [];
-        }
-      });
-    });
-  }
-
   // TODO: search button only clickable when one of the field has length >=2 (with enter just do nothing)
-
 }

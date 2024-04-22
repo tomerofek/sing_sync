@@ -15,4 +15,8 @@ export class ResponseService {
   getContent<T>(response:Response<T>):T|undefined{
     return response.content;
   }
+
+  getError(response:Response<any>):string{
+    return response.error ? '' : <string>response.error;
+  }
 }

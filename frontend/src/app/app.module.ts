@@ -26,6 +26,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { AddSongNormalSearchComponent } from './components/partials/add-song-normal-search/add-song-normal-search.component';
 import { AddSongFromUrlComponent } from './components/partials/add-song-from-url/add-song-from-url.component';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
@@ -59,7 +60,8 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     MatDialogModule,
     MatTabsModule,
-    FormsModule
+    FormsModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
