@@ -51,7 +51,7 @@ export class RoomViewComponent implements OnInit {
   }
 
   sendHello(message: string) {
-    this.roomService.sendHello(message, this.room_id);
+    this.songService.sendHello(message, this.room_id);
   }
 
   next_lines():void{

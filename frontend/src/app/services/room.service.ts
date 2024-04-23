@@ -35,14 +35,6 @@ export class RoomService implements IRoomService{
     }
     return this.fake.host_room();
   }
-
-  //  send hello to server
-  sendHello(message: string, room_id: string) {
-    this.http_client.post(SEND_HELLO_URL+ room_id, { message: message })
-        .subscribe(response => {
-            console.log(response);
-        });
-  }
 }
 
 export class RealRoomService implements IRoomService{
