@@ -18,6 +18,7 @@ export const GET_POSITION = SONGS_URL + '/get_position/';
 export const ADVANCE_POSITION = SONGS_URL + '/advance_position/';
 export const PREVIOUS_POSITION = SONGS_URL + '/previous_position/';
 export const ADVANCE_SONG = SONGS_URL + '/advance_song/';
+export const SEND_HELLO_URL = SONGS_URL + '/send_hello/';
 
 export const QUEUES_URL = BASE_URL + '/api/queues';
 export const GET_TOP_QUEUE = QUEUES_URL + '/get_top_queue/';

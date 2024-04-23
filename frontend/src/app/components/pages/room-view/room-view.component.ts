@@ -7,6 +7,7 @@ import { RoomService } from 'src/app/services/room.service';
 import { SongService } from 'src/app/services/song.service';
 import { Response } from 'src/app/shared/models/Response';
 import { Song } from 'src/app/shared/models/Song';
+import { WebsocketService } from 'src/app/services/websocket.service'; // Import the SocketService
 
 @Component({
   selector: 'app-room-view',
@@ -15,6 +16,8 @@ import { Song } from 'src/app/shared/models/Song';
 })
 export class RoomViewComponent implements OnInit {
 
+  broadcastMessage: string = 'None';
+  message: string = '';
   current_song_part_index?: number;
   is_last_song_part?: boolean;
   room_id!: string;
@@ -22,7 +25,7 @@ export class RoomViewComponent implements OnInit {
   top_queue?: Song[];
 
   constructor(activatedRoute:ActivatedRoute, private roomService:RoomService, private responseService:ResponseService,
-    private songService:SongService, private queueService:QueueService, private router: Router) { 
+    private songService:SongService, private queueService:QueueService, private router: Router,private socketService: WebsocketService) { 
       activatedRoute.params.subscribe((params) => {
         if(params.roomid) this.room_id = params.roomid;
       });
@@ -40,6 +43,15 @@ export class RoomViewComponent implements OnInit {
   ngOnInit(): void {
     this.getSong();
     this.getTopQ();
+    this.socketService.io_connect(this.room_id);
+    this.socketService.listenForBroadcasts();
+      this.socketService.broadcastReceived.subscribe((msg) => {
+        this.broadcastMessage = msg;
+    });
+  }
+
+  sendHello(message: string) {
+    this.roomService.sendHello(message, this.room_id);
   }
 
   next_lines():void{

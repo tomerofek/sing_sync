@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import io from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 import { EventEmitter } from '@angular/core';
 import { BASE_URL } from '../shared/constants/url';
 
@@ -8,17 +8,23 @@ import { BASE_URL } from '../shared/constants/url';
 })
 export class WebsocketService {
   
-  private socket;
+  private socket: Socket | null; 
   public broadcastReceived = new EventEmitter<string>();
 
   constructor() {
-    this.socket = io(BASE_URL);
+    this.socket = null;
+  }
+
+  io_connect(room_id: string) {
+    this.socket = io(`${BASE_URL}?room_id=${room_id}`);
   }
 
   listenForBroadcasts() {
-    this.socket.on('broadcast', (msg) => {
-      console.log('Received broadcast from server:', msg);
-      this.broadcastReceived.emit(msg);
-    });
+    if (this.socket) {
+      this.socket.on('broadcast', (msg) => {
+        console.log('Received broadcast from server:', msg);
+        this.broadcastReceived.emit(msg);
+      });
+    }
   }
 }

@@ -51,18 +51,22 @@ export const io = new Server(httpServer, {
   });
 
 
-io.on("connection", socket => {
-    console.log("New client connected");
-    socket.on("disconnect", () => {
-        console.log("Client disconnected");
-    });
-});
+  io.on('connection', (socket) => {
+    console.log('New client connected');
 
-// send broadcast to all clients after post request
-app.post("/api/hello", (req, res) => {
-    const message = req.body.message; // Assuming the message is sent in the request body
-    io.emit("broadcast", message);
-    res.send({status : "ok"});
+    // Extract room name from socket handshake query
+    const room_id = socket.handshake.query.room_id;
+
+    // Join the room
+    if (room_id){
+        socket.join(room_id);
+
+        console.log(`Client joined room: ${room_id}`);
+
+        socket.on('disconnect', () => {
+            console.log('Client disconnected');
+        });
+    }
 });
 
 

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JOIN_ROOM_URL, HOST_ROOM_URL } from '../shared/constants/url';
+import { JOIN_ROOM_URL, HOST_ROOM_URL, SEND_HELLO_URL } from '../shared/constants/url';
 import { Response } from '../shared/models/Response';
 import { Observable, of } from 'rxjs';
 
@@ -34,6 +34,14 @@ export class RoomService implements IRoomService{
       return this.real.host_room();
     }
     return this.fake.host_room();
+  }
+
+  //  send hello to server
+  sendHello(message: string, room_id: string) {
+    this.http_client.post(SEND_HELLO_URL+ room_id, { message: message })
+        .subscribe(response => {
+            console.log(response);
+        });
   }
 }
 

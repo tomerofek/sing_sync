@@ -33,4 +33,9 @@
         </div>
 
     </div>
+    <p>Hello World</p>
+    <input [(ngModel)]="message" placeholder="Enter message">
+    <button (click)="sendHello(message)">Send Message</button>
+    <p>{{ broadcastMessage }}</p>
 </div>
+

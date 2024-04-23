@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { roomContoller } from "../server";
-import { ADVANCE_POSITION, ADVANCE_SONG, GET_POSITION, GET_SONG_URL, GET_TOP_QUEUE, HOST_ROOM_URL, JOIN_ROOM_URL, PREVIOUS_POSITION, buildUrl } from "./urls";
+import { io, roomContoller } from "../server";
+import { ADVANCE_POSITION, ADVANCE_SONG, GET_POSITION, GET_SONG_URL, GET_TOP_QUEUE, HOST_ROOM_URL, JOIN_ROOM_URL, PREVIOUS_POSITION, SEND_HELLO_URL, buildUrl } from "./urls";
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
 import { Song } from "../Song";
@@ -89,6 +89,18 @@ router.get(buildUrl(ADVANCE_SONG, 'room_id'), asyncHandler(
         } catch (error) {
             res.send({status: 'error', content: error})
         }
+    }
+))
+
+router.post(buildUrl(SEND_HELLO_URL, 'room_id'), asyncHandler(
+    async (req, res) => {
+        const room_id = req.params.room_id
+        const message = req.body.message; // Assuming the message is sent in the request body
+        // Debugging
+        // console.log(`Room ID: ${room_id}`);
+        // console.log(`Message: ${message}`);
+        io.to(room_id).emit("broadcast", message);
+        res.send({status : "ok"});
     }
 ))
 
