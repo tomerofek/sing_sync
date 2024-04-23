@@ -25,9 +25,7 @@ export const STATISTICS_URL = '/api/statistics';
 export const GET_WEEKLY_TOP_10 = '/get_weekly_top_10';
 
 export const buildUrl = (url: string, ...params: string[]) => {
-    const result = url + (params.length > 0 ? '/:' : '') + params.join('/:')
-    console.log(result)
-    return result
+    return url + (params.length > 0 ? '/:' : '') + params.join('/:')
 }
 
 

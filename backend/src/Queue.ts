@@ -51,10 +51,10 @@ export async function getSongNames(song_name : string ,song_author : string): Pr
       }
     });
   }
-  //song info interface
+  //song info interface. lior was here
   export interface SongInfo {
-    songName: string;
-    songAuthor: string;
+    song_name: string; // changed from songName
+    song_author: string; // changed from songAuthor
   }
 
   //replace this class with thread safe one
@@ -242,11 +242,10 @@ export class SongsQueue{
       return names_author_list;
     }
 
-  
+    
+    //lior was here, make sure it is fine with the rest of the backend.
     private make_songName_songAuthor_json(song: Song): SongInfo {
-      let songName = song.getSongName();
-      let songAuthor = song.getSongAuthor();
-      return { songName, songAuthor };
+      return { song_name: song.getSongName(), song_author: song.getSongAuthor() };
     }
 
   }

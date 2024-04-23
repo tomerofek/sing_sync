@@ -19,8 +19,9 @@ router.get(buildUrl(GET_SONG_URL, 'room_id'), asyncHandler(
             let song_name = result.getSongName();
             let song_author = result.getSongAuthor();
             let json_to_send = {song_name : song_name, song_author : song_author, song_body : song_body}
-            console.log('[LOG] result: ' + result)
+            console.log('[LOG] result: ' + result);
             res.send({status: json_to_send ? 'ok' : 'error', content: json_to_send}) //FIX ME
+
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
         }
@@ -84,8 +85,12 @@ router.get(buildUrl(ADVANCE_SONG, 'room_id'), asyncHandler(
         try {
             console.log(`[LOG] recieved ADVANCE_SONG request. params: ${room_id}`)
             const result = roomContoller.advance_song(room_id)
-            res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
-            console.log('[LOG] result: ' + result)
+            let song_body = result.getSongBody();
+            let song_name = result.getSongName();
+            let song_author = result.getSongAuthor();
+            let json_to_send = {song_name : song_name, song_author : song_author, song_body : song_body}
+            console.log('[LOG] result: ' + json_to_send);
+            res.send({status: json_to_send ? 'ok' : 'error', content: json_to_send}) //FIX ME
         } catch (error) {
             res.send({status: 'error', content: error})
         }

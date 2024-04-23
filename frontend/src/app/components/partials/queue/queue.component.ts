@@ -28,6 +28,7 @@ export class QueueComponent implements OnInit, OnChanges {
     if(changes['topOfQ']){
       this.firstInQ = this.topOfQ?.[0];
       this.secondInQ = this.topOfQ?.[1];
+      console.log('ngOnChange for topOfQ: ', this.firstInQ, this.secondInQ);
     }
   }
 
