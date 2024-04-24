@@ -143,6 +143,7 @@ export class SongsQueue{
         this.addToQueue(song)
         //add the song to the database
         await add_song_to_db(song);
+        console.log(song)
         //this resolve is for debugging the song should be added to the queue by now
         resolve();
       })
@@ -190,6 +191,9 @@ export class SongsQueue{
 
     //returns the current song
     getCurrentSong() : Song | undefined{
+      if(this.songsQueue.isEmpty()){
+        return undefined;
+      }
       return this.songsQueue.peek();
       //TODO broadcast notification to the other users using express
     }
