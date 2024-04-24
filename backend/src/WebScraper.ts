@@ -13,7 +13,7 @@ export class WebScraper {
 
     async add_song_name($: cheerio.Root, song_dict: ScrapedSong): Promise<void> {
         const title = $('h1').first();
-        song_dict.song_name = title.children().first().text().trim();
+        song_dict.song_name = $('[itemprop="name"]').eq(3).text();
     }
 
     async add_song_author($: cheerio.Root, song_dict: ScrapedSong): Promise<void> {
