@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationService } from 'src/app/services/notification.service';
 import { ResponseService } from 'src/app/services/response.service';
 import { RoomService } from 'src/app/services/room.service';
 import { Response } from 'src/app/shared/models/Response';
@@ -11,7 +13,9 @@ import { Response } from 'src/app/shared/models/Response';
 })
 export class HomeViewComponent implements OnInit {
 
-  constructor(activatedRoute:ActivatedRoute, private router:Router, private roomService: RoomService, private responseService: ResponseService) {
+  constructor(activatedRoute:ActivatedRoute, private router:Router, private roomService: RoomService, private responseService: ResponseService,
+    private notificationService: NotificationService, private snackBar: MatSnackBar
+  ) {
    }
 
   ngOnInit(): void {
@@ -29,6 +33,8 @@ export class HomeViewComponent implements OnInit {
     this.roomService.host_room().subscribe(data => {res = {...data}
       // TODO: show an error message
       if(res === null || this.responseService.isError(res)){
+        console.log(res)
+        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
         window.alert(res === null ? "response is null" : this.responseService.getContent(res));
       }
       else{

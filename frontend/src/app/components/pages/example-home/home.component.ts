@@ -1,3 +1,4 @@
+/*
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -31,6 +32,7 @@ export class HomeComponent implements OnInit {
     sendHello(message: string) {
         this.foodService.sendHello(message);
     }
+
     getSongFromUrl(roomId: string, url: string) {
       this.foodService.getSongFromUrl(roomId, url).subscribe(response => {
         this.songResponse = response;
@@ -39,3 +41,4 @@ export class HomeComponent implements OnInit {
 
     
   }
+  */

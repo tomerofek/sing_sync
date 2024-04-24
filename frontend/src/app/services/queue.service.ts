@@ -54,7 +54,7 @@ export interface IQueueService {
    * @param room_id 
    * @param song_url 
    */
-  get_song_from_url(room_id:string, song_url:string): Observable<Response<Song[]>>;
+  get_song_from_url(room_id:string, song_url:string): Observable<Response<Song>>;
 
   /*
   add_custom_song(room_id:string, song:Song): Observable<Response<void>>;
@@ -116,7 +116,7 @@ export class QueueService implements IQueueService{
     return this.fake.add_song_to_queue(room_id, song_name, song_author);
   }
 
-  get_song_from_url(room_id:string, song_url:string): Observable<Response<Song[]>>{
+  get_song_from_url(room_id:string, song_url:string): Observable<Response<Song>>{
     if(this.real !== null){
       return this.real.get_song_from_url(room_id, song_url);
     }
@@ -159,8 +159,8 @@ export class RealQueueService implements IQueueService{
     return this.httpClient.get<Response<void>>(ADD_SONG_TO_QUEUE + room_id + '/' + song_name + '/' + song_author);
   }
 
-  get_song_from_url(room_id:string, song_url:string): Observable<Response<Song[]>>{
-    return this.httpClient.get<Response<Song[]>>(GET_SONG_FROM_URL + room_id + '/' + song_url);
+  get_song_from_url(room_id:string, song_url:string): Observable<Response<Song>>{
+    return this.httpClient.get<Response<Song>>(GET_SONG_FROM_URL + room_id + '/' + song_url);
   }
 
   /*
@@ -215,7 +215,7 @@ export class FakeQueueService implements IQueueService{
     return of({status:"ok"});
   }
 
-  get_song_from_url(room_id:string, song_url:string): Observable<Response<Song[]>>{
+  get_song_from_url(room_id:string, song_url:string): Observable<Response<Song>>{
     throw new Error("Unimplemented");
   }
 

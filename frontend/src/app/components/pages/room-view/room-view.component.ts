@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { NotificationService } from 'src/app/services/notification.service';
 import { QueueService } from 'src/app/services/queue.service';
 import { ResponseService } from 'src/app/services/response.service';
 import { RoomService } from 'src/app/services/room.service';
@@ -22,13 +24,13 @@ export class RoomViewComponent implements OnInit {
   top_queue?: Song[];
 
   constructor(activatedRoute:ActivatedRoute, private roomService:RoomService, private responseService:ResponseService,
-    private songService:SongService, private queueService:QueueService, private router: Router) { 
+    private songService:SongService, private queueService:QueueService, private router: Router,
+    private notificationService: NotificationService, private snackBar: MatSnackBar) { 
       activatedRoute.params.subscribe((params) => {
         if(params.roomid) this.room_id = params.roomid;
       });
     let res: Response<void> | null = null;
     roomService.join_room(this.room_id).subscribe(data => {res = {...data}
-      //TODO: place holder for now, need to show error message
       if(res === null || responseService.isError(res)){
         console.log('error in getting song in constructor');
         console.log(res);
@@ -45,10 +47,10 @@ export class RoomViewComponent implements OnInit {
   next_lines():void{
     let linesRes: Response<number> | null = null;
     this.songService.advance_position(this.room_id).subscribe(data => {linesRes = {...data}
-      //TODO
       if(linesRes === null || this.responseService.isError(linesRes)){
         console.log('error in getting position in next_lines click');
         console.log(linesRes);
+        this.notificationService.openSnackBarError(this.snackBar, linesRes === null ? 'result is null' : this.responseService.getError(linesRes))
       }
       else{
         this.current_song_part_index = this.responseService.getContent(linesRes);
@@ -59,32 +61,27 @@ export class RoomViewComponent implements OnInit {
   prev_lines():void{
     let linesRes: Response<number> | null = null;
     this.songService.previous_position(this.room_id).subscribe(data => {linesRes = {...data}
-      //TODO
       if(linesRes === null || this.responseService.isError(linesRes)){
         console.log('error in getting position in new song');
         console.log(linesRes);
+        this.notificationService.openSnackBarError(this.snackBar, linesRes === null ? 'result is null' : this.responseService.getError(linesRes))
       }
       else{
         this.current_song_part_index = this.responseService.getContent(linesRes);
       }
       
     });
-    
-    /*if(this.current_song_part_index != undefined)
-      this.current_song_part_index--;*/
     this.is_last_song_part = false;
   }
 
-  //should be service call
   next_song():void{
-    //window.alert('requested next song');
     if(this.has_next_song()){
       let songRes: Response<Song> | null = null;
       this.songService.advance_song(this.room_id).subscribe(data => {songRes = {...data}
-        //TODO: display error message
         if(songRes === null || this.responseService.isError(songRes)){
           console.log('error in getting song in next_song click');
           console.log(songRes);
+          this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
         }
         else{
           const newSong: Song | undefined = this.responseService.getContent(songRes);
@@ -122,15 +119,17 @@ export class RoomViewComponent implements OnInit {
   getSong(): void{
     let songRes: Response<Song> | null = null;
     this.songService.get_song(this.room_id).subscribe(data => {songRes = {...data}
-      //TODO: display error message
+
       if(songRes === null || this.responseService.isError(songRes)){
         console.log('error in getting position');
         console.log(songRes);
+        this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
       }
       else{
         const songResContent : Song | undefined = this.responseService.getContent(songRes);
         this.song = songResContent ? this.songService.separate_song_body(songResContent) : songResContent
-        this.getCurrentSongPartIndex();
+        if(songResContent)
+          this.getCurrentSongPartIndex();
       }
     });
   }
@@ -138,10 +137,10 @@ export class RoomViewComponent implements OnInit {
   getTopQ(): void{
     let queueRes: Response<Song[]> | null = null;
     this.queueService.get_top_queue(this.room_id).subscribe(data => {queueRes = {...data}
-      //TODO: display error message
       if(queueRes === null || this.responseService.isError(queueRes)){
         console.log('error in getting top_queue in constructor');
         console.log(queueRes);
+        this.notificationService.openSnackBarError(this.snackBar, queueRes === null ? 'result is null' : this.responseService.getError(queueRes))
       }
       else{
         this.top_queue = this.responseService.getContent(queueRes);
@@ -152,11 +151,11 @@ export class RoomViewComponent implements OnInit {
   getCurrentSongPartIndex(): void{
     this.songService.get_position(this.room_id).subscribe(data => {
       const linesRes: Response<number> = {...data};
-      //TODO
       if(linesRes === null || this.responseService.isError(linesRes)){
         console.log('error in getting position in getCurrentSongPartIndex');
         console.log(linesRes);
         this.current_song_part_index = 0;
+        this.notificationService.openSnackBarError(this.snackBar, linesRes === null ? 'result is null' : this.responseService.getError(linesRes))
       }
       else{
         this.current_song_part_index = this.responseService.getContent(linesRes);

@@ -40,6 +40,8 @@ export class AddSongNormalSearchComponent implements OnInit {
       // TODO: show error message
       if(songRes === null || this.responseService.isError(songRes)){
         this.results = [];
+        console.log(songRes)
+        this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
       }
       else{
         this.results = this.responseService.getContent(songRes) ?? [];
@@ -57,6 +59,7 @@ export class AddSongNormalSearchComponent implements OnInit {
     this.queueService.add_song_to_queue(this.room_id,song.song_name,song.song_author).subscribe(data => {
       res = {...data}
       if(res === null || this.responseService.isError(res)){
+        console.log(res)
         this.notificationService.openSnackBarError(this.snackBar, res==null ? 'Error: null response' : `Error: ${this.responseService.getError(res)}`);
         
       } else{

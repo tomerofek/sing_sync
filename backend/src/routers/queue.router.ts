@@ -94,7 +94,7 @@ router.get(buildUrl(ADD_SONG_TO_QUEUE, 'room_id', 'song_name', 'song_author'), a
 router.get(buildUrl(GET_SONG_FROM_URL, 'room_id', 'url'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
-        const url = decodeURI(req.params.url)
+        const url = decodeURIComponent(req.params.url)
         try {
             await roomContoller.get_song_from_url(room_id, url)
             res.send({status : 'ok'})
