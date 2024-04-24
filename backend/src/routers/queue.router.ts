@@ -3,6 +3,7 @@ import { roomContoller } from "../server";
 import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE} from "./urls";
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
+import { SongInfo } from "../Queue";
 const router = Router()
 
 
@@ -96,8 +97,8 @@ router.get(buildUrl(GET_SONG_FROM_URL, 'room_id', 'url'), asyncHandler(
         const room_id = req.params.room_id
         const url = decodeURIComponent(req.params.url)
         try {
-            await roomContoller.get_song_from_url(room_id, url)
-            res.send({status : 'ok'})
+            const ret : SongInfo = await roomContoller.get_song_from_url(room_id, url)
+            res.send({status : 'ok',content : ret})
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
         }

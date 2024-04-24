@@ -133,7 +133,7 @@ export class SongsQueue{
 
     
     //add song using url to the db and insert to queue
-    async addToQueueFromUrl(url : string) : Promise<void> {
+    async addToQueueFromUrl(url : string) : Promise<SongInfo> {
       return new Promise(async (resolve) => {
         //make empty song
         const song = new Song("","");
@@ -144,8 +144,9 @@ export class SongsQueue{
         //add the song to the database
         await add_song_to_db(song);
         console.log(song)
+        const songInfo : SongInfo = {song_name : song.getSongName(), song_author : song.getSongAuthor()}
         //this resolve is for debugging the song should be added to the queue by now
-        resolve();
+        resolve(songInfo);
       })
 
     }

@@ -1,5 +1,5 @@
 import { Room } from "./Room";
-import { getSongNames} from "./Queue"
+import { SongInfo, getSongNames} from "./Queue"
 export class RoomController {
     sharedBuffer : SharedArrayBuffer;// 4 bytes for a 32-bit integer
     next_id : Int32Array;
@@ -117,7 +117,7 @@ export class RoomController {
 
         //adds a song to the queue using the url - concatanation of name and author and returns the added song
         //this function throw massages but on web scraping or db uploading the error will be in the promise returned value
-        get_song_from_url(room_id : string ,url : string): Promise<void>{
+        get_song_from_url(room_id : string ,url : string): Promise<SongInfo>{
             //checks if the the room exists if yes add the song
             let room = this.rooms.get(room_id);
             if (!room) {

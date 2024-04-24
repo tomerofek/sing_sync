@@ -1,5 +1,5 @@
 import { Song } from "./Song";
-import { Queue,SongsQueue } from "./Queue"; // Assuming Queue is exported from a separate file
+import { Queue,SongInfo,SongsQueue } from "./Queue"; // Assuming Queue is exported from a separate file
 
 
 class Room {
@@ -35,7 +35,7 @@ class Room {
         return this.songsQueue.getCurrentSong();
     }
 
-    add_song_from_url(url : string) : Promise<void> {//returns a promise
+    add_song_from_url(url : string) : Promise<SongInfo> {//returns a promise
         return this.songsQueue.addToQueueFromUrl(url);
     }
 
