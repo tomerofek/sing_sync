@@ -17,7 +17,7 @@
                 <ng-template #LyricBlock>
                     <div *ngIf="!isEmptyLine(songLine); then NormalBlock; else EmptyBlock"></div>
                     <ng-template #NormalBlock>
-                        <p class="lyrics">{{songLine.content}}</p>
+                        <p class="lyrics" dir="rtl">{{songLine.content}}</p>
                     </ng-template>
                     <ng-template #EmptyBlock>
                         <br>
@@ -27,7 +27,7 @@
                 <ng-template #ChordBlock>
                     <div *ngIf="show_chords; then Chords; else Empty"></div>
                     <ng-template #Chords>
-                        <p class="chords">{{songLine.content}}</p>
+                        <p class="chords" dir="rtl">{{songLine.content}}</p>
                     </ng-template>
                     <ng-template #Empty>
                         <p class="invisible-chords">{{songLine.content}}</p>
