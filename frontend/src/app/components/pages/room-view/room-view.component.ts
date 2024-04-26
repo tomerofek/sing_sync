@@ -9,6 +9,7 @@ import { RoomService } from 'src/app/services/room.service';
 import { SongService } from 'src/app/services/song.service';
 import { Response } from 'src/app/shared/models/Response';
 import { Song } from 'src/app/shared/models/Song';
+import { WebsocketService } from 'src/app/services/websocket.service'; // Import the SocketService
 
 @Component({
   selector: 'app-room-view',
@@ -25,7 +26,7 @@ export class RoomViewComponent implements OnInit {
 
   constructor(activatedRoute:ActivatedRoute, private roomService:RoomService, private responseService:ResponseService,
     private songService:SongService, private queueService:QueueService, private router: Router,
-    private notificationService: NotificationService, private snackBar: MatSnackBar) { 
+    private notificationService: NotificationService, private snackBar: MatSnackBar, private socketService: WebsocketService) {
       activatedRoute.params.subscribe((params) => {
         if(params.roomid) this.room_id = params.roomid;
       });
@@ -42,6 +43,27 @@ export class RoomViewComponent implements OnInit {
   ngOnInit(): void {
     this.getSong();
     this.getTopQ();
+    this.socketService.io_connect(this.room_id);
+
+    this.socketService.listenForPositions();
+      this.socketService.positionReceived.subscribe((num) => {
+        this.current_song_part_index = num;
+    });
+
+    this.socketService.listenForBroadcasts();
+      this.socketService.songReceived.subscribe((song) => {
+        this.song = song;
+    });
+
+    this.socketService.listenForBroadcasts();
+      this.socketService.topOfQueueReceived.subscribe((songs) => {
+        this.top_queue = songs;
+    });
+
+  }
+
+  sendHello(message: string) {
+    this.songService.sendHello(message, this.room_id);
   }
 
   next_lines():void{
@@ -69,7 +91,7 @@ export class RoomViewComponent implements OnInit {
       else{
         this.current_song_part_index = this.responseService.getContent(linesRes);
       }
-      
+
     });
     this.is_last_song_part = false;
   }
@@ -113,7 +135,7 @@ export class RoomViewComponent implements OnInit {
       this.getTopQ();
     }
   }
-  
+
 
   //service calls
   getSong(): void{

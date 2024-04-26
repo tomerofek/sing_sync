@@ -3,7 +3,7 @@ import { Song } from '../shared/models/Song';
 import { SongLine } from '../shared/models/SongLine';
 import { HttpClient } from '@angular/common/http';
 import { Response } from '../shared/models/Response';
-import { GET_SONG_URL, GET_POSITION, ADVANCE_POSITION, PREVIOUS_POSITION, ADVANCE_SONG } from '../shared/constants/url';
+import { GET_SONG_URL, GET_POSITION, ADVANCE_POSITION, PREVIOUS_POSITION, ADVANCE_SONG, SEND_HELLO_URL } from '../shared/constants/url';
 import { Observable, of } from 'rxjs';
 
 export interface ISongService{
@@ -22,6 +22,8 @@ export interface ISongService{
 
 
   generate_test_Song():Song;
+
+  sendHello(message:string, room_id:string): void;
 }
 
 @Injectable({
@@ -34,6 +36,16 @@ export class SongService implements ISongService {
     this.real = new RealSongService(httpClient);
     this.fake = new FakeSongService();
    }
+  
+  //  send hello to server
+  sendHello(message: string, room_id: string) {
+    if(this.real !== null){
+      this.real.sendHello(message, room_id);
+    }
+    else{
+      this.fake.sendHello(message, room_id);
+    }
+  }
 
   get_song(room_id:string): Observable<Response<Song>>{
     if(this.real !== null){
@@ -132,6 +144,14 @@ export class SongService implements ISongService {
 export class RealSongService implements ISongService {
 
   constructor(private httpClient:HttpClient) { }
+
+  //  send hello to server
+  sendHello(message: string, room_id: string) {
+    this.httpClient.post(SEND_HELLO_URL+ room_id, { message: message })
+        .subscribe(response => {
+            console.log(response);
+        });
+  }
 
   get_song(room_id:string): Observable<Response<Song>>{
     return this.httpClient.get<Response<Song>>(GET_SONG_URL + room_id);
@@ -254,6 +274,10 @@ export class FakeSongService implements ISongService {
     this.song_part = 0;
     this.song_num = 0;
    }
+  
+  sendHello(message: string, room_id: string): void {
+    
+  }
 
   get_song(room_id:string): Observable<Response<Song>>{
     if(this.song_num == 0)

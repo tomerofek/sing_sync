@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JOIN_ROOM_URL, HOST_ROOM_URL } from '../shared/constants/url';
+import { JOIN_ROOM_URL, HOST_ROOM_URL, SEND_HELLO_URL } from '../shared/constants/url';
 import { Response } from '../shared/models/Response';
 import { Observable, of } from 'rxjs';
 
