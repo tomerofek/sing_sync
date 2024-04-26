@@ -48,6 +48,22 @@ export class RoomViewComponent implements OnInit {
       this.socketService.broadcastReceived.subscribe((msg) => {
         this.broadcastMessage = msg;
     });
+
+    this.socketService.listenForPositions();
+      this.socketService.positionReceived.subscribe((num) => {
+        this.current_song_part_index = num;
+    });
+
+    this.socketService.listenForBroadcasts();
+      this.socketService.songReceived.subscribe((song) => {
+        this.song = song;
+    });
+
+    this.socketService.listenForBroadcasts();
+      this.socketService.topOfQueueReceived.subscribe((songs) => {
+        this.top_queue = songs;
+    });
+
   }
 
   sendHello(message: string) {

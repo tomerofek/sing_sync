@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { roomContoller } from "../server";
+import { io, roomContoller } from "../server";
 import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE} from "./urls";
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
@@ -17,6 +17,11 @@ router.get(buildUrl(GET_TOP_QUEUE, 'room_id'), asyncHandler(
         const room_id = req.params.room_id
         try {
             const result = roomContoller.get_top_queue(room_id)
+
+            if(result != undefined){
+                io.to(room_id).emit("topOfQueue", result);
+            }
+
             res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
         } catch (error: any) {
             res.send({status: 'error', content: error.message})

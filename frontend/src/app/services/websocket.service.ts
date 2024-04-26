@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import io, { Socket } from 'socket.io-client';
 import { EventEmitter } from '@angular/core';
 import { BASE_URL } from '../shared/constants/url';
+import { Song } from '../shared/models/Song';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,9 @@ export class WebsocketService {
   
   private socket: Socket | null; 
   public broadcastReceived = new EventEmitter<string>();
+  public positionReceived = new EventEmitter<number>();
+  public songReceived = new EventEmitter<Song>();
+  public topOfQueueReceived = new EventEmitter<Song[]>();
 
   constructor() {
     this.socket = null;
@@ -27,4 +31,32 @@ export class WebsocketService {
       });
     }
   }
+
+  listenForPositions() {
+    if (this.socket) {
+      this.socket.on('position', (msg) => {
+        console.log('Position broadcast from server:', msg);
+        this.positionReceived.emit(msg);
+      });
+    }
+  }
+
+  listenForSongs() {
+    if (this.socket) {
+      this.socket.on('song', (msg) => {
+        console.log('Song broadcast from server:', msg);
+        this.songReceived.emit(msg);
+      });
+    }
+  }
+
+  listenForTopOfQueues() {
+    if (this.socket) {
+      this.socket.on('topOfQueue', (msg) => {
+        console.log('Queue broadcast from server:', msg);
+        this.topOfQueueReceived.emit(msg);
+      });
+    }
+  }
+
 }
