@@ -112,7 +112,7 @@ router.get(buildUrl(GET_SONG_FROM_URL, 'room_id', 'url'), asyncHandler(
         const url = decodeURIComponent(req.params.url)
         try {
             const result : SongInfo = await roomController.get_song_from_url(room_id, url)
-            if(result == undefined)1
+            if(result == undefined)
                 throw Error('result is undefined')
 
             let qLen = roomController.get_queue_len(room_id)
@@ -120,7 +120,9 @@ router.get(buildUrl(GET_SONG_FROM_URL, 'room_id', 'url'), asyncHandler(
                 io.to(room_id).emit("topOfQueue", roomController.get_top_queue(room_id));
             
             if(qLen === 1){
-                io.to(room_id).emit("song", roomController.get_current_song(room_id));
+                let songInfo = roomController.get_current_song(room_id);
+                console.log(songInfo)
+                io.to(room_id).emit("song", songInfo);
                 io.to(room_id).emit("position", roomController.get_current_position(room_id));
             }
             res.send({status : 'ok',content : result})

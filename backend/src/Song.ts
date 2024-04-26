@@ -116,7 +116,7 @@ export class Song {
     scrape_song(url: string): Promise<void> {
       return this.webScraper.url2song(url).then((result) => {
           this.songData = JSON.parse(JSON.stringify(result)); // Parse back to JSON
-          this.songBody = this.songData;
+          this.songBody = this.songData['song_body']
           this.songName = result.song_name;
           this.songAuthor = result.song_author;
       });
