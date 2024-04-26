@@ -31,7 +31,7 @@ class Room {
     }
 
     //returns the current song on the queue
-    get_current_song(): any { //returns json(song_name, song_author,song_body,status) 
+    get_current_song(): SongInfo | undefined { //returns json(song_name, song_author,song_body,status) 
         return this.songsQueue.getCurrentSong();
     }
 
@@ -51,16 +51,16 @@ class Room {
         return this.songsQueue.previous_position_in_song();
     }
 
-    advance_song() : any{
+    advance_song() : SongInfo | undefined{
         this.songsQueue.skipSong();
         return this.songsQueue.getCurrentSong();
     }
 
-    get_top_queue() : any[]{
+    get_top_queue() : SongInfo[]{
         return this.songsQueue.get_top2_songs()
     } 
 
-    get_all_queue() : any[]{
+    get_all_queue() : SongInfo[]{
         return this.songsQueue.get_all_queue()
     }
 
@@ -71,6 +71,10 @@ class Room {
 
     add_song_to_queue(song_name : string ,song_author : string): Promise<void>{
         return this.songsQueue.addToQueueByName(song_name,song_author)
+    }
+
+    get_queue_len(): number {
+        return this.songsQueue.get_queue_len()
     }
 
 }

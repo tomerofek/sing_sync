@@ -1,9 +1,10 @@
-import { Router } from "express";
-import { io, roomContoller } from "../server";
-import { ADVANCE_POSITION, ADVANCE_SONG, GET_POSITION, GET_SONG_URL, GET_TOP_QUEUE, HOST_ROOM_URL, JOIN_ROOM_URL, PREVIOUS_POSITION, SEND_HELLO_URL, buildUrl } from "./urls";
+import { Router, response } from "express";
+import { io, roomController } from "../server";
+import { ADVANCE_POSITION, ADVANCE_SONG, GET_POSITION, GET_SONG_URL, GET_TOP_QUEUE, HOST_ROOM_URL, JOIN_ROOM_URL, PREVIOUS_POSITION, buildUrl } from "./urls";
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
 import { Song } from "../Song";
+import { SongInfo } from "../Queue";
 
 const router = Router()
 
@@ -14,13 +15,12 @@ router.get(buildUrl(GET_SONG_URL, 'room_id'), asyncHandler(
         const room_id = req.params.room_id
         try {
             console.log(`[LOG] recieved GET SONG request. params: ${room_id}`)
-            const result : Song = roomContoller.get_current_song(room_id)
-            let song_body = result.getSongBody();
-            let song_name = result.getSongName();
-            let song_author = result.getSongAuthor();
-            let json_to_send = {song_name : song_name, song_author : song_author, song_body : song_body}
+            const result : SongInfo | undefined = roomController.get_current_song(room_id)
+            if(result == undefined && roomController.get_queue_len(room_id) !== 0)
+                throw Error(`result is undefined while queue isn't empty`)
+            
             console.log('[LOG] result: ' + result);
-            res.send({status: json_to_send ? 'ok' : 'error', content: json_to_send}) //FIX ME
+            res.send({status: 'ok', content: result}) //FIX ME
 
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
@@ -35,7 +35,7 @@ router.get(buildUrl(GET_POSITION, 'room_id'), asyncHandler(
         const room_id = req.params.room_id
         try {
             console.log(`[LOG] recieved GET POSITOIN request. params: ${room_id}`)
-            const result = roomContoller.get_current_position(room_id)
+            const result = roomController.get_current_position(room_id)
             res.send({status: result != undefined ? 'ok' : 'error', content: result}) //FIX ME
             console.log('[LOG] result: ' + result)
         } catch (error: any) {
@@ -52,7 +52,7 @@ router.get(buildUrl(ADVANCE_POSITION, 'room_id'), asyncHandler(
         const room_id = req.params.room_id
         try {
             console.log(`[LOG] recieved ADVANCE_POSITION request. params: ${room_id}`)
-            const result = roomContoller.advance_position(room_id)
+            const result = roomController.advance_position(room_id)
 
             if(result != undefined){
                 io.to(room_id).emit("position", result);
@@ -73,7 +73,7 @@ router.get(buildUrl(PREVIOUS_POSITION, 'room_id'), asyncHandler(
         const room_id = req.params.room_id
         try {
             console.log(`[LOG] recieved PREVIOUS_POSITION request. params: ${room_id}`)
-            const result = roomContoller.previous_position(room_id)
+            const result = roomController.previous_position(room_id)
             if(result != undefined){
                 io.to(room_id).emit("position", result);
             }
@@ -93,25 +93,26 @@ router.get(buildUrl(ADVANCE_SONG, 'room_id'), asyncHandler(
         const room_id = req.params.room_id
         try {
             console.log(`[LOG] recieved ADVANCE_SONG request. params: ${room_id}`)
-            const result = roomContoller.advance_song(room_id)
+            const result = roomController.advance_song(room_id)
+            if(result == undefined && roomController.get_queue_len(room_id) > 0)
+                throw Error(`result is undefined and the queue isn't empty`)
 
+            console.log('[LOG] result: ' + result);
+            io.to(room_id).emit("song", result);
+            io.to(room_id).emit("position", roomController.get_current_position(room_id));
 
-            let song_body = result.getSongBody();
-            let song_name = result.getSongName();
-            let song_author = result.getSongAuthor();
-            let json_to_send = {song_name : song_name, song_author : song_author, song_body : song_body}
-            console.log('[LOG] result: ' + json_to_send);
-
-            if(json_to_send != undefined){
-                io.to(room_id).emit("song", json_to_send);
-            }
-            res.send({status: json_to_send ? 'ok' : 'error', content: json_to_send}) //FIX ME
+            const queueRes = roomController.get_top_queue(room_id)
+            if(queueRes == undefined)
+                throw Error('queue result is undefined')
+            io.to(room_id).emit("topOfQueue", queueRes)
+            
+            res.send({status: 'ok', content: result}) //FIX ME
         } catch (error) {
             res.send({status: 'error', content: error})
         }
     }
 ))
-
+/*
 router.post(buildUrl(SEND_HELLO_URL, 'room_id'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
@@ -122,7 +123,7 @@ router.post(buildUrl(SEND_HELLO_URL, 'room_id'), asyncHandler(
         io.to(room_id).emit("broadcast", message);
         res.send({status : "ok"});
     }
-))
+))*/
 
 
 export default router;

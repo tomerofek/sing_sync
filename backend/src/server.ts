@@ -18,7 +18,7 @@ import queueRouter from "./routers/queue.router";
 dbConnect();
 
 
-export const roomContoller = new RoomController()
+export const roomController = new RoomController()
 const app = express();
 app.use(express.json());
 app.use(cors({
@@ -51,7 +51,7 @@ export const io = new Server(httpServer, {
   });
 
 
-  io.on('connection', (socket) => {
+io.on('connection', (socket) => {
     console.log('New client connected');
 
     // Extract room name from socket handshake query

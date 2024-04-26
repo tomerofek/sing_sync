@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { io, roomContoller } from "../server";
+import { io, roomController } from "../server";
 import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE} from "./urls";
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
@@ -17,7 +17,7 @@ router.get(buildUrl(GET_TOP_QUEUE, 'room_id'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
         try {
-            const result = roomContoller.get_top_queue(room_id)
+            const result = roomController.get_top_queue(room_id)
 
             if(result != undefined){
                 io.to(room_id).emit("topOfQueue", result);
@@ -37,7 +37,7 @@ router.get(buildUrl(GET_ALL_QUEUE, 'room_id'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
         try {
-            const result = roomContoller.get_all_queue(room_id)
+            const result = roomController.get_all_queue(room_id)
             res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
@@ -52,7 +52,7 @@ router.get(buildUrl(REMOVE_SONG_FROM_QUEUE, 'room_id', 'song_to_remove_position'
         const room_id = req.params.room_id
         const song_to_remove_position = req.params.song_to_remove_position
         try {
-            roomContoller.remove_song_from_queue(room_id,parseInt(song_to_remove_position))
+            roomController.remove_song_from_queue(room_id,parseInt(song_to_remove_position))
             res.send({status: 'ok'})
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
@@ -68,7 +68,7 @@ router.get(buildUrl(SEARCH_SONG_FROM_DB, 'song_name', 'song_author'), asyncHandl
         const song_author = req.params.song_author === '$' ? '' : req.params.song_author;
         try {
             console.log(`[LOG] recieved SEARCH SONG FROM DB request. params: ${song_name} | ${song_author}`)
-            const result = await roomContoller.search_song_from_db(song_name,song_author);
+            const result = await roomController.search_song_from_db(song_name,song_author);
             console.log(`[LOG] result: ${result}`)
             res.send({status: result ? 'ok' : 'error', content: result}) 
         } catch (error: any) {
@@ -86,7 +86,16 @@ router.get(buildUrl(ADD_SONG_TO_QUEUE, 'room_id', 'song_name', 'song_author'), a
         const song_name = req.params.song_name
         const song_author = req.params.song_author
         try {
-            await roomContoller.add_song_to_queue(room_id, song_name, song_author)
+            await roomController.add_song_to_queue(room_id, song_name, song_author)
+            let qLen = roomController.get_queue_len(room_id) //queue len AFTER the addition of the song
+            if(qLen <= 3)
+                io.to(room_id).emit("topOfQueue", roomController.get_top_queue(room_id));
+            
+            if(qLen === 1){
+                io.to(room_id).emit("song", roomController.get_current_song(room_id));
+                io.to(room_id).emit("position", roomController.get_current_position(room_id));
+            }
+            
             res.send({status : 'ok'}) //FIX ME
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
@@ -102,8 +111,19 @@ router.get(buildUrl(GET_SONG_FROM_URL, 'room_id', 'url'), asyncHandler(
         const room_id = req.params.room_id
         const url = decodeURIComponent(req.params.url)
         try {
-            const ret : SongInfo = await roomContoller.get_song_from_url(room_id, url)
-            res.send({status : 'ok',content : ret})
+            const result : SongInfo = await roomController.get_song_from_url(room_id, url)
+            if(result == undefined)1
+                throw Error('result is undefined')
+
+            let qLen = roomController.get_queue_len(room_id)
+            if(qLen <= 3)
+                io.to(room_id).emit("topOfQueue", roomController.get_top_queue(room_id));
+            
+            if(qLen === 1){
+                io.to(room_id).emit("song", roomController.get_current_song(room_id));
+                io.to(room_id).emit("position", roomController.get_current_position(room_id));
+            }
+            res.send({status : 'ok',content : result})
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
         }

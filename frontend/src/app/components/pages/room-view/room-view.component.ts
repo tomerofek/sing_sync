@@ -43,19 +43,23 @@ export class RoomViewComponent implements OnInit {
   ngOnInit(): void {
     this.getSong();
     this.getTopQ();
-    this.socketService.io_connect(this.room_id);
 
+    //subscribe for broadcasts
+    this.socketService.io_connect(this.room_id);
     this.socketService.listenForPositions();
       this.socketService.positionReceived.subscribe((num) => {
         this.current_song_part_index = num;
     });
 
-    this.socketService.listenForBroadcasts();
+    this.socketService.listenForSongs();
       this.socketService.songReceived.subscribe((song) => {
-        this.song = song;
+        if(song !== undefined && song !== null){
+          this.song = this.songService.separate_song_body(song)
+          console.log('song after broadcast and separation', this.song)
+        }
     });
 
-    this.socketService.listenForBroadcasts();
+    this.socketService.listenForTopOfQueues();
       this.socketService.topOfQueueReceived.subscribe((songs) => {
         this.top_queue = songs;
     });

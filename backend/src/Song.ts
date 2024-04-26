@@ -1,5 +1,5 @@
 import { MongoClient, Db , ObjectId} from 'mongodb';
-import { Queue } from './Queue';
+import { Queue, SongInfo } from './Queue';
 import { WebScraper } from './WebScraper';
 // MongoDB connection URI
 //need to encrypt this password
@@ -170,5 +170,17 @@ export class Song {
     // Method to set the author of the song
     setSongAuthor(newSongAuthor: string): void {
         this.songAuthor = newSongAuthor;
+    }
+
+    getSongInfo(): SongInfo{
+      return {song_name: this.getSongName(), song_author: this.getSongAuthor()}
+    }
+
+    getSongInfoWithBody(): SongInfo{
+      return {
+        song_name: this.getSongName(),
+        song_author: this.getSongAuthor(),
+        song_body: this.getSongBody()
+      }
     }
 }

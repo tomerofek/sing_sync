@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { HOST_ROOM_URL, JOIN_ROOM_URL, buildUrl } from "./urls";
 import { handle_get } from "./routerWrapper";
-import { roomContoller, io } from "../server";
+import { roomController, io } from "../server";
 import asyncHandler from 'express-async-handler';
 
 const router = Router();
@@ -28,7 +28,7 @@ router.get(buildUrl(JOIN_ROOM_URL, 'room_id'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
         try {
-            const result = roomContoller.joinRoom(room_id)
+            const result = roomController.joinRoom(room_id)
             res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
         } catch (error: any) {
             res.send({status: 'error', content: error.message})
@@ -40,7 +40,7 @@ router.get(buildUrl(JOIN_ROOM_URL, 'room_id'), asyncHandler(
 router.get(buildUrl(HOST_ROOM_URL), asyncHandler(
     async (req, res) => {
         try {
-            const result = roomContoller.hostRoom('') //fixme
+            const result = roomController.hostRoom('') //fixme
             res.send({status: result != undefined ? 'ok' : 'error', content: result})
         } catch (error: any) {
             res.send({status: 'error', content: error.message})

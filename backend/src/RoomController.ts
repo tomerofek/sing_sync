@@ -39,7 +39,7 @@ export class RoomController {
     }
 
     //returns the current song if undifined - error
-    get_current_song(room_id: string): any {
+    get_current_song(room_id: string): SongInfo | undefined {
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.get_current_song();
         }
@@ -64,7 +64,7 @@ export class RoomController {
     }
 
     //advances to the next song and returns the new song the needs to be played
-    advance_song(room_id : string): any{
+    advance_song(room_id : string): SongInfo | undefined{
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.advance_song();
         }
@@ -72,7 +72,7 @@ export class RoomController {
     }
 
     //returns a json with the name and author of the first 2 songs in the queue
-    get_top_queue(room_id : string) : any{
+    get_top_queue(room_id : string) : SongInfo[] | undefined{
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.get_top_queue();
         }
@@ -80,7 +80,7 @@ export class RoomController {
     }
 
     //returns a json with the name and author of all of the queue
-    get_all_queue(room_id : string) : any{
+    get_all_queue(room_id : string) : SongInfo[] | undefined{
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.get_all_queue()
         }
@@ -115,22 +115,29 @@ export class RoomController {
         throw new Error("cannot add song to queue");
     }
 
-        //adds a song to the queue using the url - concatanation of name and author and returns the added song
-        //this function throw massages but on web scraping or db uploading the error will be in the promise returned value
-        get_song_from_url(room_id : string ,url : string): Promise<SongInfo>{
-            //checks if the the room exists if yes add the song
-            let room = this.rooms.get(room_id);
-            if (!room) {
-                throw new Error("Room doesn't exist");
-            }
-            //attempt to add the song to the room's queue with the given url
-            let ret = room.add_song_from_url(url);
-            if(ret){
-                return ret
-            }
-            throw new Error("cannot add song to queue from this url");
+    //adds a song to the queue using the url - concatanation of name and author and returns the added song
+    //this function throw massages but on web scraping or db uploading the error will be in the promise returned value
+    get_song_from_url(room_id : string ,url : string): Promise<SongInfo>{
+        //checks if the the room exists if yes add the song
+        let room = this.rooms.get(room_id);
+        if (!room) {
+            throw new Error("Room doesn't exist");
         }
+        //attempt to add the song to the room's queue with the given url
+        let ret = room.add_song_from_url(url);
+        if(ret){
+            return ret
+        }
+        throw new Error("cannot add song to queue from this url");
+    }
 
+    
+    get_queue_len(room_id: string): number {
+        if (this.rooms.has(room_id)){      
+            return this.rooms.get(room_id)?.get_queue_len() ?? 0
+        }
+        throw new Error("Invalid ID");
+    }
 
 }
 

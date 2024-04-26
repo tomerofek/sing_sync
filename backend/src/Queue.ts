@@ -55,6 +55,7 @@ export async function getSongNames(song_name : string ,song_author : string): Pr
   export interface SongInfo {
     song_name: string; // changed from songName
     song_author: string; // changed from songAuthor
+    song_body?: any //list of song lines: each song line has type and content
   }
 
   //replace this class with thread safe one
@@ -191,12 +192,13 @@ export class SongsQueue{
     }
 
     //returns the current song
-    getCurrentSong() : Song | undefined{
+    getCurrentSong() : SongInfo | undefined{
       if(this.songsQueue.isEmpty()){
         return undefined;
       }
-      return this.songsQueue.peek();
-      //TODO broadcast notification to the other users using express
+      return this.songsQueue.peek()?.getSongInfoWithBody();
+      //TODO broadcast notification to the other users using express 
+      //lior was here, i don't know why there is a need to broadcast here
     }
 
     //returns the next song in the queue
@@ -221,36 +223,34 @@ export class SongsQueue{
     }
 
     //returns the first 2 elements in the song queue
-    get_top2_songs() : any{
+    get_top2_songs() : SongInfo[]{
       //array with 2 or less songs
       let top2 = this.songsQueue.peek2and3Element()
       if(top2?.length == 2){
         let first_song: Song = top2[0] as Song;
         let second_song: Song = top2[1] as Song;
-        return [this.make_songName_songAuthor_json(first_song), this.make_songName_songAuthor_json(second_song)]
+        return [first_song.getSongInfo(), second_song.getSongInfo()]
       }else if(top2?.length == 1){
         let first_song: Song = top2[0] as Song;
-        return [this.make_songName_songAuthor_json(first_song)]
+        return [first_song.getSongInfo()]
       }else{
         return []
       }
     }
 
     //returns a list with all songs names and authors
-    get_all_queue() : any{
+    get_all_queue() : SongInfo[]{
       let names_author_list = []
       let queue = this.songsQueue.getQueue();
       for(let i = 0; i < queue.length ; i++){
         let current_song: Song = queue[i] as Song;
-        names_author_list.push(this.make_songName_songAuthor_json(current_song))
+        names_author_list.push(current_song.getSongInfo())
       }
       return names_author_list;
     }
 
-    
-    //lior was here, make sure it is fine with the rest of the backend.
-    private make_songName_songAuthor_json(song: Song): SongInfo {
-      return { song_name: song.getSongName(), song_author: song.getSongAuthor() };
-    }
+    get_queue_len(): number{
+      return this.songsQueue.size()
+    } 
 
   }
