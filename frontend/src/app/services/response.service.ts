@@ -17,6 +17,6 @@ export class ResponseService {
   }
 
   getError(response:Response<any>):string{
-    return response.error ? '' : <string>response.error;
+    return <string> (response.error ?? '')
   }
 }
