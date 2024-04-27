@@ -1,12 +1,12 @@
 export class Response<T>{
-    status!: string;
-    content?: T;
-    error?: string;
+    status !: string;
+    content : T | undefined;
+    error : string | undefined;
 
     constructor(result?: T, error?: string){
-        this.content = result;
+        this.content = result === 'ok' ? undefined : result;
         this.error = error;
-        this.status = result === undefined ? (error === undefined ? 'ok' : 'error') : 'ok';
+        this.status = error !== undefined ? 'error' : 'ok';
     }
 
     toJson(){

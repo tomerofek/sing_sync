@@ -41,16 +41,21 @@ export class WebScraper {
 
     async getSongData(url: string): Promise<ScrapedSong> {
         return new Promise(async (resolve, reject) => {
-            const response = await axios.get(url);
-            const $ = cheerio.load(response.data);
+            try{
+                const response = await axios.get(url);
+                const $ = cheerio.load(response.data);
 
-            const song_dict: ScrapedSong = { song_name: '', song_author: '', song_body: [] };
-            await this.add_song_name($, song_dict);
-            await this.add_song_author($, song_dict);
-            await this.add_song_lyrics($, song_dict);
-            
-            resolve(song_dict);})
+                const song_dict: ScrapedSong = { song_name: '', song_author: '', song_body: [] };
+                await this.add_song_name($, song_dict);
+                await this.add_song_author($, song_dict);
+                await this.add_song_lyrics($, song_dict);
+                
+                resolve(song_dict);
+            } catch (error) {
+                reject(error);
+            }});
     }
+    
 
 
     async url2song(url: string): Promise<ScrapedSong> {

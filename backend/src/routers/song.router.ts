@@ -5,6 +5,7 @@ import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
 import { Song } from "../Song";
 import { SongInfo } from "../Queue";
+import { Response } from "../response";
 
 const router = Router()
 
@@ -36,10 +37,10 @@ router.get(buildUrl(GET_POSITION, 'room_id'), asyncHandler(
         try {
             console.log(`[LOG] recieved GET POSITOIN request. params: ${room_id}`)
             const result = roomController.get_current_position(room_id)
-            res.send({status: result != undefined ? 'ok' : 'error', content: result}) //FIX ME
+            res.send(new Response(result)) //FIX ME
             console.log('[LOG] result: ' + result)
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            res.send(new Response(undefined, error.message))
         }
     }
 ))
@@ -58,10 +59,10 @@ router.get(buildUrl(ADVANCE_POSITION, 'room_id'), asyncHandler(
                 io.to(room_id).emit("position", result);
             }
             //res.send({status : "ok"});
-            res.send({status: result != undefined ? 'ok' : 'error', content: result})
+            res.send(new Response(result))
             console.log('[LOG] result: ' + result)
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            res.send(new Response(undefined, error.message))
         }
     }
 ))
@@ -78,10 +79,10 @@ router.get(buildUrl(PREVIOUS_POSITION, 'room_id'), asyncHandler(
                 io.to(room_id).emit("position", result);
             }
             //res.send({status : "ok"});
-            res.send({status: result != undefined ? 'ok' : 'error', content: result}) //FIX ME
+            res.send(new Response(result)) //FIX ME
             console.log('[LOG] result: ' + result)
-        } catch (error) {
-            res.send({status: 'error', content: error})
+        } catch (error : any) {
+            res.send(new Response(undefined, error.message))
         }
     }
 ))
@@ -106,9 +107,9 @@ router.get(buildUrl(ADVANCE_SONG, 'room_id'), asyncHandler(
                 throw Error('queue result is undefined')
             io.to(room_id).emit("topOfQueue", queueRes)
             
-            res.send({status: 'ok', content: result}) //FIX ME
-        } catch (error) {
-            res.send({status: 'error', content: error})
+            res.send(new Response(result)) //FIX ME
+        } catch (error : any) {
+            res.send(new Response(undefined, error.message))
         }
     }
 ))

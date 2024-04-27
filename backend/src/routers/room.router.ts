@@ -3,6 +3,7 @@ import { HOST_ROOM_URL, JOIN_ROOM_URL, buildUrl } from "./urls";
 import { handle_get } from "./routerWrapper";
 import { roomController, io } from "../server";
 import asyncHandler from 'express-async-handler';
+import { Response } from "../response";
 
 const router = Router();
 
@@ -29,9 +30,9 @@ router.get(buildUrl(JOIN_ROOM_URL, 'room_id'), asyncHandler(
         const room_id = req.params.room_id
         try {
             const result = roomController.joinRoom(room_id)
-            res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
+            res.send(new Response(result)) //gets only the result from the response - no need for error
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            res.send(new Response(undefined, error.message))
         }
     }
 ))
@@ -40,10 +41,10 @@ router.get(buildUrl(JOIN_ROOM_URL, 'room_id'), asyncHandler(
 router.get(buildUrl(HOST_ROOM_URL), asyncHandler(
     async (req, res) => {
         try {
-            const result = roomController.hostRoom('') //fixme
-            res.send({status: result != undefined ? 'ok' : 'error', content: result})
+            const result = roomController.hostRoom('') 
+            res.send(new Response(result))
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            res.send(new Response(undefined, error.message))
         }
     }
 ))

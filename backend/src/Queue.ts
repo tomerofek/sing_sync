@@ -135,18 +135,27 @@ export class SongsQueue{
     
     //add song using url to the db and insert to queue
     async addToQueueFromUrl(url : string) : Promise<SongInfo> {
-      return new Promise(async (resolve) => {
-        //make empty song
-        const song = new Song("","");
-        //update song with the data from the url
-        await this.scrapeSong(url,song);
-        //the song in the queue might not be complete
-        this.addToQueue(song)
-        //add the song to the database
-        await add_song_to_db(song);
-        console.log(song)
-        resolve(song.getSongInfo());
-      })
+      return new Promise(async (resolve, reject) => {
+        try {
+            // Make an empty song
+            const song = new Song("", "");
+
+            // Update song with the data from the URL
+            await this.scrapeSong(url, song);
+
+            // The song in the queue might not be complete
+            this.addToQueue(song);
+
+            // Add the song to the database
+            await add_song_to_db(song);
+
+            // Resolve with song information
+            resolve(song.getSongInfo());
+        } catch (error : any) {
+            // If an error occurs, reject the Promise with the error
+            reject(error);
+        }
+      });
 
     }
 

@@ -4,6 +4,7 @@ import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FR
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
 import { SongInfo } from "../Queue";
+import { Response } from "../response";
 const router = Router()
 
 
@@ -23,9 +24,9 @@ router.get(buildUrl(GET_TOP_QUEUE, 'room_id'), asyncHandler(
                 io.to(room_id).emit("topOfQueue", result);
             }
 
-            res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
+            res.send(new Response(result)) //FIX ME
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            res.send(new Response(undefined,error.message))
         }
     }
 ))
@@ -38,9 +39,9 @@ router.get(buildUrl(GET_ALL_QUEUE, 'room_id'), asyncHandler(
         const room_id = req.params.room_id
         try {
             const result = roomController.get_all_queue(room_id)
-            res.send({status: result ? 'ok' : 'error', content: result}) //FIX ME
+            res.send(new Response(result))
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            res.send(new Response(undefined, error.message))
         }
     }
 ))
@@ -53,9 +54,9 @@ router.get(buildUrl(REMOVE_SONG_FROM_QUEUE, 'room_id', 'song_to_remove_position'
         const song_to_remove_position = req.params.song_to_remove_position
         try {
             roomController.remove_song_from_queue(room_id,parseInt(song_to_remove_position))
-            res.send({status: 'ok'})
+            res.send(new Response('ok'))
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            res.send(new Response(undefined, error.message))
         }
     }
 ))
@@ -70,9 +71,9 @@ router.get(buildUrl(SEARCH_SONG_FROM_DB, 'song_name', 'song_author'), asyncHandl
             console.log(`[LOG] recieved SEARCH SONG FROM DB request. params: ${song_name} | ${song_author}`)
             const result = await roomController.search_song_from_db(song_name,song_author);
             console.log(`[LOG] result: ${result}`)
-            res.send({status: result ? 'ok' : 'error', content: result}) 
+            res.send(new Response(result)) 
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            res.send(new Response(undefined, error.message))
         }
     }
 ))
@@ -96,9 +97,9 @@ router.get(buildUrl(ADD_SONG_TO_QUEUE, 'room_id', 'song_name', 'song_author'), a
                 io.to(room_id).emit("position", roomController.get_current_position(room_id));
             }
             
-            res.send({status : 'ok'}) //FIX ME
+            res.send(new Response('ok')) //FIX ME
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            res.send(new Response(undefined, error.message))
         }
     }
 ))
@@ -125,9 +126,10 @@ router.get(buildUrl(GET_SONG_FROM_URL, 'room_id', 'url'), asyncHandler(
                 io.to(room_id).emit("song", songInfo);
                 io.to(room_id).emit("position", roomController.get_current_position(room_id));
             }
-            res.send({status : 'ok',content : result})
+            res.send(new Response(result))
         } catch (error: any) {
-            res.send({status: 'error', content: error.message})
+            console.log("found axois error" + error);
+            res.send(new Response(undefined, error.message))
         }
     }
 ))
