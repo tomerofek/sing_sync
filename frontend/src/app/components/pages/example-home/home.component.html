@@ -37,3 +37,11 @@ resetLinkText="Reset Search">
       </a>
     </li>
   </ul> -->
+
+  <p>Hello World</p>
+  <input [(ngModel)]="message" placeholder="Enter message">
+  <button (click)="sendHello(message)">Send Message</button>
+  <p>{{ broadcastMessage }}</p>
+
+  <button (click)="getSongFromUrl('123', 'https%3A%2F%2Fwww.nagnu.co.il%2F%25D7%2590%25D7%25A7%25D7%2595%25D7%25A8%25D7%2593%25D7%2599%25D7%259D%2F%25D7%25A0%25D7%2595%25D7%25A2%25D7%2594_%25D7%25A7%25D7%2599%25D7%25A8%25D7%259C%2C_%25D7%25A9%25D7%2592%25D7%2599%25D7%2590_%25D7%25A7%25D7%25A8%25D7%2599%25D7%2591%2C_%25D7%25A4%25D7%2595%25D7%25A8%25D7%2590%25D7%2591%25D7%25A8_%25D7%25AA%25D7%259C_%25D7%2590%25D7%2591%25D7%2599%25D7%2591%2F%25D7%25A4%25D7%25A8%25D7%2595%25D7%2591%25D7%2595%25D7%25A7%25D7%2598%25D7%2599%25D7%2591%25D7%2599%25D7%25AA')">Get Song</button>
+  <p>{{ songResponse | json }}</p>
