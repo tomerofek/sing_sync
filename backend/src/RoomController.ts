@@ -1,5 +1,34 @@
 import { Room } from "./Room";
 import { SongInfo, getSongNames} from "./Queue"
+
+const key_length = 16; // Length of the random string (adjust as needed)
+
+
+// Encode function using Base64 encoding
+function encode_with_base64_room_and_host(str1: string, str2: string): string {
+    const delimiter = "|"; // Choose a delimiter that won't occur in your strings
+    let text = `${str1}${delimiter}${str2}`;
+    return Buffer.from(text).toString('base64');
+}
+
+// Decode function using Base64 decoding
+function decodeWithBase64(encodedText: string): string {
+    return Buffer.from(encodedText, 'base64').toString('utf8');
+}
+
+function generateRandomString(): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < key_length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+    }
+    return result;
+}
+
+
+
+
 export class RoomController {
     sharedBuffer : SharedArrayBuffer;// 4 bytes for a 32-bit integer
     next_id : Int32Array;
@@ -16,18 +45,44 @@ export class RoomController {
     //creates a new room returns the new id of the room
     hostRoom(host: any) : string {
         const id = Atomics.add(this.next_id, 0, 1) //adds 1 to the existing value. returns the prev value
-        let r : Room = new Room(host, id);
+        const host_key : string = generateRandomString()
+        let r : Room = new Room(host_key, id);
         this.rooms.set(r.get_room_id().toString(),r);
-        return r.get_room_id().toString();
+        return encode_with_base64_room_and_host(id.toString(),host_key);
     }
 
     //joins the room returns ok if the room was found and not null
     joinRoom(room_id: string): string {
-        if (this.rooms.has(room_id)){      
-            return this.rooms.get(room_id)?.join_room() ?? "Invalid ID";
+        const param = decodeWithBase64(room_id)
+        //check if contains | - if so its host join
+        if(param.includes("|")){
+            const parts: string[] = param.split("|");
+            //check room id exists
+            if (this.rooms.has(parts[0])){
+                //check if key is correct
+                if(this.rooms.get(parts[0])?.get_host_key() === parts[1]){
+                    //function in the line below only returns ok and doesnt do anything for now
+                    this.rooms.get(room_id)?.join_room();
+                    return "true";
 
+                }
+                //case that none host tries to join
+                throw new Error("Wrong host key");
+            }
+            throw new Error("Invalid ID");
+        
+        }else{
+            console.log("attempt normal login")
+            if (this.rooms.has(param)){
+                console.log("room exists trying to enter")
+                //function in the line below only returns ok and doesnt do anything for now
+                this.rooms.get(param)?.join_room();
+                return "false";
+
+            }
+            console.log("no such room");
+            throw new Error("Invalid ID");
         }
-        throw new Error("Invalid ID");
     }
 
     //returns the current position in the song
