@@ -23,7 +23,7 @@
             <song-content (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song"></song-content>
         </div>
 
-        <div *ngIf="owner_perm" class="navigation">
+        <div *ngIf="song && owner_perm" class="navigation">
             <div class="filler"></div>
             <div class="buttons">
                 <mat-icon *ngIf="current_song_part_index!=0" class="prev-page-btn" (click)="prev_lines()">chevron_left</mat-icon>

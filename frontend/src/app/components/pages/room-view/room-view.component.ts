@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -17,12 +17,12 @@ import { CookieService } from 'src/app/services/cookie.service';
   templateUrl: './room-view.component.html',
   styleUrls: ['./room-view.component.css']
 })
-export class RoomViewComponent implements OnInit {
+export class RoomViewComponent implements OnInit, OnChanges {
 
   current_song_part_index?: number;
   is_last_song_part?: boolean;
   room_id!: string;
-  owner_perm?: boolean;
+  owner_perm!: boolean;
   song?: Song;
   top_queue?: Song[];
 
@@ -44,9 +44,13 @@ export class RoomViewComponent implements OnInit {
         this.notificationService.openSnackBarError(this.snackBar,responseService.getError(res));
         this.router.navigateByUrl('');
       }
-      this.owner_perm = responseService.getContent(res);
+      var perm:boolean|undefined = responseService.getContent(res);
+      this.owner_perm = perm !== undefined ? perm : false;
       console.log(`owner permissions: ${this.owner_perm}`);
     });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    
   }
 
   ngOnInit(): void {

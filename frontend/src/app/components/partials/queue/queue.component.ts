@@ -14,7 +14,7 @@ export class QueueComponent implements OnInit, OnChanges {
 
   @Input() topOfQ? : Song[];
   @Input() room_id!: string;
-  @Input() owner_perm?: boolean;
+  @Input() owner_perm!: boolean;
   @Output() onSongAddEvent = new EventEmitter<void>();
   firstInQ?: Song;
   secondInQ?: Song;

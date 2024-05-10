@@ -52,7 +52,7 @@ export class RoomController {
     }
 
     //joins the room returns ok if the room was found and not null
-    joinRoom(room_id: string): string {
+    joinRoom(room_id: string): boolean {
         const param = decodeWithBase64(room_id)
         //check if contains | - if so its host join
         if(param.includes("|")){
@@ -63,7 +63,7 @@ export class RoomController {
                 if(this.rooms.get(parts[0])?.get_host_key() === parts[1]){
                     //function in the line below only returns ok and doesnt do anything for now
                     this.rooms.get(room_id)?.join_room();
-                    return "true";
+                    return true;
 
                 }
                 //case that none host tries to join
@@ -77,7 +77,7 @@ export class RoomController {
                 console.log("room exists trying to enter")
                 //function in the line below only returns ok and doesnt do anything for now
                 this.rooms.get(param)?.join_room();
-                return "false";
+                return false;
 
             }
             console.log("no such room");
