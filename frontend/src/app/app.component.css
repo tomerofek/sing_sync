@@ -1,0 +1,78 @@
+/* app.component.css */
+.sidenav-container {
+    /*height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  mat-sidenav-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .main-content {
+    flex: 1;
+    overflow: auto; /* Ensure content is scrollable if it overflows */
+  }
+
+  .sidebar-content{
+    padding: 8px;
+  }
+
+  .close-bar-button{
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 50%;
+    text-align: center;
+    color: #44474e;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+    overflow: visible;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+  }
+
+  .close-bar-span{
+    border-radius: 50%;
+    text-align: center;
+    width: 40px;
+    height: 40px;
+  }
+
+  .close-bar-button:hover{
+    background: rgba(26, 27, 31, .08);
+  }
+
+  /* Adjust the button style to display its content in a single line */
+  mat-sidenav {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* Prevent text from wrapping */
+  }
+
+  mat-sidenav {
+    width: 250px;
+  }
+
+  mat-list-item {
+    text-align: center;
+  }
+
+  mat-icon {
+    margin-right: 5px;
+  }
+
+  .sidebar-text {
+    text-align: center;
+  }
+
+  .nar-input {
+    display: flex;
+    flex-direction: column;
+  }

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-// import { HeaderComponent } from './components/partials/header/header.component';
+import { HeaderComponent } from './components/partials/header/header.component';
 // import { HomeComponent } from './components/pages/home/home.component';
 // import { SearchComponent } from './components/partials/search/search.component';
 // import { TagsComponent } from './components/partials/tags/tags.component';
@@ -27,6 +27,11 @@ import { AddSongNormalSearchComponent } from './components/partials/add-song-nor
 import { AddSongFromUrlComponent } from './components/partials/add-song-from-url/add-song-from-url.component';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatInputModule } from '@angular/material/input'
 
 
 
@@ -40,8 +45,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     QueueViewComponent,
     AddSongViewComponent,
     AddSongNormalSearchComponent,
-    AddSongFromUrlComponent
-    // HeaderComponent,
+    AddSongFromUrlComponent,
+    HeaderComponent,
     // HomeComponent,
     // SearchComponent,
     // TagsComponent,
@@ -61,7 +66,12 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatDialogModule,
     MatTabsModule,
     FormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

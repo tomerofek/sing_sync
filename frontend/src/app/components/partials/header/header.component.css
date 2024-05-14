@@ -1,14 +1,14 @@
-/* header{
+/*  header{
     position: relative;
     background: white;
     padding: 0;
-    border-bottom: 1px solid #e72929;
+    border-bottom: 1px solid #c66372;
   }
-  
+
   a{
     color: #af1313;
   }
-  
+
   a:hover{
     background:#e72929;
     color: white;
@@ -60,7 +60,49 @@
     display: block;
   }
   
-  .menu a{
+  .menu .a{
     width: 100%;
     min-width:8rem;
-  } */
+  }*/
+
+  mat-toolbar{
+    background: white;
+    align-items: center;
+  }
+
+  .menu-button{
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 50%;
+    text-align: center;
+    color: #44474e;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+    overflow: visible;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+  }
+
+  .menu-span{
+    border-radius: 50%;
+    text-align: center;
+    width: 40px;
+    height: 40px;
+  }
+
+  .menu-button:hover{
+    background: rgba(26, 27, 31, .08);
+  }
+
+  /* header.component.css */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+  }

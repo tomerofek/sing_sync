@@ -1,5 +1,37 @@
-<!-- <app-header> </app-header>
-<router-outlet></router-outlet> -->
+<!-- app.component.html -->
+<mat-sidenav-container class="sidenav-container" [hasBackdrop]="false">
+  <mat-sidenav #sidenav mode="push" [fixedInViewport]="true" class="sidebar-content">
+    <!-- Sidebar content here -->
+    <button mat-icon-button class="close-bar-button" (click)="sidenav.close()">
+      <span class="close-bar-span">
+        <mat-icon>close</mat-icon>
+      </span>
+    </button>
+    <!-- Add more sidebar content here -->
+    <mat-list>
+      <mat-list-item>
+        <button mat-button class="close-bar-button" (click)="home()">
+          <span class="close-bar-span">
+            <mat-icon>home</mat-icon><span class="sidebar-text">back to home page</span>
+          </span>
+        </button>
+      </mat-list-item>
+      <mat-list-item>
+        <span>Enter a room</span>
+        <mat-form-field>
+          <mat-label>room number</mat-label>
+          <input matInput>
+        </mat-form-field>
+      </mat-list-item>
+    </mat-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header [sidebar]="sidenav"></app-header>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
