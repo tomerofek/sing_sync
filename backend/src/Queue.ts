@@ -61,9 +61,11 @@ export async function getSongNames(song_name : string ,song_author : string): Pr
   //replace this class with thread safe one
 export class Queue<T> {
     private items: T[];
+    private index : number;
 
     constructor() {
         this.items = [];
+        this.index = 0;
     }
 
     enqueue(item: T): void {
@@ -71,24 +73,25 @@ export class Queue<T> {
     }
 
     dequeue(): T | undefined {
-        return this.items.shift();
+        this.index = this.index + 1;
+        return this.items[this.index - 1];
     }
 
     isEmpty(): boolean {
-        return this.items.length === 0;
+        return this.items.length - this.index === 0;
     }
 
     peek(): T | undefined {
-        return this.items.length > 0 ? this.items[0] : undefined;
+        return this.items.length - this.index > 0 ? this.items[this.index] : undefined;
     }
 
     peek2and3Element(): T[] | undefined {
       let top2Song : any[] = []
       if(this.size() >= 3){
-        top2Song.push(this.items[1])
-        top2Song.push(this.items[2])
+        top2Song.push(this.items[this.index + 1])
+        top2Song.push(this.items[this.index + 2])
       }else if(this.size() == 2){
-        top2Song.push(this.items[1])
+        top2Song.push(this.items[this.index + 1])
       }
       return top2Song
     }
@@ -98,13 +101,17 @@ export class Queue<T> {
     }
 
     size(): number {
-        return this.items.length;
+        return this.items.length - this.index;
     }
 
     remove(index : number): void {
         if (index !== -1) {
             this.items.splice(index, 1);
         }
+    }
+
+    getIndex(): number {
+      return this.index;
     }
 }
 //the queue of songs uses the Queue implementation
@@ -225,7 +232,7 @@ export class SongsQueue{
         this.songsQueue.remove(song_to_remove_position);
       } catch (error) {
           // If an error occurs during removal, throw a new error
-          throw new Error("Failed to remove song from queue");
+          throw new Error("Invalid position");
       }
     }
 
@@ -259,5 +266,9 @@ export class SongsQueue{
     get_queue_len(): number{
       return this.songsQueue.size()
     } 
+
+    get_index(): number{
+      return this.songsQueue.getIndex()
+    }
 
   }

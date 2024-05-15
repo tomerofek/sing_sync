@@ -81,6 +81,10 @@ class Room {
         return this.host
     }
 
+    get_index() : number {
+        return this.songsQueue.get_index();
+    }
+
 }
 
 export { Room };

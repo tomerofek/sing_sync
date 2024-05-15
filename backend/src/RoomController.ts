@@ -27,7 +27,16 @@ function generateRandomString(): string {
 }
 
 
+export class ServiceQueue {
+    private songs_info_list : SongInfo[] | undefined
+    private index : number
 
+    constructor(song_info_list : SongInfo[], index : number){
+        this.songs_info_list = song_info_list
+        this.index = index
+    }
+
+}
 
 export class RoomController {
     sharedBuffer : SharedArrayBuffer;// 4 bytes for a 32-bit integer
@@ -135,9 +144,15 @@ export class RoomController {
     }
 
     //returns a json with the name and author of all of the queue
-    get_all_queue(room_id : string) : SongInfo[] | undefined{
-        if (this.rooms.has(room_id)){      
-            return this.rooms.get(room_id)?.get_all_queue()
+    get_all_queue(room_id : string) : ServiceQueue | undefined{
+        if (this.rooms.has(room_id)){    
+            const songs_info_list : SongInfo[] | undefined = this.rooms.get(room_id)?.get_all_queue();
+            const index : number | undefined = this.rooms.get(room_id)?.get_index();
+            //if songs_info_list or index is undefined return undefined
+            if(songs_info_list === undefined || index === undefined){
+                return undefined;
+            }
+            return new ServiceQueue(songs_info_list,index);
         }
         throw new Error("Invalid ID");
     }
