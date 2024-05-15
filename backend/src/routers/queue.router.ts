@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { io, roomController } from "../server";
-import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE, PREVIOUS_SONG} from "./urls";
+import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE, PREVIOUS_SONG, REORDER_QUEUE} from "./urls";
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
 import { SongInfo } from "../Queue";
@@ -148,5 +148,24 @@ router.get(buildUrl(PREVIOUS_SONG, 'room_id'), asyncHandler(
         }
     }
 ))
+
+
+// get the previous songInfo from the queue in room with room_id and move the queue backward and reset position in the song
+// if room not exists returns a response with “Invalid ID” status
+// if index == 0 in the song queue than returns a response with "there is no previous song" status
+router.get(buildUrl(REORDER_QUEUE, 'room_id', 'old_position', 'new_position'), asyncHandler(
+    async (req, res) => {
+        const room_id = req.params.room_id
+        const old_position = req.params.old_position
+        const new_position = req.params.new_position
+        try {
+            const result : string = roomController.swap_song(room_id,parseInt(old_position),parseInt(new_position))
+            res.send(new Response(result))
+        } catch (error: any) {
+            res.send(new Response(undefined, error.message))
+        }
+    }
+))
+
 
 export default router;

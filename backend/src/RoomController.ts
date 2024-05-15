@@ -209,6 +209,21 @@ export class RoomController {
         throw new Error("Invalid ID");
     }
 
+    previous_song(room_id: string): SongInfo | undefined {
+        if (this.rooms.has(room_id)){      
+            return this.rooms.get(room_id)?.previous_song();
+        }
+        throw new Error("Invalid ID");
+    }
+
+    swap_song(room_id: string, index1: number, index2: number): string {
+        if (this.rooms.has(room_id)){      
+            this.rooms.get(room_id)?.swap_songs(index1, index2);
+            return "ok";
+        }
+        throw new Error("Invalid ID");
+    }
+
 }
 
 // Example usage

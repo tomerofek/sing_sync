@@ -123,7 +123,35 @@ export class Queue<T> {
     getIndex(): number {
       return this.index;
     }
+
+    //moves the item at first index to be located in second_index (second_index of the old list)
+    swap_elements(first_index : number, second_index : number) : void {
+      if(this.size() < 2){
+        throw new Error("not enough songs in the queue to swap");
+      }
+      if(first_index == this.index || second_index == this.index){
+        throw new Error("cannot swap with the current song");
+      }
+
+      if(first_index < second_index){
+      let temp : T = this.items[first_index];
+      let first_list : T[] = this.items.slice(0,first_index);
+      let second_list : T[] = this.items.slice(first_index + 1,second_index);
+      let third_list : T[] = this.items.slice(second_index,this.items.length);
+      second_list = second_list.concat(temp);
+      this.items = first_list.concat(second_list).concat(third_list);
+    }else{
+      let temp : T = this.items[first_index];
+      let first_list : T[] = this.items.slice(0,second_index);
+      let second_list : T[] = this.items.slice(second_index,first_index);
+      let third_list : T[] = this.items.slice(first_index + 1,this.items.length);
+      first_list = first_list.concat(temp);
+      this.items = first_list.concat(second_list).concat(third_list);
+    
+    }
+  }
 }
+
 //the queue of songs uses the Queue implementation
 export class SongsQueue{
     private songsQueue: Queue<Song>;
@@ -287,6 +315,11 @@ export class SongsQueue{
       //return the previous song info
       return this.songsQueue.move_to_prev()?.getSongInfoWithBody();
 
+    }
+
+    //swap songs in the queue will put item at old_position at new position
+    swap_songs(old_position : number, new_position : number) : void {
+      this.songsQueue.swap_elements(old_position,new_position);
     }
 
   }

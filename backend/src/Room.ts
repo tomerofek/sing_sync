@@ -89,6 +89,10 @@ class Room {
         return this.songsQueue.previous_song();
     }
 
+    swap_songs(index1 : number, index2 : number) : void{
+        this.songsQueue.swap_songs(index1,index2);
+    }
+
 }
 
 export { Room };
