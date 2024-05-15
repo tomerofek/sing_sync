@@ -85,6 +85,10 @@ class Room {
         return this.songsQueue.get_index();
     }
 
+    previous_song() : SongInfo | undefined{
+        return this.songsQueue.previous_song();
+    }
+
 }
 
 export { Room };

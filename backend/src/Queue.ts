@@ -72,10 +72,20 @@ export class Queue<T> {
         this.items.push(item);
     }
 
-    dequeue(): T | undefined {
+    move_to_next(): T | undefined {
         this.index = this.index + 1;
         return this.items[this.index - 1];
     }
+
+    move_to_prev(): T | undefined {
+      if(this.index == 0){
+        throw new Error("there is no previous song");
+      }
+      this.index = this.index - 1;
+      //when we get prev we dont want to get current song we want to get prev song , so we use the reduced index unlike before
+      return this.items[this.index];
+  }
+
 
     isEmpty(): boolean {
         return this.items.length - this.index === 0;
@@ -185,7 +195,7 @@ export class SongsQueue{
       //reset the current position in the song
       this.current_position_in_song = 0;
       //dequeue the current song
-      this.songsQueue.dequeue();
+      this.songsQueue.move_to_next();
       //return the next song in the queue
       return this.songsQueue.peek();
       //TODO broadcast notification to the other users using express
@@ -269,6 +279,14 @@ export class SongsQueue{
 
     get_index(): number{
       return this.songsQueue.getIndex()
+    }
+
+    previous_song() : SongInfo | undefined{
+      //reset the current position in the song
+      this.current_position_in_song = 0;
+      //return the previous song info
+      return this.songsQueue.move_to_prev()?.getSongInfoWithBody();
+
     }
 
   }

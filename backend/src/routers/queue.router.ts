@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { io, roomController } from "../server";
-import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE} from "./urls";
+import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE, PREVIOUS_SONG} from "./urls";
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
 import { SongInfo } from "../Queue";
@@ -129,6 +129,21 @@ router.get(buildUrl(GET_SONG_FROM_URL, 'room_id', 'url'), asyncHandler(
             res.send(new Response(result))
         } catch (error: any) {
             console.log("found axois error" + error);
+            res.send(new Response(undefined, error.message))
+        }
+    }
+))
+
+// get the previous songInfo from the queue in room with room_id and move the queue backward and reset position in the song
+// if room not exists returns a response with “Invalid ID” status
+// if index == 0 in the song queue than returns a response with "there is no previous song" status
+router.get(buildUrl(PREVIOUS_SONG, 'room_id'), asyncHandler(
+    async (req, res) => {
+        const room_id = req.params.room_id
+        try {
+            const result : SongInfo | undefined = roomController.previous_song(room_id)
+            res.send(new Response(result))
+        } catch (error: any) {
             res.send(new Response(undefined, error.message))
         }
     }
