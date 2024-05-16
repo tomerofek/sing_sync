@@ -142,6 +142,10 @@ router.get(buildUrl(PREVIOUS_SONG, 'room_id'), asyncHandler(
         const room_id = req.params.room_id
         try {
             const result : SongInfo | undefined = roomController.previous_song(room_id)
+            //send
+            io.to(room_id).emit("topOfQueue", roomController.get_top_queue(room_id));
+            io.to(room_id).emit("song", result);
+            io.to(room_id).emit("position", roomController.get_current_position(room_id));
             res.send(new Response(result))
         } catch (error: any) {
             res.send(new Response(undefined, error.message))
@@ -159,7 +163,10 @@ router.get(buildUrl(REORDER_QUEUE, 'room_id', 'old_position', 'new_position'), a
         const old_position = req.params.old_position
         const new_position = req.params.new_position
         try {
+            //send the needed broadcasts to change the way the top of queue looks like
+            io.to(room_id).emit("topOfQueue", roomController.get_top_queue(room_id));
             const result : string = roomController.swap_song(room_id,parseInt(old_position),parseInt(new_position))
+            io.to(room_id).emit("topOfQueue", roomController.get_top_queue(room_id));
             res.send(new Response(result))
         } catch (error: any) {
             res.send(new Response(undefined, error.message))
