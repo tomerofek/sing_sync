@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { ADD_CUSTOM_SONG, ADD_SONG_TO_QUEUE, GET_ALL_QUEUE, GET_SONG_FROM_URL, GET_TOP_QUEUE, REMOVE_SONG_FROM_QUEUE, REORDER_QUEUE, SEARCH_SONG_FROM_DB } from '../shared/constants/url';
 import { Song } from '../shared/models/Song';
 import { Response } from '../shared/models/Response';
+import { Queue } from '../shared/models/Queue';
 
 export interface IQueueService {
 
@@ -17,7 +18,7 @@ export interface IQueueService {
    * return all the next songs in the queue
    * @param room_id 
    */
-  get_all_queue(room_id:string): Observable<Response<Song[]>>;
+  get_all_queue(room_id:string): Observable<Response<Queue>>;
 
   /**
    * move the song in from an old position to the new posotion in queue
@@ -81,7 +82,7 @@ export class QueueService implements IQueueService{
     return this.fake.get_top_queue(room_id);
   }
 
-  get_all_queue(room_id:string): Observable<Response<Song[]>>{
+  get_all_queue(room_id:string): Observable<Response<Queue>>{
     if(this.real !== null){
       return this.real.get_all_queue(room_id);
     }
@@ -139,8 +140,8 @@ export class RealQueueService implements IQueueService{
     return this.httpClient.get<Response<Song[]>>(GET_TOP_QUEUE + room_id);
   }
 
-  get_all_queue(room_id:string): Observable<Response<Song[]>>{
-    return this.httpClient.get<Response<Song[]>>(GET_ALL_QUEUE + room_id);
+  get_all_queue(room_id:string): Observable<Response<Queue>>{
+    return this.httpClient.get<Response<Queue>>(GET_ALL_QUEUE + room_id);
   }
 
   reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<void>>{
@@ -189,14 +190,15 @@ export class FakeQueueService implements IQueueService{
     return of({status: "ok", content: []});
   }
 
-  get_all_queue(room_id:string): Observable<Response<Song[]>>{
-    if(this.queue_pos==1)
+  get_all_queue(room_id:string): Observable<Response<Queue>>{
+    /*if(this.queue_pos==1)
       return of({status: "ok", content: [new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3')]});
     if(this.queue_pos==2)
       return of({status: "ok", content: [new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3')]});
     if(this.queue_pos==3)
       return of({status: "ok", content: [new Song('שיר3','יוצר3')]});
-    return of({status: "ok", content: []});
+    return of({status: "ok", content: []});*/
+    return of({status:'ok', content:{index:1,songs_info_list:[new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3')]}});
   }
 
   reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<void>>{

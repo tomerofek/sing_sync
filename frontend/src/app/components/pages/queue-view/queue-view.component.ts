@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationService } from 'src/app/services/notification.service';
 import { QueueService } from 'src/app/services/queue.service';
 import { ResponseService } from 'src/app/services/response.service';
+import { Queue } from 'src/app/shared/models/Queue';
 import { Response } from 'src/app/shared/models/Response';
 import { Song } from 'src/app/shared/models/Song';
 
@@ -14,8 +15,7 @@ import { Song } from 'src/app/shared/models/Song';
 })
 export class QueueViewComponent implements OnInit {
 
-  currentSong?: Song;
-  queue!: Song[];
+  queue?: Queue;
   room_id!: string;
 
   constructor(@Inject(MAT_DIALOG_DATA) room_id: any, private queueService: QueueService, private responseService: ResponseService,
@@ -25,17 +25,16 @@ export class QueueViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let res: Response<Song[]> | null = null;
+    let res: Response<Queue> | null = null;
     this.queueService.get_all_queue(this.room_id).subscribe(data => {res = {...data}
+      console.log(res);
       if(res === null || this.responseService.isError(res)){
-        this.queue = []
         console.log(res)
         this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
       } else{
-        this.queue = this.responseService.getContent(res) ?? [];
+        this.queue = this.responseService.getContent(res);
+        console.log(this.queue);
       }
-      if(this.queue.length > 0)
-        this.currentSong = this.queue[0];
      });
   }
 

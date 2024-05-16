@@ -1,16 +1,16 @@
 <div class="content">
     <h1 class="title">Queue</h1>
-    <div class="Q-notEmpty" *ngIf="currentSong">
-        <h2>Now playing</h2>
+    <div class="Q-notEmpty" *ngIf="queue && queue.songs_info_list.length>0">
+        <!--<h2>Now playing</h2>
         <ol>
             <li class="currentSong" dir="rtl">{{currentSong.song_name}} - {{currentSong.song_author}}</li>
         </ol>
-        <h2>Next up</h2>
-        <ol start="2">        
-            <li *ngFor="let song of queue | slice:1" dir="rtl">{{song.song_name}} - {{song.song_author}}</li>
+        <h2>Next up</h2>-->
+        <ol>        
+            <li *ngFor="let song of queue.songs_info_list; let i = index" [ngClass]="{'currentSong': i === queue.index}" dir="rtl">{{song.song_name}} - {{song.song_author}}</li>
         </ol>
     </div>
-    <p class="Q-empty" *ngIf="!currentSong">
+    <p class="Q-empty" *ngIf="!queue || queue.songs_info_list.length==0">
         the queue is currently empty
     </p>
     
