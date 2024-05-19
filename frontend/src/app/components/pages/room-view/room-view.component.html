@@ -19,11 +19,11 @@
         </div>
 
         <div class="main">
-            <queue (onSongAddEvent)="onSongAdd()" [topOfQ]="top_queue" [room_id]="room_id"></queue>
+            <queue (onSongAddEvent)="onSongAdd()" [topOfQ]="top_queue" [room_id]="room_id" [owner_perm]="owner_perm"></queue>
             <song-content (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song"></song-content>
         </div>
 
-        <div class="navigation">
+        <div *ngIf="song && owner_perm" class="navigation">
             <div class="filler"></div>
             <div class="buttons">
                 <mat-icon *ngIf="current_song_part_index!=0" class="prev-page-btn" (click)="prev_lines()">chevron_left</mat-icon>

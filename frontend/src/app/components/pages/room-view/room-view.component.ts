@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -10,34 +10,47 @@ import { SongService } from 'src/app/services/song.service';
 import { Response } from 'src/app/shared/models/Response';
 import { Song } from 'src/app/shared/models/Song';
 import { WebsocketService } from 'src/app/services/websocket.service'; // Import the SocketService
+import { CookieService } from 'src/app/services/cookie.service';
 
 @Component({
   selector: 'app-room-view',
   templateUrl: './room-view.component.html',
   styleUrls: ['./room-view.component.css']
 })
-export class RoomViewComponent implements OnInit {
+export class RoomViewComponent implements OnInit, OnChanges {
 
   current_song_part_index?: number;
   is_last_song_part?: boolean;
   room_id!: string;
+  owner_perm!: boolean;
   song?: Song;
   top_queue?: Song[];
 
   constructor(activatedRoute:ActivatedRoute, private roomService:RoomService, private responseService:ResponseService,
     private songService:SongService, private queueService:QueueService, private router: Router,
-    private notificationService: NotificationService, private snackBar: MatSnackBar, private socketService: WebsocketService) {
+    private notificationService: NotificationService, private snackBar: MatSnackBar, private socketService: WebsocketService,
+    private CookieService: CookieService) {
       activatedRoute.params.subscribe((params) => {
         if(params.roomid) this.room_id = params.roomid;
       });
-    let res: Response<void> | null = null;
-    roomService.join_room(this.room_id).subscribe(data => {res = {...data}
+    let res: Response<boolean> | null = null;
+    var owner_key = this.CookieService.getCookie(this.room_id);
+    console.log(`owner_key: ${owner_key}`);
+    var encodedStr = this.CookieService.encode_with_base64_room_and_host(this.room_id,owner_key);
+    roomService.join_room(encodedStr).subscribe(data => {res = {...data}
       if(res === null || responseService.isError(res)){
         console.log('error in getting song in constructor');
         console.log(res);
+        this.notificationService.openSnackBarError(this.snackBar,responseService.getError(res));
         this.router.navigateByUrl('');
       }
+      var perm:boolean|undefined = responseService.getContent(res);
+      this.owner_perm = perm !== undefined ? perm : false;
+      console.log(`owner permissions: ${this.owner_perm}`);
     });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    
   }
 
   ngOnInit(): void {

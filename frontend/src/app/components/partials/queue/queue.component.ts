@@ -14,6 +14,7 @@ export class QueueComponent implements OnInit, OnChanges {
 
   @Input() topOfQ? : Song[];
   @Input() room_id!: string;
+  @Input() owner_perm!: boolean;
   @Output() onSongAddEvent = new EventEmitter<void>();
   firstInQ?: Song;
   secondInQ?: Song;
@@ -29,6 +30,9 @@ export class QueueComponent implements OnInit, OnChanges {
       this.firstInQ = this.topOfQ?.[0];
       this.secondInQ = this.topOfQ?.[1];
       //console.log('ngOnChange for topOfQ: ', this.firstInQ, this.secondInQ);
+    }
+    if(changes['owner_perm']){
+      console.log(`changed owner_perm to: ${this.owner_perm}`);
     }
   }
 

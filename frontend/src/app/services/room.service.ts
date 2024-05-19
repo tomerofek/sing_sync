@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 
 export interface IRoomService {
 
-  join_room(room_id:string): Observable<Response<void>>;
+  join_room(room_id:string): Observable<Response<boolean>>;
 
   host_room(): Observable<Response<string>>;
 }
@@ -22,7 +22,7 @@ export class RoomService implements IRoomService{
     this.fake = new FakeRoomService();
    }
 
-  join_room(room_id:string): Observable<Response<void>>{
+  join_room(room_id:string): Observable<Response<boolean>>{
     if(this.real !== null){
       return this.real.join_room(room_id);
     }
@@ -41,8 +41,8 @@ export class RealRoomService implements IRoomService{
 
   constructor(private http_client:HttpClient) { }
 
-  join_room(room_id:string): Observable<Response<void>>{
-    return this.http_client.get<Response<void>>(JOIN_ROOM_URL + room_id);
+  join_room(room_id:string): Observable<Response<boolean>>{
+    return this.http_client.get<Response<boolean>>(JOIN_ROOM_URL + room_id);
   }
 
   host_room(): Observable<Response<string>>{
@@ -54,8 +54,8 @@ export class FakeRoomService implements IRoomService{
 
   constructor() { }
 
-  join_room(room_id:string): Observable<Response<void>>{
-    return of({status: "ok"});
+  join_room(room_id:string): Observable<Response<boolean>>{
+    return of({status: "ok", content:false});
   }
 
   host_room(): Observable<Response<string>>{

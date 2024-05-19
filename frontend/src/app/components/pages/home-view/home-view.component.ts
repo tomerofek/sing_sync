@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'src/app/services/cookie.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ResponseService } from 'src/app/services/response.service';
 import { RoomService } from 'src/app/services/room.service';
@@ -14,7 +15,7 @@ import { Response } from 'src/app/shared/models/Response';
 export class HomeViewComponent implements OnInit {
 
   constructor(activatedRoute:ActivatedRoute, private router:Router, private roomService: RoomService, private responseService: ResponseService,
-    private notificationService: NotificationService, private snackBar: MatSnackBar
+    private notificationService: NotificationService, private snackBar: MatSnackBar, private cookieService: CookieService
   ) {
    }
 
@@ -38,7 +39,12 @@ export class HomeViewComponent implements OnInit {
         window.alert(res === null ? "response is null" : this.responseService.getContent(res));
       }
       else{
-        this.router.navigateByUrl('/room/' + this.responseService.getContent(res));
+        var content = this.cookieService.decodeWithBase64(<string>this.responseService.getContent(res));
+        console.log(content);
+        const { var1, var2 } = this.cookieService.splitString(content);
+        console.log(var1, var2);
+        this.cookieService.setCookie(var1,var2,7);
+        this.router.navigateByUrl('/room/' + var1);
       }
     });
   }

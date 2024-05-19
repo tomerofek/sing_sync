@@ -77,6 +77,10 @@ class Room {
         return this.songsQueue.get_queue_len()
     }
 
+    get_host_key() : string{
+        return this.host
+    }
+
 }
 
 export { Room };
