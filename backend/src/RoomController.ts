@@ -91,6 +91,7 @@ export class RoomController {
     remove_song_from_queue(room_id : string,song_to_remove_position : number) : void{
         if (this.rooms.has(room_id)){      
             this.rooms.get(room_id)?.remove_song_from_queue(song_to_remove_position)
+            return;
         }
         throw new Error("Invalid ID");
     }
