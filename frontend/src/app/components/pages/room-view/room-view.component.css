@@ -1,22 +1,42 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    font-family: Arial, sans-serif;
+    box-sizing: border-box; /* Ensure padding and border are included in element's total width and height */
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
 .back {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100%;
-  }
-  
+    padding: 10px; /* Add padding to ensure no content touches the edges */
+    width: 100%;
+}
+
 .content {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
     max-width: 500px;
     height: 100%;
-  }
+    padding: 10px; /* Add padding for internal spacing */
+    box-sizing: border-box;
+}
 
 .top {
     display: flex;
-    align-items: top;
-    width: 500px;
+    align-items: flex-start; /* Correct alignment from 'top' to 'flex-start' */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .roomid {
@@ -36,6 +56,13 @@
     vertical-align: top;
 }
 
+.main {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px; /* Add padding to prevent content from touching the edges */
+}
 
 queue {
     flex: 1;
@@ -47,10 +74,12 @@ song-content {
     display: inline-block;
 }
 
-.main {
+.navigation {
     display: flex;
     flex-direction: row;
-    width: 500px;
+    width: 100%;
+    padding: 10px; /* Add padding to ensure no content touches the edges */
+    box-sizing: border-box;
 }
 
 .filler {
@@ -65,8 +94,13 @@ song-content {
     justify-content: flex-end;
 }
 
-.navigation {
-    display: flex;
-    flex-direction: row;
-    width: 500px;
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .content, .top, .main, .navigation {
+        padding: 5px; /* Adjust padding for small screens */
+    }
+
+    .roomid, .song-info, .song-author, queue, song-content {
+        font-size: 14px; /* Adjust font size for better readability on small screens */
+    }
 }

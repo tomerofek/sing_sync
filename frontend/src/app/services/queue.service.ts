@@ -71,7 +71,7 @@ export class QueueService implements IQueueService{
   private real: IQueueService | null;
   private fake: IQueueService;
   constructor(private httpClient:HttpClient) {
-    this.real = new RealQueueService(httpClient);
+    this.real = null;//new RealQueueService(httpClient);
     this.fake = new FakeQueueService();
    }
 

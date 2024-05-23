@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,9 +11,30 @@ import { Response } from 'src/app/shared/models/Response';
 @Component({
   selector: 'app-home-view',
   templateUrl: './home-view.component.html',
-  styleUrls: ['./home-view.component.css']
+  styleUrls: ['./home-view.component.css'],
+  animations: [
+    trigger('toggleAnimation', [
+      state('hidden', style({
+        opacity: 0,
+        height: '0px',
+        overflow: 'hidden'
+      })),
+      state('visible', style({
+        opacity: 1,
+        height: '*'
+      })),
+      transition('hidden => visible', [
+        animate('0.5s ease-in')
+      ]),
+      transition('visible => hidden',[
+        animate('0.5s ease-out')
+      ])
+    ])
+  ]
 })
 export class HomeViewComponent implements OnInit {
+
+  showJoin:boolean = false;
 
   constructor(activatedRoute:ActivatedRoute, private router:Router, private roomService: RoomService, private responseService: ResponseService,
     private notificationService: NotificationService, private snackBar: MatSnackBar, private cookieService: CookieService
@@ -20,6 +42,10 @@ export class HomeViewComponent implements OnInit {
    }
 
   ngOnInit(): void {
+  }
+
+  toggleJoin() {
+    this.showJoin = !this.showJoin;
   }
 
   goToRoom(room_id: string): void {
