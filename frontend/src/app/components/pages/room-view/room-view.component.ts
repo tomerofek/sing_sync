@@ -11,6 +11,7 @@ import { Response } from 'src/app/shared/models/Response';
 import { Song } from 'src/app/shared/models/Song';
 import { WebsocketService } from 'src/app/services/websocket.service'; // Import the SocketService
 import { CookieService } from 'src/app/services/cookie.service';
+import { ClipboardModule, Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-room-view',
@@ -29,7 +30,7 @@ export class RoomViewComponent implements OnInit, OnChanges {
   constructor(activatedRoute:ActivatedRoute, private roomService:RoomService, private responseService:ResponseService,
     private songService:SongService, private queueService:QueueService, private router: Router,
     private notificationService: NotificationService, private snackBar: MatSnackBar, private socketService: WebsocketService,
-    private CookieService: CookieService) {
+    private CookieService: CookieService, private clipboard: Clipboard) {
       activatedRoute.params.subscribe((params) => {
         if(params.roomid) this.room_id = params.roomid;
       });
@@ -77,6 +78,17 @@ export class RoomViewComponent implements OnInit, OnChanges {
         this.top_queue = songs;
     });
 
+  }
+
+  home() {
+    // TODO: call to broadcasts unsbscribe
+    this.router.navigateByUrl('/');
+  }
+
+  share() {
+    const textToCopy = window.location.href;
+    this.clipboard.copy(textToCopy);
+    this.notificationService.openSnackBar(this.snackBar, 'קישור הועתק')
   }
 
   sendHello(message: string) {

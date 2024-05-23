@@ -8,7 +8,7 @@
         <div>
           <button class="join-button" (click)="toggleJoin()">כניסה לחדר</button>
         </div>
-        <div [@toggleAnimation]="showJoin ? 'visible' : 'hidden'">
+        <div [@toggleAnimation]="showJoin ? 'visible' : 'hidden'" class="join-slide">
           <div>
             <input #s class="join-input" type="text" placeholder="room id"/>
           </div>

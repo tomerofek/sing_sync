@@ -28,6 +28,9 @@ import { AddSongFromUrlComponent } from './components/partials/add-song-from-url
 import { FormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { ClipboardModule } from '@angular/cdk/clipboard'
 
 
 
@@ -63,7 +66,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatTabsModule,
     FormsModule,
     MatSnackBarModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatSidenavModule,
+    MatListModule,
+    ClipboardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

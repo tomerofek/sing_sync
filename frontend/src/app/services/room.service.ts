@@ -18,7 +18,7 @@ export class RoomService implements IRoomService{
   private real: IRoomService | null;
   private fake: IRoomService;
   constructor(private http_client:HttpClient) {
-    this.real = null;//new RealRoomService(http_client);
+    this.real = new RealRoomService(http_client);
     this.fake = new FakeRoomService();
    }
 
