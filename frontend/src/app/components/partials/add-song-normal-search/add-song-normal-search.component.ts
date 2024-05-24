@@ -82,5 +82,9 @@ export class AddSongNormalSearchComponent implements OnInit {
     }
   }
 
+  test(){
+    window.alert('noder')
+  }
+
   // TODO: search button only clickable when one of the field has length >=2 (with enter just do nothing)
 }

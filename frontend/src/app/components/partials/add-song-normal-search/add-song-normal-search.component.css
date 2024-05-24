@@ -9,10 +9,10 @@
 .search-input {
     width: 100%;
     border: 3px solid #c66372ff;
-    border-right: none;
+    border-left: none;
     padding: 5px;
     height: 30px;
-    border-radius: 0 0 0 0;
+    border-radius: 0 5px 5px 0;
     outline: none;
 }
   
@@ -25,7 +25,7 @@
     text-align: center;
     justify-items: center;
     color: #fff;
-    border-radius: 0 5px 5px 0;
+    border-radius: 5px 0 0 5px;
     cursor: pointer;
     font-size: 20px;
 }
@@ -73,5 +73,10 @@ ol {
 .search-type:focus,
 .search-type:active {
     outline: none;
+}
+
+.import_from_url_link {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
