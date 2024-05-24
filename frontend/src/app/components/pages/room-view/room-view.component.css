@@ -103,13 +103,6 @@ song-content {
     display: inline-block;
 }
 
-.navigation {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    padding: 10px; /* Add padding to ensure no content touches the edges */
-    box-sizing: border-box;
-}
 
 .filler {
     display: inline-block;
@@ -169,3 +162,71 @@ mat-sidenav {
         font-size: 14px; /* Adjust font size for better readability on small screens */
     }
 }
+
+/*new navigation*/
+
+/* Ensure the container has the same maximum width as the content div */
+.navigation-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 20px); /* Adjusted to account for padding */
+    max-width: 600px; /* Same maximum width as the .content div */
+    padding: 10px; /* Add padding to ensure no content touches the edges */
+    box-sizing: border-box;
+    z-index: 1000; /* Ensure the navigation bar is above other content */
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between; /* Distribute buttons evenly */
+    width: 100%;
+}
+
+.nav_btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    margin: 0 5px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+    font-family: Arial, sans-serif;
+}
+
+.nav_btn_icon {
+    font-size: 36px;
+    height: 36px;
+    width: 36px;
+    vertical-align: middle;
+}
+
+.nav_btn_text {
+    font-size: 18px;
+    margin-top: 5px;
+    font-family: Arial, sans-serif;
+}
+
+/* Adjusted hover effect for non-disabled nav buttons */
+.nav_btn:not([disabled]):hover {
+    background: rgba(26,27,31,.08);
+    cursor: pointer;
+}
+
+/* Add transition for smooth effect */
+.nav_btn:not([disabled]) {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* Effect after clicking on a nav button */
+.nav_btn:not([disabled]):active {
+    transform: translateY(3px); /* Increase the transform distance */
+}
+
+
+

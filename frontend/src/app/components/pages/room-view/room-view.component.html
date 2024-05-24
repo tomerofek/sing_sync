@@ -60,12 +60,44 @@
                 </div>
             </div>
         
-            <div *ngIf="song && owner_perm" class="navigation">
-                <div class="filler"></div>
-                <div class="buttons">
-                    <mat-icon *ngIf="current_song_part_index!=0" class="prev-page-btn" (click)="prev_lines()">chevron_left</mat-icon>
-                    <mat-icon *ngIf="!is_last_song_part" class="next-page-btn" (click)="next_lines()">chevron_right</mat-icon>
-                    <mat-icon *ngIf="has_next_song()" class="next-song-btn" (click)="next_song()">last_page</mat-icon>
+            <div class="navigation-container">
+                <div *ngIf="owner_perm" class="navigation">
+                    <button id="prev_song_btn" class="nav_btn">
+                        <mat-icon class="nav_btn_icon">skip_previous</mat-icon>
+                        <p class="nav_btn_text" dir="rtl">
+                            לשיר
+                            <br>
+                            הקודם
+                        </p>
+                    </button>
+                    
+                    <button id="prev_part_btn" class="nav_btn" [disabled]="current_song_part_index==0" (click)="prev_lines()">
+                        <mat-icon class="nav_btn_icon">keyboard_arrow_left</mat-icon>
+                        <p class="nav_btn_text" dir="rtl">
+                        לחלק
+                        <br>
+                        הקודם
+                        </p>
+                    </button>
+                    
+                    <button id="next_part_btn" class="nav_btn" [disabled]="is_last_song_part" (click)="next_lines()">
+                        <mat-icon class="nav_btn_icon">keyboard_arrow_right</mat-icon>
+                        <p class="nav_btn_text" dir="rtl">
+                        לחלק
+                        <br> 
+                        הבא
+                        </p>
+                    </button>
+                    
+                    <button id="next_song_btn" class="nav_btn" [disabled]="has_next_song()" (click)="next_song()">
+                        <mat-icon class="nav_btn_icon">skip_next</mat-icon>
+                        <p class="nav_btn_text" dir="rtl">
+                        העבר
+                        <br> 
+                        שיר
+                        </p>
+                    </button>
+                    
                 </div>
             </div>
         </mat-sidenav-container>
