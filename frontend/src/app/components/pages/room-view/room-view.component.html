@@ -1,33 +1,33 @@
-<div class="back">
-    <div class="content">
-        <mat-sidenav-container class="sidenav-container">
-            <mat-sidenav #sidenav mode="over" closed>
-                <button mat-icon-button class="menu-button" (click)="sidenav.close()">
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="over" closed>
+        <button mat-icon-button class="menu-button" (click)="sidenav.close()">
+            <span class="menu-span">
+                <mat-icon>close</mat-icon>
+            </span>
+        </button>
+        <mat-list>
+            <mat-list-item>
+                <button mat-icon-button class="menu-button" (click)="home()">
                     <span class="menu-span">
-                        <mat-icon>close</mat-icon>
+                        <mat-icon>home</mat-icon>
+                        מסך הבית
                     </span>
                 </button>
-                <mat-list>
-                    <mat-list-item>
-                        <button mat-icon-button class="menu-button" (click)="home()">
-                            <span class="menu-span">
-                                <mat-icon>home</mat-icon>
-                                מסך הבית
-                            </span>
-                        </button>
-                    </mat-list-item>
-                    <mat-list-item>
-                        <button mat-icon-button class="menu-button" (click)="share()">
-                            <span class="menu-span">
-                                <mat-icon>share</mat-icon>
-                                הזמן אנשים לחדר
-                            </span>
-                        </button>
-                    </mat-list-item>
-                </mat-list>
-            </mat-sidenav>
-            <!-- Body -->
-            
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-icon-button class="menu-button" (click)="share()">
+                    <span class="menu-span">
+                        <mat-icon>share</mat-icon>
+                        הזמן אנשים לחדר
+                    </span>
+                </button>
+            </mat-list-item>
+        </mat-list>
+    </mat-sidenav>
+    <!-- Body -->
+    
+    <div class="back">
+        <div class="content">
             <div class="top">
                 <div class="top-sidebar">
                     <button mat-icon-button class="menu-button" (click)="sidenav.toggle()">
@@ -59,7 +59,7 @@
                     <song-content (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song"></song-content>
                 </div>
             </div>
-        
+            
             <div *ngIf="song && owner_perm" class="navigation">
                 <div class="filler"></div>
                 <div class="buttons">
@@ -68,8 +68,8 @@
                     <mat-icon *ngIf="has_next_song()" class="next-song-btn" (click)="next_song()">last_page</mat-icon>
                 </div>
             </div>
-        </mat-sidenav-container>
-    
+        
+        </div>
     </div>
-</div>
 
+</mat-sidenav-container>    

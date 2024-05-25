@@ -31,7 +31,7 @@ html, body {
     height: 100%;
     padding: 0 10px; /* Add padding for internal spacing */
     box-sizing: border-box;
-    /*background: linear-gradient(to right, rgba(68, 71, 78, 1) 0%, rgba(255, 255, 255, 1) 2%, rgba(255, 255, 255, 1) 98%, rgba(68, 71, 78, 1) 100%); /* Gradient from white to transparent*/
+    background: linear-gradient(to right, rgba(68, 71, 78, 1) 0%, rgba(255, 255, 255, 1) 2%, rgba(255, 255, 255, 1) 98%, rgba(68, 71, 78, 1) 100%); /* Gradient from white to transparent*/
 }
 
 .sidenav-container {
