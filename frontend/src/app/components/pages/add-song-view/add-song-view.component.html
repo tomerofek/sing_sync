@@ -1,6 +1,6 @@
 <mat-tab-group color="accent" class="tab-group">
     <mat-tab label="חיפוש" class="normal-search"> 
-        <add-song-normal-search [room_id]="room_id" (onSongAddEvent)="onSongAdd()"></add-song-normal-search>
+        <add-song-normal-search [room_id]="room_id" (onSongAddEvent)="onSongAdd()" (moveToUrlTabEvent)="onMoveToUrlTabEvent()"></add-song-normal-search>
     </mat-tab>
     <mat-tab label="מבאה מקישור">
         <add-song-from-url [room_id]="room_id"></add-song-from-url>

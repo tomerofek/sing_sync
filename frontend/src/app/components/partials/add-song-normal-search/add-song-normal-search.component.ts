@@ -14,6 +14,7 @@ import { Song } from 'src/app/shared/models/Song';
   styleUrls: ['./add-song-normal-search.component.css']
 })
 export class AddSongNormalSearchComponent implements OnInit {
+  @Output() moveToUrlTabEvent = new EventEmitter<void>();
 
   results: Song[] = [];
   search_term: string = '';
@@ -85,8 +86,8 @@ export class AddSongNormalSearchComponent implements OnInit {
     }
   }
 
-  test(){
-    window.alert('noder')
+  move_to_url_tab(){
+    this.moveToUrlTabEvent.emit();
   }
 
   // TODO: search button only clickable when one of the field has length >=2 (with enter just do nothing)
