@@ -16,6 +16,8 @@ import { Song } from 'src/app/shared/models/Song';
 export class AddSongNormalSearchComponent implements OnInit {
 
   results: Song[] = [];
+  search_term: string = '';
+  highlight_term: string = '';
   name_input: string = '';
   author_input: string = '';
   search_type: string = 'name';
@@ -32,6 +34,7 @@ export class AddSongNormalSearchComponent implements OnInit {
   }
 
   searchSongs() {
+    this.highlight_term = this.search_term;
     let name: string = this.name_input === '' ? '$' : this.name_input;
     let author: string = this.author_input === '' ? '$' : this.author_input;
     let songRes: Response<Song[]> | null = null;

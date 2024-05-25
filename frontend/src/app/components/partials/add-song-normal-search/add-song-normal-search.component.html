@@ -4,13 +4,13 @@
             <button class="search-btn" (click)="searchSongs()">
                 <mat-icon>search</mat-icon>
             </button>
-            <input type="text" class="search-input" dir="rtl" (keyup.enter)="searchSongs()" placeholder="חיפוש לפי שיר או אומן">
+            <input [(ngModel)]="search_term" type="text" class="search-input" dir="rtl" (keyup.enter)="searchSongs()" placeholder="חיפוש לפי שיר או אומן">
         </div>
     </div>
     <div class="search-results" *ngIf="found_results">
         <ol>        
             <li *ngFor="let song of results" dir="rtl" (click)="addSongToQ(song)">
-                {{song.song_name}} - {{song.song_author}}
+                <span [innerHTML]="(song.song_name + ' - ' + song.song_author) | highlight:highlight_term"></span>
             </li>
         </ol>
     </div>
