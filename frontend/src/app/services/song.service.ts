@@ -33,7 +33,7 @@ export class SongService implements ISongService {
   private real: ISongService | null;
   private fake: ISongService;
   constructor(private httpClient:HttpClient) {
-    this.real = null //new RealSongService(httpClient);
+    this.real = new RealSongService(httpClient);
     this.fake = new FakeSongService();
    }
   
