@@ -37,10 +37,9 @@ export interface IQueueService {
 
   /**
    * search a song with the provided data from the data base
-   * @param song_name 
-   * @param song_author 
+   * @param search_term
    */
-  search_song_from_db(song_name:string, song_author:string): Observable<Response<Song[]>>;
+  search_song_from_db(search_term:string): Observable<Response<Song[]>>;
 
   /**
    * add a song to the queue
@@ -121,11 +120,11 @@ export class QueueService implements IQueueService{
     return this.fake.remove_song_from_queue(room_id, song_to_remove_position);
   }
 
-  search_song_from_db(song_name:string, song_author:string): Observable<Response<Song[]>>{
+  search_song_from_db(search_term:string): Observable<Response<Song[]>>{
     if(this.real !== null){
-      return this.real.search_song_from_db(song_name, song_author);
+      return this.real.search_song_from_db(search_term);
     }
-    return this.fake.search_song_from_db(song_name, song_author);
+    return this.fake.search_song_from_db(search_term);
   }
 
   add_song_to_queue(room_id:string, song_name:string, song_author: string): Observable<Response<void>>{
@@ -193,8 +192,8 @@ export class RealQueueService implements IQueueService{
     return this.httpClient.get<Response<void>>(REMOVE_SONG_FROM_QUEUE + room_id + '/' + song_to_remove_position);
   }
 
-  search_song_from_db(song_name:string, song_author:string): Observable<Response<Song[]>>{
-    return this.httpClient.get<Response<Song[]>>(SEARCH_SONG_FROM_DB + song_name + '/' + song_author);
+  search_song_from_db(search_term:string): Observable<Response<Song[]>>{
+    return this.httpClient.get<Response<Song[]>>(SEARCH_SONG_FROM_DB + search_term);
   }
 
   add_song_to_queue(room_id:string, song_name:string, song_author:string): Observable<Response<void>>{
@@ -262,7 +261,7 @@ export class FakeQueueService implements IQueueService{
     throw new Error("Unimplemented");
   }
 
-  search_song_from_db(song_name:string, song_author:string): Observable<Response<Song[]>>{
+  search_song_from_db(search_term:string): Observable<Response<Song[]>>{
     return of({status:"ok", content:[new Song("song1","author1"), new Song("song2","author2")]})
   }
 

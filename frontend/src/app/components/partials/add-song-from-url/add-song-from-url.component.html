@@ -1,17 +1,17 @@
 <div class="content">
     <div class="input-wrap">
         <div class="input-bar">
-            <input #i type="text" class="url-input" (keyup.enter)="importSongFromURL(i.value)">
-            <button class="import-btn" (click)="importSongFromURL(i.value)">
-                <mat-icon>get_app</mat-icon>
+            <button class="import-btn" (click)="importSongFromURL()" [disabled]="url.length == 0">
+                <mat-icon>download</mat-icon>
             </button>
+            <input [(ngModel)]="url" type="text" class="url-input" (keyup.enter)="importSongFromURL()" dir="rtl" placeholder="קישור לשיר באתר נתמך">
         </div>
     </div>
     <br>
     <div class="supported-websites">
-        <p>supported websites:</p>
+        <p dir="rtl">אתרים נתמכים:</p>
         <ul>        
-            <li>
+            <li dir="rtl">
                 <a href="https://www.nagnu.co.il/" target="_blank">nagnu</a>
             </li>
         </ul>

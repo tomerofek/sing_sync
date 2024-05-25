@@ -14,13 +14,13 @@ import { Song } from 'src/app/shared/models/Song';
   styleUrls: ['./add-song-normal-search.component.css']
 })
 export class AddSongNormalSearchComponent implements OnInit {
-
-  results: Song[] = [];
-  name_input: string = '';
-  author_input: string = '';
-  search_type: string = 'name';
   @Input() room_id!: string;
   @Output() onSongAddEvent = new EventEmitter<void>();
+  @Output() moveToUrlTabEvent = new EventEmitter<void>();
+
+  results: Song[] = [];
+  search_term: string = '';
+  highlight_term: string = '';
   found_results: boolean = true;
 
   constructor(private songService:SongService, private queueService:QueueService, private responseService:ResponseService,
@@ -32,23 +32,31 @@ export class AddSongNormalSearchComponent implements OnInit {
   }
 
   searchSongs() {
-    let name: string = this.name_input === '' ? '$' : this.name_input;
-    let author: string = this.author_input === '' ? '$' : this.author_input;
+    if(this.search_term.length < 2) return;
+
+    //update the part in the search result that is highlighted
+    this.highlight_term = this.search_term;
+
+    //calling server
     let songRes: Response<Song[]> | null = null;
-    this.queueService.search_song_from_db(name,author).subscribe(data => {
+    this.queueService.search_song_from_db(this.search_term).subscribe(data => {
       songRes = {...data}
-      // TODO: show error message
+
       if(songRes === null || this.responseService.isError(songRes)){
+        //clearing results
         this.results = [];
+
+        //showing error msg
         console.log(songRes)
         this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
       }
       else{
+        //updating results
         this.results = this.responseService.getContent(songRes) ?? [];
       }
 
       this.found_results = this.results.length !== 0
-      this.name_input = ''; this.author_input = '';
+      this.search_term = ''
     });
 
     
@@ -70,16 +78,9 @@ export class AddSongNormalSearchComponent implements OnInit {
     });
   }
 
-  updateSearchBar(option: string){
-    this.search_type = option;
-    switch(option){
-      case('name'):
-        this.author_input = '';
-        break;
-      case('author'):
-        this.name_input = '';
-        break;
-    }
+
+  move_to_url_tab(){
+    this.moveToUrlTabEvent.emit();
   }
 
   // TODO: search button only clickable when one of the field has length >=2 (with enter just do nothing)

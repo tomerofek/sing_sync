@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-add-song-view',
@@ -7,6 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./add-song-view.component.css']
 })
 export class AddSongViewComponent implements OnInit {
+  @ViewChild(MatTabGroup) tabGroup !: MatTabGroup;
 
   room_id!: string;
   added_song_flag: boolean = false;
@@ -28,6 +30,10 @@ export class AddSongViewComponent implements OnInit {
 
   closeDialog(){
     this.dialogRef.close(this.added_song_flag);
+  }
+
+  onMoveToUrlTabEvent(){
+    this.tabGroup.selectedIndex = 1;
   }
 
 }
