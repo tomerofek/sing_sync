@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ADD_CUSTOM_SONG, ADD_SONG_TO_QUEUE, GET_ALL_QUEUE, GET_SONG_FROM_URL, GET_TOP_QUEUE, REMOVE_SONG_FROM_QUEUE, REORDER_QUEUE, SEARCH_SONG_FROM_DB } from '../shared/constants/url';
+import { ADD_CUSTOM_SONG, ADD_SONG_TO_QUEUE, GET_ALL_QUEUE, GET_SONG_FROM_URL, GET_TOP_QUEUE, HAS_NEXT_SONG, HAS_PREVIOUS_SONG, PREVIOUS_SONG, REMOVE_SONG_FROM_QUEUE, REORDER_QUEUE, SEARCH_SONG_FROM_DB } from '../shared/constants/url';
 import { Song } from '../shared/models/Song';
 import { Response } from '../shared/models/Response';
 import { Queue } from '../shared/models/Queue';
@@ -56,6 +56,24 @@ export interface IQueueService {
    * @param song_url 
    */
   get_song_from_url(room_id:string, song_url:string): Observable<Response<Song>>;
+
+  /**
+   * move to the previous song in the queue
+   * @param room_id 
+   */
+  previous_song(room_id:string): Observable<Response<Song>>
+
+  /**
+   * checks if there is a song before the current one in the queue
+   * @param room_id 
+   */
+  has_previous_song(room_id:string): Observable<Response<boolean>>
+
+  /**
+   * checkes if there is a song after the current one in the queue
+   * @param room_id 
+   */
+  has_next_song(room_id:string): Observable<Response<boolean>>
 
   /*
   add_custom_song(room_id:string, song:Song): Observable<Response<void>>;
@@ -124,6 +142,29 @@ export class QueueService implements IQueueService{
     return this.fake.get_song_from_url(room_id, song_url);
   }
 
+
+  previous_song(room_id: string): Observable<Response<Song>> {
+    if(this.real !== null){
+      return this.real.previous_song(room_id);
+    }
+    return this.fake.previous_song(room_id);
+  }
+
+  has_next_song(room_id: string): Observable<Response<boolean>> {
+    if(this.real !== null){
+      return this.real.has_next_song(room_id);
+    }
+    return this.fake.has_next_song(room_id);
+  }
+
+  has_previous_song(room_id: string): Observable<Response<boolean>> {
+    if(this.real !== null){
+      return this.real.has_previous_song(room_id);
+    }
+    return this.fake.has_previous_song(room_id);
+  }
+
+
   /*
   add_custom_song(room_id:string, song:Song): Observable<Response<void>>{
     return this.httpClient.get<Response<void>>(ADD_CUSTOM_SONG + room_id + '/' + song);
@@ -162,6 +203,18 @@ export class RealQueueService implements IQueueService{
 
   get_song_from_url(room_id:string, song_url:string): Observable<Response<Song>>{
     return this.httpClient.get<Response<Song>>(GET_SONG_FROM_URL + room_id + '/' + song_url);
+  }
+
+  previous_song(room_id: string): Observable<Response<Song>> {
+    return this.httpClient.get<Response<Song>>(PREVIOUS_SONG + room_id);
+  }
+
+  has_next_song(room_id: string): Observable<Response<boolean>> {
+    return this.httpClient.get<Response<boolean>>(HAS_NEXT_SONG + room_id);
+  }
+
+  has_previous_song(room_id: string): Observable<Response<boolean>> {
+    return this.httpClient.get<Response<boolean>>(HAS_PREVIOUS_SONG + room_id);
   }
 
   /*
@@ -219,6 +272,19 @@ export class FakeQueueService implements IQueueService{
 
   get_song_from_url(room_id:string, song_url:string): Observable<Response<Song>>{
     throw new Error("Unimplemented");
+  }
+
+  previous_song(room_id: string): Observable<Response<Song>> {
+    window.alert('called: previous_song');
+    throw new Error("Unimplemented");
+  }
+
+  has_next_song(room_id: string): Observable<Response<boolean>> {
+    return of({status:'ok', content:true});
+  }
+
+  has_previous_song(room_id: string): Observable<Response<boolean>> {
+    return of({status:'ok', content:true});
   }
 
   /*

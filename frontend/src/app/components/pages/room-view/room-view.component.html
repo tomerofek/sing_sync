@@ -62,7 +62,7 @@
         
             <div class="navigation-container">
                 <div *ngIf="owner_perm" class="navigation">
-                    <button id="prev_song_btn" class="nav_btn">
+                    <button id="prev_song_btn" class="nav_btn" [disabled]="has_prev_song" (click)="prev_song()">
                         <mat-icon class="nav_btn_icon">skip_previous</mat-icon>
                         <p class="nav_btn_text" dir="rtl">
                             לשיר
@@ -89,7 +89,7 @@
                         </p>
                     </button>
                     
-                    <button id="next_song_btn" class="nav_btn" [disabled]="has_next_song()" (click)="next_song()">
+                    <button id="next_song_btn" class="nav_btn" [disabled]="has_next_song" (click)="next_song()">
                         <mat-icon class="nav_btn_icon">skip_next</mat-icon>
                         <p class="nav_btn_text" dir="rtl">
                         העבר

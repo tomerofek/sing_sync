@@ -26,6 +26,8 @@ export class RoomViewComponent implements OnInit, OnChanges {
   owner_perm!: boolean;
   song?: Song;
   top_queue?: Song[];
+  has_next_song!: boolean;
+  has_prev_song!: boolean
 
   constructor(activatedRoute:ActivatedRoute, private roomService:RoomService, private responseService:ResponseService,
     private songService:SongService, private queueService:QueueService, private router: Router,
@@ -126,28 +128,24 @@ export class RoomViewComponent implements OnInit, OnChanges {
   }
 
   next_song():void{
-    if(this.has_next_song()){
-      let songRes: Response<Song> | null = null;
-      this.songService.advance_song(this.room_id).subscribe(data => {songRes = {...data}
-        if(songRes === null || this.responseService.isError(songRes)){
-          console.log('error in getting song in next_song click');
-          console.log(songRes);
-          this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
+    let songRes: Response<Song> | null = null;
+    this.songService.advance_song(this.room_id).subscribe(data => {songRes = {...data}
+      if(songRes === null || this.responseService.isError(songRes)){
+        console.log('error in getting song in next_song click');
+        console.log(songRes);
+        this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
+      }
+      else{
+        const newSong: Song | undefined = this.responseService.getContent(songRes);
+        if(newSong){
+          this.song = this.songService.separate_song_body(newSong);
         }
-        else{
-          const newSong: Song | undefined = this.responseService.getContent(songRes);
-          if(newSong){
-            this.song = this.songService.separate_song_body(newSong);
-          }
-          this.getCurrentSongPartIndex();
-          this.getTopQ();
-        }
-      });
-    }
-  }
-
-  has_next_song():boolean{
-    return (this.top_queue?.length || 0) !== 0;
+        this.getCurrentSongPartIndex();
+        this.getTopQ();
+        this.update_has_next_song();
+        this.update_has_prev_song();
+      }
+    });
   }
 
   onLastSongPart(){
@@ -210,6 +208,55 @@ export class RoomViewComponent implements OnInit, OnChanges {
       }
       else{
         this.current_song_part_index = this.responseService.getContent(linesRes);
+      }
+    });
+  }
+
+  prev_song() {
+    let songRes: Response<Song> | null = null;
+    this.queueService.previous_song(this.room_id).subscribe(data => {songRes = {...data}
+      if(songRes === null || this.responseService.isError(songRes)){
+        console.log('error in getting song in previous_song click');
+        console.log(songRes);
+        this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
+      }
+      else{
+        const newSong: Song | undefined = this.responseService.getContent(songRes);
+        if(newSong){
+          this.song = this.songService.separate_song_body(newSong);
+        }
+        this.getCurrentSongPartIndex();
+        this.getTopQ();
+        this.update_has_next_song();
+        this.update_has_prev_song();
+      }
+    });
+  }
+
+  update_has_next_song() {
+    let res: Response<boolean> | null = null;
+    this.queueService.has_next_song(this.room_id).subscribe(data => {res = {...data}
+      if(res === null || this.responseService.isError(res)){
+        console.log('error in updating has next song');
+        console.log(res);
+        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
+      }
+      else{
+        this.has_next_song = this.responseService.getContent(res) ?? false;
+      }
+    });
+  }
+
+  update_has_prev_song() {
+    let res: Response<boolean> | null = null;
+    this.queueService.has_previous_song(this.room_id).subscribe(data => {res = {...data}
+      if(res === null || this.responseService.isError(res)){
+        console.log('error in updating has previous song');
+        console.log(res);
+        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
+      }
+      else{
+        this.has_prev_song = this.responseService.getContent(res) ?? false;
       }
     });
   }
