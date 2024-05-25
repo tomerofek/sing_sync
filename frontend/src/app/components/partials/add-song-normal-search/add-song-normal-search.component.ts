@@ -32,6 +32,8 @@ export class AddSongNormalSearchComponent implements OnInit {
   }
 
   searchSongs() {
+    if(this.search_term.length < 2) return;
+
     //update the part in the search result that is highlighted
     this.highlight_term = this.search_term;
 
