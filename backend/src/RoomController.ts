@@ -166,8 +166,8 @@ export class RoomController {
     }
 
     //searches a song in the db returns the names and authors - as a list of json (each json is a tuple)
-    search_song_from_db(song_name:string, song_author:string): Promise<any>{
-        return getSongNames(song_name ,song_author);
+    search_song_from_db(song_id:string): Promise<any>{
+        return getSongNames(song_id);
     }
 
     //adds a song to the queue using the id - concatanation of name and author and returns the added song

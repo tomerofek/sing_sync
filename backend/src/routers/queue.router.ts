@@ -63,13 +63,12 @@ router.get(buildUrl(REMOVE_SONG_FROM_QUEUE, 'room_id', 'song_to_remove_position'
 // returns a list with json representing the names and author of all the songs in the queue after the current song
 // if not exists returns a response with “Invalid ID” status
 //either the song name or the length must be at least size bigger then 2 
-router.get(buildUrl(SEARCH_SONG_FROM_DB, 'song_name', 'song_author'), asyncHandler(
+router.get(buildUrl(SEARCH_SONG_FROM_DB, 'search_term'), asyncHandler(
     async (req, res) => {
-        const song_name = req.params.song_name === '$' ? '' : req.params.song_name;
-        const song_author = req.params.song_author === '$' ? '' : req.params.song_author;
+        const search_term = req.params.search_term === '$' ? '' : req.params.search_term;
         try {
-            console.log(`[LOG] recieved SEARCH SONG FROM DB request. params: ${song_name} | ${song_author}`)
-            const result = await roomController.search_song_from_db(song_name,song_author);
+            console.log(`[LOG] recieved SEARCH SONG FROM DB request. params: ${search_term}`)
+            const result = await roomController.search_song_from_db(search_term);
             console.log(`[LOG] result: ${result}`)
             res.send(new Response(result)) 
         } catch (error: any) {
