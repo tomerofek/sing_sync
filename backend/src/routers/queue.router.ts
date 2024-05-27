@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { io, roomController } from "../server";
-import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE, PREVIOUS_SONG, REORDER_QUEUE} from "./urls";
+import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE, PREVIOUS_SONG, REORDER_QUEUE, HAS_NEXT_SONG, HAS_PREV_SONG} from "./urls";
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
 import { SongInfo } from "../Queue";
@@ -174,5 +174,34 @@ router.get(buildUrl(REORDER_QUEUE, 'room_id', 'old_position', 'new_position'), a
     }
 ))
 
+
+// return whether there is a next song in the queue
+router.get(buildUrl(HAS_NEXT_SONG, 'room_id'), asyncHandler(
+    async (req, res) => {
+        const room_id = req.params.room_id
+        try {
+            //send the needed broadcasts to change the way the top of queue looks like
+            const result : boolean = roomController.has_next(room_id)
+            res.send(new Response(result))
+        } catch (error: any) {
+            res.send(new Response(undefined, error.message))
+        }
+    }
+))
+
+
+// return whether there is a next song in the queue
+router.get(buildUrl(HAS_PREV_SONG, 'room_id'), asyncHandler(
+    async (req, res) => {
+        const room_id = req.params.room_id
+        try {
+            //send the needed broadcasts to change the way the top of queue looks like
+            const result : boolean = roomController.has_prev(room_id)
+            res.send(new Response(result))
+        } catch (error: any) {
+            res.send(new Response(undefined, error.message))
+        }
+    }
+))
 
 export default router;

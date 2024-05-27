@@ -147,6 +147,14 @@ export class Queue<T> {
     
     }
   }
+
+  has_next() : boolean {
+    return this.size() > this.getIndex() + 1;
+  }
+
+  has_prev() : boolean {
+    return 0 < this.getIndex();
+  }
 }
 
 //the queue of songs uses the Queue implementation
@@ -319,4 +327,11 @@ export class SongsQueue{
       this.songsQueue.swap_elements(old_position,new_position);
     }
 
+    has_next() : boolean {
+      return this.songsQueue.has_next();
+    }
+
+    has_prev() : boolean {
+      return this.songsQueue.has_prev();
+    }
   }
