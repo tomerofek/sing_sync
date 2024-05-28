@@ -14,7 +14,9 @@
             </li>
         </ol>
     </div>
-    <div class="search-results" *ngIf="!found_results">
+    
+    <div class="search-results" *ngIf="!found_results" dir="rtl">
+        <br>
         לא נמצאו תוצאות. נסו 
         <span class="import_from_url_link" (click)="move_to_url_tab()">
             הבאה מקישור
