@@ -9,7 +9,7 @@ const uri = "mongodb+srv://final-project:dbpassword@noder.2cvtm9i.mongodb.net/";
 export async function getSongNames(song_id : string): Promise<any> {
     return new Promise(async (resolve, reject) => {
 
-      
+
       const client = new MongoClient(uri);
       
       try {
@@ -145,7 +145,8 @@ export class Queue<T> {
   }
 
   has_next() : boolean {
-    return this.size() > this.getIndex() + 1;
+    return this.items.length  > this.getIndex() + 1;
+    
   }
 
   has_prev() : boolean {
