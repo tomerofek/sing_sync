@@ -62,7 +62,7 @@
         
             <div class="navigation-container">
                 <div *ngIf="owner_perm" class="navigation">
-                    <button id="prev_song_btn" class="nav_btn" [disabled]="has_prev_song" (click)="prev_song()">
+                    <button id="prev_song_btn" class="nav_btn" [disabled]="!has_prev_song" (click)="prev_song()">
                         <mat-icon class="nav_btn_icon">skip_previous</mat-icon>
                         <p class="nav_btn_text" dir="rtl">
                             לשיר
@@ -71,7 +71,7 @@
                         </p>
                     </button>
                     
-                    <button id="prev_part_btn" class="nav_btn" [disabled]="current_song_part_index==0" (click)="prev_lines()">
+                    <button id="prev_part_btn" class="nav_btn" [disabled]="current_song_part_index==0 || !song" (click)="prev_lines()">
                         <mat-icon class="nav_btn_icon">keyboard_arrow_left</mat-icon>
                         <p class="nav_btn_text" dir="rtl">
                         לחלק
@@ -80,7 +80,7 @@
                         </p>
                     </button>
                     
-                    <button id="next_part_btn" class="nav_btn" [disabled]="is_last_song_part" (click)="next_lines()">
+                    <button id="next_part_btn" class="nav_btn" [disabled]="is_last_song_part || !song" (click)="next_lines()">
                         <mat-icon class="nav_btn_icon">keyboard_arrow_right</mat-icon>
                         <p class="nav_btn_text" dir="rtl">
                         לחלק
@@ -89,7 +89,7 @@
                         </p>
                     </button>
                     
-                    <button id="next_song_btn" class="nav_btn" [disabled]="has_next_song" (click)="next_song()">
+                    <button id="next_song_btn" class="nav_btn" [disabled]="!has_next_song" (click)="next_song()">
                         <mat-icon class="nav_btn_icon">skip_next</mat-icon>
                         <p class="nav_btn_text" dir="rtl">
                         העבר

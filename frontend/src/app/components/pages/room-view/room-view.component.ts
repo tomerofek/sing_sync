@@ -59,6 +59,8 @@ export class RoomViewComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.getSong();
     this.getTopQ();
+    this.update_has_next_song()
+    this.update_has_prev_song()
 
     //subscribe for broadcasts
     this.socketService.io_connect(this.room_id);
@@ -161,6 +163,7 @@ export class RoomViewComponent implements OnInit, OnChanges {
     if(this.top_queue && this.top_queue.length<2){
       this.getTopQ();
     }
+    this.update_has_next_song();
   }
 
 
