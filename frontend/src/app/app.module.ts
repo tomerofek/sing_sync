@@ -32,6 +32,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HighlightPipe } from './pipes/highlight.pipe'
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 
@@ -71,7 +73,9 @@ import { HighlightPipe } from './pipes/highlight.pipe'
     BrowserAnimationsModule,
     MatSidenavModule,
     MatListModule,
-    ClipboardModule
+    ClipboardModule,
+    DragDropModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -36,6 +37,41 @@ export class QueueViewComponent implements OnInit {
         console.log(this.queue);
       }
      });
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    this.reorder_queue(event.previousIndex, event.currentIndex);
+  }
+
+  update_queue_ui(old_position: number, new_position: number){
+    if(!this.queue) return;
+
+    //update this.queue order
+    moveItemInArray(this.queue.songs_info_list, old_position, new_position);
+
+    //moving a song that is after the one playing before the one playing
+    if(old_position > this.queue.index && new_position <= this.queue.index){
+      this.queue.index++;
+    }
+      
+    //moving a song that is before the one playing after the one playing
+    else if(old_position < this.queue.index && new_position >= this.queue.index){
+      this.queue.index--;
+    }
+
+    //moving the song that is currently playing
+    else if(old_position == this.queue.index){
+      this.queue.index = new_position
+    }
+
+  }
+
+
+  reorder_queue(old_position: number, new_position: number){
+    //service call
+    
+    //on success call this function:
+    this.update_queue_ui(old_position, new_position)
   }
 
 }
