@@ -6,36 +6,47 @@ import {spawnSync } from "child_process";
 //a simple queue implementation
 const uri = "mongodb+srv://final-project:dbpassword@noder.2cvtm9i.mongodb.net/";
 
+export async function getSongNames(song_id : string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
 
+      
+      const client = new MongoClient(uri);
+      
+      try {
+        await client.connect();
+        console.log('Connected to MongoDB');
+        const database: Db = client.db("SingSync");
+        const collection = database.collection("songs");
+        //easy to see that this is trivial to add to our code
+        const escapedSong_id = song_id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-export async function getSongNames(song_id: string): Promise<any> {
-  const client = new MongoClient('your_connection_string_here');
-
-  try {
-    await client.connect();
-    const database = client.db('your_database_name_here');
-    const collection = database.collection('your_collection_name_here');
-
-    // Escape special characters in song_id
-    const escaped_song_id = song_id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-    // Determine if the _id field should be treated as an ObjectId or a string
-  
-    // Query to find documents
-    const array_of_songs = await collection.find({
-      $or: [
-        { song_name: { $regex: escaped_song_id, $options: 'i' } }, // Case-insensitive search for song_name
-        { song_author: { $regex: escaped_song_id, $options: 'i' } } // Case-insensitive search for song_author
-      ]
-    }).toArray(); // Convert cursor to array
-    console.log(array_of_songs);
-  } catch (error) {
-    console.error('An error occurred:', error);
-  } finally {
-    await client.close();
+        //the query i sent to mongo db (trivial)
+        
+        const array_of_songs = await collection.find({
+          $or: [
+            { song_name: { $regex: escapedSong_id, $options: 'i' } }, // Case-insensitive search for song_name
+            { song_author: { $regex: escapedSong_id, $options: 'i' } } // Case-insensitive search for song_author
+          ]
+        }).toArray(); // Convert cursor to array
+        if (array_of_songs) {
+          const song_id_pairs = array_of_songs.map(song => {
+            return {song_name : song.song_name, song_author : song.song_author};
+        });
+          resolve(song_id_pairs);
+        } else {
+          
+          const error = new Error('JSON object not found.');
+          reject(error);
+        }
+      } catch (error) {
+        reject(error);
+      } finally {
+        // Close the connection when done
+        await client.close();
+        console.log('MongoDB connection closed');
+      }
+    });
   }
-}
-
   //song info interface. lior was here
   export interface SongInfo {
     song_name: string; // changed from songName
@@ -134,7 +145,7 @@ export class Queue<T> {
   }
 
   has_next() : boolean {
-    return this.items.length > this.getIndex() + 1;
+    return this.size() > this.getIndex() + 1;
   }
 
   has_prev() : boolean {
