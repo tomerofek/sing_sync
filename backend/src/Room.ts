@@ -93,6 +93,14 @@ class Room {
         this.songsQueue.swap_songs(index1,index2);
     }
 
+    has_next() : boolean {
+        return this.songsQueue.has_next();
+    }
+  
+    has_prev() : boolean {
+        return this.songsQueue.has_prev();
+    }
+
 }
 
 export { Room };

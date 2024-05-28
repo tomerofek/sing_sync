@@ -166,8 +166,8 @@ export class RoomController {
     }
 
     //searches a song in the db returns the names and authors - as a list of json (each json is a tuple)
-    search_song_from_db(song_name:string, song_author:string): Promise<any>{
-        return getSongNames(song_name ,song_author);
+    search_song_from_db(song_id:string): Promise<any>{
+        return getSongNames(song_id);
     }
 
     //adds a song to the queue using the id - concatanation of name and author and returns the added song
@@ -209,7 +209,7 @@ export class RoomController {
         throw new Error("Invalid ID");
     }
 
-    previous_song(room_id: string): SongInfo | undefined {
+    previous_song(room_id: string): SongInfo | undefined{
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.previous_song();
         }
@@ -222,6 +222,28 @@ export class RoomController {
             return "ok";
         }
         throw new Error("Invalid ID");
+    }
+
+    has_next(room_id : string) : boolean {
+        if (this.rooms.has(room_id)){   
+            let room_has_next = this.rooms.get(room_id)?.has_next();   
+            if(undefined !== room_has_next){
+                return room_has_next;
+            }
+        }
+        throw new Error("Invalid ID");
+        
+    }
+  
+    has_prev(room_id : string) : boolean {
+        if (this.rooms.has(room_id)){   
+            let room_has_prev = this.rooms.get(room_id)?.has_prev();   
+            if(undefined !== room_has_prev){
+                return room_has_prev;
+            }
+        }
+        throw new Error("Invalid ID");
+        
     }
 
 }

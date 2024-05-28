@@ -6,13 +6,8 @@ import {spawnSync } from "child_process";
 //a simple queue implementation
 const uri = "mongodb+srv://final-project:dbpassword@noder.2cvtm9i.mongodb.net/";
 
-export async function getSongNames(song_name : string ,song_author : string): Promise<any> {
+export async function getSongNames(song_id : string): Promise<any> {
     return new Promise(async (resolve, reject) => {
-
-      //legth check
-      if(song_name.length < 2 && song_author.length < 2){
-          reject(new Error("not enough characters to seach"));
-      }
 
       const client = new MongoClient(uri);
       
@@ -22,16 +17,12 @@ export async function getSongNames(song_name : string ,song_author : string): Pr
         const database: Db = client.db("SingSync");
         const collection = database.collection("songs");
         //easy to see that this is trivial to add to our code
-        const escapedSongName = song_name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const escapedSongAuthor = song_author.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const escapedSongAuthor_id = song_id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
         //the query i sent to mongo db (trivial)
         
         const array_of_songs = await collection.find({
-            $and: [
-                { song_name: { $regex: new RegExp(`.*${escapedSongName}.*`, 'i') } },
-                { song_author: { $regex: new RegExp(`.*${escapedSongAuthor}.*`, 'i') } }
-                ]
-            }).toArray();
+            song_name: { $regex: new RegExp(`.*${escapedSongAuthor_id}.*`, 'i') } }).toArray();
         if (array_of_songs) {
           const song_id_pairs = array_of_songs.map(song => {
             return {song_name : song.song_name, song_author : song.song_author};
@@ -147,6 +138,14 @@ export class Queue<T> {
     
     }
   }
+
+  has_next() : boolean {
+    return this.size() > this.getIndex() + 1;
+  }
+
+  has_prev() : boolean {
+    return 0 < this.getIndex();
+  }
 }
 
 //the queue of songs uses the Queue implementation
@@ -165,8 +164,8 @@ export class SongsQueue{
     }
     
     //for user search function - return the list of results to user
-    search_song(song_name : string, author_name : string) : any {
-        return getSongNames(song_name,author_name).then((result) => {
+    search_song(song_id : string) : any {
+        return getSongNames(song_id).then((result) => {
             //TODO add here calledback to calling function - probably send to user side - probably send to user side
             return result;
         }).catch(error => {
@@ -319,4 +318,11 @@ export class SongsQueue{
       this.songsQueue.swap_elements(old_position,new_position);
     }
 
+    has_next() : boolean {
+      return this.songsQueue.has_next();
+    }
+
+    has_prev() : boolean {
+      return this.songsQueue.has_prev();
+    }
   }

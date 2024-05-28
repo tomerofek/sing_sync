@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { io, roomController } from "../server";
-import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE, PREVIOUS_SONG, REORDER_QUEUE} from "./urls";
+import { SEARCH_SONG_FROM_DB,GET_TOP_QUEUE, GET_ALL_QUEUE ,buildUrl, GET_SONG_FROM_URL, REMOVE_SONG_FROM_QUEUE, ADD_SONG_TO_QUEUE, PREVIOUS_SONG, REORDER_QUEUE, HAS_NEXT_SONG, HAS_PREV_SONG} from "./urls";
 import { handle_get } from "./routerWrapper";
 import asyncHandler from 'express-async-handler';
 import { SongInfo } from "../Queue";
@@ -63,13 +63,12 @@ router.get(buildUrl(REMOVE_SONG_FROM_QUEUE, 'room_id', 'song_to_remove_position'
 // returns a list with json representing the names and author of all the songs in the queue after the current song
 // if not exists returns a response with “Invalid ID” status
 //either the song name or the length must be at least size bigger then 2 
-router.get(buildUrl(SEARCH_SONG_FROM_DB, 'song_name', 'song_author'), asyncHandler(
+router.get(buildUrl(SEARCH_SONG_FROM_DB, 'search_term'), asyncHandler(
     async (req, res) => {
-        const song_name = req.params.song_name === '$' ? '' : req.params.song_name;
-        const song_author = req.params.song_author === '$' ? '' : req.params.song_author;
+        const search_term = req.params.search_term === '$' ? '' : req.params.search_term;
         try {
-            console.log(`[LOG] recieved SEARCH SONG FROM DB request. params: ${song_name} | ${song_author}`)
-            const result = await roomController.search_song_from_db(song_name,song_author);
+            console.log(`[LOG] recieved SEARCH SONG FROM DB request. params: ${search_term}`)
+            const result = await roomController.search_song_from_db(search_term);
             console.log(`[LOG] result: ${result}`)
             res.send(new Response(result)) 
         } catch (error: any) {
@@ -174,5 +173,34 @@ router.get(buildUrl(REORDER_QUEUE, 'room_id', 'old_position', 'new_position'), a
     }
 ))
 
+
+// return whether there is a next song in the queue
+router.get(buildUrl(HAS_NEXT_SONG, 'room_id'), asyncHandler(
+    async (req, res) => {
+        const room_id = req.params.room_id
+        try {
+            //send the needed broadcasts to change the way the top of queue looks like
+            const result : boolean = roomController.has_next(room_id)
+            res.send(new Response(result))
+        } catch (error: any) {
+            res.send(new Response(undefined, error.message))
+        }
+    }
+))
+
+
+// return whether there is a next song in the queue
+router.get(buildUrl(HAS_PREV_SONG, 'room_id'), asyncHandler(
+    async (req, res) => {
+        const room_id = req.params.room_id
+        try {
+            //send the needed broadcasts to change the way the top of queue looks like
+            const result : boolean = roomController.has_prev(room_id)
+            res.send(new Response(result))
+        } catch (error: any) {
+            res.send(new Response(undefined, error.message))
+        }
+    }
+))
 
 export default router;
