@@ -23,13 +23,11 @@ export async function getSongNames(song_id: string): Promise<any> {
   
     // Query to find documents
     const array_of_songs = await collection.find({
-      $expr: {
-        $gt: [
-          { $indexOfBytes: ["$_id", escaped_song_id] },
-          -1
-        ]
-      }
-    });
+      $or: [
+        { song_name: { $regex: escaped_song_id, $options: 'i' } }, // Case-insensitive search for song_name
+        { song_author: { $regex: escaped_song_id, $options: 'i' } } // Case-insensitive search for song_author
+      ]
+    }).toArray(); // Convert cursor to array
     console.log(array_of_songs);
   } catch (error) {
     console.error('An error occurred:', error);
