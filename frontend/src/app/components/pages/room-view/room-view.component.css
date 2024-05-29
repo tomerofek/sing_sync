@@ -137,6 +137,7 @@ song-content {
 .menu-span{
     border-radius: 50%;
     text-align: center;
+    align-items: center;
     width: 40px;
     height: 40px;
 }
@@ -144,6 +145,57 @@ song-content {
 .menu-button:hover{
     background: rgba(26,27,31,.08);
 }
+
+.in-menu-button{
+    background-color: rgba(0,0,0,0);
+    text-align: center;
+    color: #44474e;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+    overflow: visible;
+    width: 100%;
+    height: 100%;
+}
+
+.in-menu-span{
+    display: flex;
+    align-items: center;
+    font-family: Arial;
+    font-size: 1.1rem;
+    /*border-radius: 50%;
+    width: 40px;
+    height: 40px;*/
+}
+
+.in-menu-icon {
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.in-menu-item {
+    background: white;
+}
+
+.in-menu-item:hover {
+    background: rgba(26,27,31,.08);
+}
+
+::ng-deep mat-list-item {
+    padding: 0 !important; /* Remove all padding */
+}
+  
+::ng-deep mat-list-item .mat-list-item-content {
+    padding: 0 !important; /* Remove padding from the content */
+}
+
 
 mat-sidenav {
     display: flex;

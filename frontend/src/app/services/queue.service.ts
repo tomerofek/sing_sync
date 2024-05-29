@@ -5,6 +5,7 @@ import { ADD_CUSTOM_SONG, ADD_SONG_TO_QUEUE, GET_ALL_QUEUE, GET_SONG_FROM_URL, G
 import { Song } from '../shared/models/Song';
 import { Response } from '../shared/models/Response';
 import { Queue } from '../shared/models/Queue';
+import { DevmodeService } from './devmode.service';
 
 export interface IQueueService {
 
@@ -87,8 +88,8 @@ export interface IQueueService {
 export class QueueService implements IQueueService{
   private real: IQueueService | null;
   private fake: IQueueService;
-  constructor(private httpClient:HttpClient) {
-    this.real = new RealQueueService(httpClient);
+  constructor(private httpClient:HttpClient, devModeService: DevmodeService) {
+    this.real = devModeService.isDevMode() ? null : new RealQueueService(httpClient);
     this.fake = new FakeQueueService();
    }
 

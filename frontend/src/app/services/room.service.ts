@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { JOIN_ROOM_URL, HOST_ROOM_URL, SEND_HELLO_URL } from '../shared/constants/url';
 import { Response } from '../shared/models/Response';
 import { Observable, of } from 'rxjs';
+import { DevmodeService } from './devmode.service';
 
 export interface IRoomService {
 
@@ -17,8 +18,8 @@ export interface IRoomService {
 export class RoomService implements IRoomService{
   private real: IRoomService | null;
   private fake: IRoomService;
-  constructor(private http_client:HttpClient) {
-    this.real = new RealRoomService(http_client);
+  constructor(private http_client:HttpClient, devModeService: DevmodeService) {
+    this.real = devModeService.isDevMode() ? null : new RealRoomService(http_client);
     this.fake = new FakeRoomService();
    }
 
