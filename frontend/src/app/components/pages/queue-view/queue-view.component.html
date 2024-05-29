@@ -1,19 +1,37 @@
 <div class="content">
     <h1 class="title" dir="rtl">
         רשימת השמעה
-        <mat-icon>edit</mat-icon>
+        <mat-icon *ngIf="!editmode" class="edit-btn" (click)="editmode = true">edit</mat-icon>
+        <mat-icon *ngIf="editmode" class="edit-btn" (click)="editmode = false">check_circle</mat-icon>
     </h1>
     <div class="Q-notEmpty" *ngIf="queue && queue.songs_info_list.length>0">  
-        <ol cdkDropList class="song_list" (cdkDropListDropped)="drop($event)"> 
-            <div class="list_item" *ngFor="let song of queue.songs_info_list; let i = index" dir="rtl" cdkDrag>
-                <mat-icon>drag_indicator</mat-icon>
-                <li [ngClass]="{'currentSong': i === queue.index}" dir="rtl">
-                    {{song.song_name}} - {{song.song_author}}
-                </li>
-                <mat-checkbox class="list_checkbox"></mat-checkbox>
-            </div>       
-            
-        </ol>
+        <div *ngIf="editmode; then edit; else notEdit"></div>
+        <ng-template #edit>
+            <ol cdkDropList class="song_list" (cdkDropListDropped)="drop($event)"> 
+                <div class="list_item" *ngFor="let song of queue.songs_info_list; let i = index" dir="rtl" cdkDrag>
+                    <mat-icon>drag_indicator</mat-icon>
+                    <li [ngClass]="{'currentSong': i === queue.index}" dir="rtl">
+                        {{song.song_name}} - {{song.song_author}}
+                    </li>
+                    <mat-checkbox [disabled]="i === queue.index" [ngClass]="{'currentSongCheckBox': i === queue.index}" class="list_checkbox" [(ngModel)]="song.checked"></mat-checkbox>
+                </div>       
+                
+            </ol>
+            <button class="remove_songs_btn" dir="rtl" [disabled]="getCheckedSongs().length == 0" (click)="remove_song_from_queue()">
+                <mat-icon class="remove_songs_icon">delete</mat-icon>
+                <p class="remove_songs_text" dir="rtl">
+                    הסר
+                </p>
+                <p *ngIf="getCheckedSongs().length" class="remove_songs_text">
+                    ({{getCheckedSongs().length}})
+                </p>
+            </button>
+        </ng-template>
+        <ng-template #notEdit>
+            <ol>        
+                <li *ngFor="let song of queue.songs_info_list; let i = index" [ngClass]="{'currentSong': i === queue.index}" dir="rtl">{{song.song_name}} - {{song.song_author}}</li>
+            </ol>
+        </ng-template>
     </div>
     <p class="Q-empty" *ngIf="!queue || queue.songs_info_list.length==0">
         רשימת ההשמעה ריקה

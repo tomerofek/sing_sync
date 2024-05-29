@@ -244,14 +244,8 @@ export class FakeQueueService implements IQueueService{
   }
 
   get_all_queue(room_id:string): Observable<Response<Queue>>{
-    /*if(this.queue_pos==1)
-      return of({status: "ok", content: [new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3')]});
-    if(this.queue_pos==2)
-      return of({status: "ok", content: [new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3')]});
-    if(this.queue_pos==3)
-      return of({status: "ok", content: [new Song('שיר3','יוצר3')]});
-    return of({status: "ok", content: []});*/
-    return of({status:'ok', content:{index:1,songs_info_list:[new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3')]}});
+    
+    return of({status:'ok', content:{index:1,songs_info_list:[new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3'), new Song('שיר4','יוצר4'), new Song('שיר5','יוצר5')]}});
   }
 
   reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<void>>{
@@ -275,7 +269,6 @@ export class FakeQueueService implements IQueueService{
   }
 
   previous_song(room_id: string): Observable<Response<Song>> {
-    window.alert('called: previous_song');
     throw new Error("Unimplemented");
   }
 

@@ -5,9 +5,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationService } from 'src/app/services/notification.service';
 import { QueueService } from 'src/app/services/queue.service';
 import { ResponseService } from 'src/app/services/response.service';
-import { Queue } from 'src/app/shared/models/Queue';
+import { Queue, QueueWithChecked } from 'src/app/shared/models/Queue';
 import { Response } from 'src/app/shared/models/Response';
 import { Song } from 'src/app/shared/models/Song';
+import { SongWithChecked } from 'src/app/shared/models/SongWithChecked';
 
 @Component({
   selector: 'app-queue-view',
@@ -16,8 +17,9 @@ import { Song } from 'src/app/shared/models/Song';
 })
 export class QueueViewComponent implements OnInit {
 
-  queue?: Queue;
+  queue?: QueueWithChecked;
   room_id!: string;
+  editmode!: boolean;
 
   constructor(@Inject(MAT_DIALOG_DATA) room_id: any, private queueService: QueueService, private responseService: ResponseService,
     private notificationService: NotificationService, private snackBar: MatSnackBar) {
@@ -26,6 +28,7 @@ export class QueueViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.editmode = false;
     let res: Response<Queue> | null = null;
     this.queueService.get_all_queue(this.room_id).subscribe(data => {res = {...data}
       console.log(res);
@@ -33,7 +36,15 @@ export class QueueViewComponent implements OnInit {
         console.log(res)
         this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
       } else{
-        this.queue = this.responseService.getContent(res);
+        
+        var tempQueue = this.responseService.getContent(res);
+        if(tempQueue){
+          this.queue = new QueueWithChecked(tempQueue);
+        }
+        else{
+          this.queue = undefined;
+        }
+        
         console.log(this.queue);
       }
      });
@@ -41,6 +52,7 @@ export class QueueViewComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>) {
     this.reorder_queue(event.previousIndex, event.currentIndex);
+    console.log(this.queue)
   }
 
   update_queue_ui(old_position: number, new_position: number){
@@ -66,12 +78,33 @@ export class QueueViewComponent implements OnInit {
 
   }
 
+  getCheckedSongs() : number[]{
+    if(this.queue) {
+      return this.queue.songs_info_list
+        .map((song, index) => song.checked ? index : -1)
+        .filter(index => index !== -1);
+    }
+    return [];
+  }
 
   reorder_queue(old_position: number, new_position: number){
     //service call
     
     //on success call this function:
     this.update_queue_ui(old_position, new_position)
+  }
+
+  remove_song_from_queue(){
+    console.log(this.getCheckedSongs())
+    //service call that uses getCheckedSongs to remove all the selected songs.
+
+    //on success calls this function:
+    //update index from reslut from service call
+    if(this.queue){
+      this.queue.index = 0 //remove this line
+      this.queue.songs_info_list = this.queue?.songs_info_list.filter(song => !song.checked)
+    }
+      
   }
 
 }
