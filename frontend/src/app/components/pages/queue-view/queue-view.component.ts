@@ -55,29 +55,6 @@ export class QueueViewComponent implements OnInit {
     console.log(this.queue)
   }
 
-  update_queue_ui(old_position: number, new_position: number){
-    if(!this.queue) return;
-
-    //update this.queue order
-    moveItemInArray(this.queue.songs_info_list, old_position, new_position);
-
-    //moving a song that is after the one playing before the one playing
-    if(old_position > this.queue.index && new_position <= this.queue.index){
-      this.queue.index++;
-    }
-      
-    //moving a song that is before the one playing after the one playing
-    else if(old_position < this.queue.index && new_position >= this.queue.index){
-      this.queue.index--;
-    }
-
-    //moving the song that is currently playing
-    else if(old_position == this.queue.index){
-      this.queue.index = new_position
-    }
-
-  }
-
   getCheckedSongs() : number[]{
     if(this.queue) {
       return this.queue.songs_info_list
@@ -97,10 +74,12 @@ export class QueueViewComponent implements OnInit {
         this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
       } else{
         //on success:
-        this.update_queue_ui(old_position, new_position);
         var resIndex: number | undefined = this.responseService.getContent(res);
-        if(this.queue && resIndex)
+        if(this.queue && resIndex != undefined){
+          moveItemInArray(this.queue.songs_info_list, old_position, new_position);
           this.queue.index = resIndex;
+        }
+          
       }
     });
   }
@@ -118,13 +97,13 @@ export class QueueViewComponent implements OnInit {
 
         //on success:
         var resIndex: number | undefined = this.responseService.getContent(res);
-        if(this.queue && resIndex){
+        console.log('queue:', this.queue, 'resIndex:', resIndex);
+        if(this.queue && resIndex != undefined){
           this.queue.index = resIndex;
-          this.queue.songs_info_list = this.queue?.songs_info_list.filter(song => !song.checked)
+          this.queue.songs_info_list = this.queue.songs_info_list.filter(((song, index) => !toRemove.includes(index)))
+          console.log('queue after remove:', this.queue);
         }
-          
       }
     });      
   }
-
 }
