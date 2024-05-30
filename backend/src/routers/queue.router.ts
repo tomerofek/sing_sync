@@ -60,9 +60,9 @@ router.get(buildUrl(REMOVE_SONG_FROM_QUEUE, 'room_id', 'songs_to_remove_position
             for(let i = 0; i < songs_to_remove_positions_stinrg_list.length; i++){
                 songs_to_remove_positions_as_int[i] = parseInt(songs_to_remove_positions_stinrg_list[i])
             }
-
-            roomController.remove_song_from_queue(room_id,songs_to_remove_positions_as_int)
-            res.send(new Response('ok'))
+            io.to(room_id).emit("topOfQueue", roomController.get_top_queue(room_id));
+            res.send(roomController.remove_song_from_queue(room_id,songs_to_remove_positions_as_int))
+            
         } catch (error: any) {
             res.send(new Response(undefined, error.message))
         }
