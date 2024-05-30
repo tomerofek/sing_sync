@@ -51,7 +51,7 @@ router.get(buildUrl(GET_ALL_QUEUE, 'room_id'), asyncHandler(
 router.get(buildUrl(REMOVE_SONG_FROM_QUEUE, 'room_id', 'songs_to_remove_positions'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
-        const songs_to_remove_positions = req.params.song_to_remove_position
+        const songs_to_remove_positions = req.params.songs_to_remove_positions
         try {
             //turn into a list of strings each is a number 
             const songs_to_remove_positions_stinrg_list = songs_to_remove_positions.split(',')
@@ -60,7 +60,7 @@ router.get(buildUrl(REMOVE_SONG_FROM_QUEUE, 'room_id', 'songs_to_remove_position
             for(let i = 0; i < songs_to_remove_positions_stinrg_list.length; i++){
                 songs_to_remove_positions_as_int[i] = parseInt(songs_to_remove_positions_stinrg_list[i])
             }
-            
+
             roomController.remove_song_from_queue(room_id,songs_to_remove_positions_as_int)
             res.send(new Response('ok'))
         } catch (error: any) {
