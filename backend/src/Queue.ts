@@ -160,7 +160,7 @@ export class Queue<T> {
     
     //moving a song that is before the one playing after the one playing
     else if(first_index < this.index && second_index >= this.index){
-      this.index;
+      this.index--;
     }
     
     //moving the song that is currently playing
