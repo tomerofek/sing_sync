@@ -146,8 +146,8 @@ export class Queue<T> {
     }else{
       let temp : T = this.items[first_index];
       let first_list : T[] = this.items.slice(0,second_index);
-      let second_list : T[] = this.items.slice(second_index,first_index);
-      let third_list : T[] = this.items.slice(first_index + 1,this.items.length);
+      let second_list : T[] = this.items.slice(second_index + 1,first_index);
+      let third_list : T[] = this.items.slice(first_index,this.items.length);
       first_list = first_list.concat(temp);
       this.items = first_list.concat(second_list).concat(third_list);
     
