@@ -122,6 +122,9 @@ export class Queue<T> {
         }
         //remove the song from the queue
         this.items.splice(indexes_to_remove[i],1);
+        for(let i = 0; i < indexes_to_remove.length; i++){
+          indexes_to_remove[i]--;
+        }
       }
       return this.index
     }
