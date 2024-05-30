@@ -135,23 +135,12 @@ export class Queue<T> {
       if(first_index < 0 || second_index < 0 || first_index >= this.items.length || second_index >= this.items.length){
         throw new Error("Invalid song position");
       }
+      const songToMove = this.items[first_index];
 
-      if(first_index < second_index){
-      let temp : T = this.items[first_index];
-      let first_list : T[] = this.items.slice(0,first_index);
-      let second_list : T[] = this.items.slice(first_index + 1,second_index);
-      let third_list : T[] = this.items.slice(second_index,this.items.length);
-      second_list = second_list.concat(temp);
-      this.items = first_list.concat(second_list).concat(third_list);
-    }else{
-      let temp : T = this.items[first_index];
-      let first_list : T[] = this.items.slice(0,second_index);
-      let second_list : T[] = this.items.slice(second_index + 1,first_index);
-      let third_list : T[] = this.items.slice(first_index,this.items.length);
-      first_list = first_list.concat(temp);
-      this.items = first_list.concat(second_list).concat(third_list);
-    
-    }
+      // Remove the song from the old position
+      this.items.splice(first_index, 1);
+      // Insert the song at the new position
+      this.items.splice(second_index, 0, songToMove);
 
     //moving a song that is after the one playing before the one playing
   if(first_index > this.index && second_index <= this.index){
