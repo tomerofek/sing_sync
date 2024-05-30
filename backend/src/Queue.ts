@@ -113,7 +113,7 @@ export class Queue<T> {
     remove(indexes_to_remove : number[]): number {
       for(let i = 0; i < indexes_to_remove.length; i++){
         //check for invalid indexes
-        if(indexes_to_remove[i] < 0 || indexes_to_remove[i] >= this.size()){
+        if(indexes_to_remove[i] < 0 || indexes_to_remove[i] >= this.items.length){
           throw new Error("Invalid song position");
         }
         //update current index in queue
