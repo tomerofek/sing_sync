@@ -48,12 +48,20 @@ router.get(buildUrl(GET_ALL_QUEUE, 'room_id'), asyncHandler(
 
 // removes a song from the queue from a given position returns a status
 // if not exists returns a response with “Invalid ID” status
-router.get(buildUrl(REMOVE_SONG_FROM_QUEUE, 'room_id', 'song_to_remove_position'), asyncHandler(
+router.get(buildUrl(REMOVE_SONG_FROM_QUEUE, 'room_id', 'songs_to_remove_positions'), asyncHandler(
     async (req, res) => {
         const room_id = req.params.room_id
-        const song_to_remove_position = req.params.song_to_remove_position
+        const songs_to_remove_positions = req.params.song_to_remove_position
         try {
-            roomController.remove_song_from_queue(room_id,parseInt(song_to_remove_position))
+            //turn into a list of strings each is a number 
+            const songs_to_remove_positions_stinrg_list = songs_to_remove_positions.split(',')
+            //turn into a list of integers
+            const songs_to_remove_positions_as_int = new Array<number>(songs_to_remove_positions_stinrg_list.length)
+            for(let i = 0; i < songs_to_remove_positions_stinrg_list.length; i++){
+                songs_to_remove_positions_as_int[i] = parseInt(songs_to_remove_positions_stinrg_list[i])
+            }
+            
+            roomController.remove_song_from_queue(room_id,songs_to_remove_positions_as_int)
             res.send(new Response('ok'))
         } catch (error: any) {
             res.send(new Response(undefined, error.message))
@@ -164,7 +172,9 @@ router.get(buildUrl(REORDER_QUEUE, 'room_id', 'old_position', 'new_position'), a
         try {
             //send the needed broadcasts to change the way the top of queue looks like
             io.to(room_id).emit("topOfQueue", roomController.get_top_queue(room_id));
-            const result : string = roomController.swap_song(room_id,parseInt(old_position),parseInt(new_position))
+            const result : number | undefined = roomController.swap_song(room_id,parseInt(old_position),parseInt(new_position))
+            if(result == undefined)
+                throw Error('cannot fetch current index after swap')
             io.to(room_id).emit("topOfQueue", roomController.get_top_queue(room_id));
             res.send(new Response(result))
         } catch (error: any) {

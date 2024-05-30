@@ -65,8 +65,8 @@ class Room {
     }
 
     
-    remove_song_from_queue(song_to_remove_position : number){
-        this.songsQueue.remove_song_from_queue(song_to_remove_position);
+    remove_song_from_queue(songs_to_remove_position : number[]) : number{
+        return this.songsQueue.remove_song_from_queue(songs_to_remove_position);
     }
 
     add_song_to_queue(song_name : string ,song_author : string): Promise<void>{
@@ -89,8 +89,8 @@ class Room {
         return this.songsQueue.previous_song();
     }
 
-    swap_songs(index1 : number, index2 : number) : void{
-        this.songsQueue.swap_songs(index1,index2);
+    swap_songs(index1 : number, index2 : number) : number{
+        return this.songsQueue.swap_songs(index1,index2);
     }
 
     has_next() : boolean {

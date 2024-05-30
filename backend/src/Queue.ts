@@ -110,10 +110,20 @@ export class Queue<T> {
         return this.items.length - this.index;
     }
 
-    remove(index : number): void {
-        if (index !== -1) {
-            this.items.splice(index, 1);
+    remove(indexes_to_remove : number[]): number {
+      for(let i = 0; i < indexes_to_remove.length; i++){
+        //check for invalid indexes
+        if(indexes_to_remove[i] < 0 || indexes_to_remove[i] >= this.size()){
+          throw new Error("Invalid song position");
         }
+        //update current index in queue
+        if(indexes_to_remove[i] < this.index){
+          this.index--;
+        }
+        //remove the song from the queue
+        this.items.splice(indexes_to_remove[i],1);
+      }
+      return this.index
     }
 
     getIndex(): number {
@@ -121,7 +131,7 @@ export class Queue<T> {
     }
 
     //moves the item at first index to be located in second_index (second_index of the old list)
-    swap_elements(first_index : number, second_index : number) : void {
+    swap_elements(first_index : number, second_index : number) : number {
       if(first_index < 0 || second_index < 0 || first_index >= this.size() || second_index >= this.size()){
         throw new Error("Invalid song position");
       }
@@ -142,6 +152,22 @@ export class Queue<T> {
       this.items = first_list.concat(second_list).concat(third_list);
     
     }
+
+    //moving a song that is after the one playing before the one playing
+  if(first_index > this.index && second_index <= this.index){
+    this.index++;
+    }
+    
+    //moving a song that is before the one playing after the one playing
+    else if(first_index < this.index && second_index >= this.index){
+      this.index;
+    }
+    
+    //moving the song that is currently playing
+    else if(first_index == this.index){
+      this.index = second_index
+    }
+    return this.getIndex();
   }
 
   has_next() : boolean {
@@ -266,10 +292,10 @@ export class SongsQueue{
     }
 
     //removes song at position from the queue
-    remove_song_from_queue(song_to_remove_position : number) : void {
+    remove_song_from_queue(song_to_remove_position : number[]) : number {
       try {
         // Attempt to remove the song from the queue
-        this.songsQueue.remove(song_to_remove_position);
+        return this.songsQueue.remove(song_to_remove_position);
       } catch (error) {
           // If an error occurs during removal, throw a new error
           throw new Error("Invalid position");
@@ -320,8 +346,8 @@ export class SongsQueue{
     }
 
     //swap songs in the queue will put item at old_position at new position
-    swap_songs(old_position : number, new_position : number) : void {
-      this.songsQueue.swap_elements(old_position,new_position);
+    swap_songs(old_position : number, new_position : number) : number {
+      return this.songsQueue.swap_elements(old_position,new_position);
     }
 
     has_next() : boolean {

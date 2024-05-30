@@ -158,9 +158,13 @@ export class RoomController {
     }
 
     //removes the item at index from the queue (remove current song is index 0)
-    remove_song_from_queue(room_id : string,song_to_remove_position : number) : void{
+    remove_song_from_queue(room_id : string,song_to_remove_position : number[]) : number{
         if (this.rooms.has(room_id)){      
-            this.rooms.get(room_id)?.remove_song_from_queue(song_to_remove_position)
+            let new_current_index =  this.rooms.get(room_id)?.remove_song_from_queue(song_to_remove_position)
+            if(new_current_index === undefined){
+                throw new Error("Invalid ID");
+            }
+            return new_current_index;
         }
         throw new Error("Invalid ID");
     }
@@ -216,10 +220,9 @@ export class RoomController {
         throw new Error("Invalid ID");
     }
 
-    swap_song(room_id: string, index1: number, index2: number): string {
+    swap_song(room_id: string, index1: number, index2: number): number | undefined {
         if (this.rooms.has(room_id)){      
-            this.rooms.get(room_id)?.swap_songs(index1, index2);
-            return "ok";
+            return this.rooms.get(room_id)?.swap_songs(index1, index2);;
         }
         throw new Error("Invalid ID");
     }
