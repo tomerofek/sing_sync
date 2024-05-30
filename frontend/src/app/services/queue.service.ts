@@ -24,17 +24,17 @@ export interface IQueueService {
   /**
    * move the song in from an old position to the new posotion in queue
    * @param room_id 
-   * @param song_to_move_position 
+   * @param old_position 
    * @param new_position 
    */
-  reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<void>>;
+  reorder_queue(room_id:string, old_position:number, new_position:number): Observable<Response<number>>;
 
   /**
    * remove a song in the position provided from the queue
    * @param room_id 
-   * @param song_to_remove_position 
+   * @param songs_to_remove_positions
    */
-  remove_song_from_queue(room_id:string, song_to_remove_position:number): Observable<Response<void>>;
+  remove_song_from_queue(room_id:string, songs_to_remove_positions:number[]): Observable<Response<number>>;
 
   /**
    * search a song with the provided data from the data base
@@ -107,18 +107,18 @@ export class QueueService implements IQueueService{
     return this.fake.get_all_queue(room_id);
   }
 
-  reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<void>>{
+  reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<number>>{
     if(this.real !== null){
       return this.real.reorder_queue(room_id, song_to_move_position, new_position);
     }
     return this.fake.reorder_queue(room_id, song_to_move_position, new_position);
   }
 
-  remove_song_from_queue(room_id:string, song_to_remove_position:number): Observable<Response<void>>{
+  remove_song_from_queue(room_id:string, songs_to_remove_positions:number[]): Observable<Response<number>>{
     if(this.real !== null){
-      return this.real.remove_song_from_queue(room_id, song_to_remove_position);
+      return this.real.remove_song_from_queue(room_id, songs_to_remove_positions);
     }
-    return this.fake.remove_song_from_queue(room_id, song_to_remove_position);
+    return this.fake.remove_song_from_queue(room_id, songs_to_remove_positions);
   }
 
   search_song_from_db(search_term:string): Observable<Response<Song[]>>{
@@ -185,12 +185,12 @@ export class RealQueueService implements IQueueService{
     return this.httpClient.get<Response<Queue>>(GET_ALL_QUEUE + room_id);
   }
 
-  reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<void>>{
-    return this.httpClient.get<Response<void>>(REORDER_QUEUE + room_id + '/' + song_to_move_position + '/' + new_position);
+  reorder_queue(room_id:string, old_position:number, new_position:number): Observable<Response<number>>{
+    return this.httpClient.get<Response<number>>(REORDER_QUEUE + room_id + '/' + old_position + '/' + new_position);
   }
 
-  remove_song_from_queue(room_id:string, song_to_remove_position:number): Observable<Response<void>>{
-    return this.httpClient.get<Response<void>>(REMOVE_SONG_FROM_QUEUE + room_id + '/' + song_to_remove_position);
+  remove_song_from_queue(room_id:string, songs_to_remove_positions:number[]): Observable<Response<number>>{
+    return this.httpClient.get<Response<number>>(REMOVE_SONG_FROM_QUEUE + room_id + '/' + songs_to_remove_positions.toString());
   }
 
   search_song_from_db(search_term:string): Observable<Response<Song[]>>{
@@ -248,11 +248,11 @@ export class FakeQueueService implements IQueueService{
     return of({status:'ok', content:{index:1,songs_info_list:[new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3'), new Song('שיר4','יוצר4'), new Song('שיר5','יוצר5')]}});
   }
 
-  reorder_queue(room_id:string, song_to_move_position:number, new_position:number): Observable<Response<void>>{
+  reorder_queue(room_id:string, old_position:number, new_position:number): Observable<Response<number>>{
     throw new Error("Unimplemented");
   }
 
-  remove_song_from_queue(room_id:string, song_to_remove_position:number): Observable<Response<void>>{
+  remove_song_from_queue(room_id:string, songs_to_remove_positions:number[]): Observable<Response<number>>{
     throw new Error("Unimplemented");
   }
 

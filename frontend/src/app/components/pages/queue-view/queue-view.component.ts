@@ -89,22 +89,42 @@ export class QueueViewComponent implements OnInit {
 
   reorder_queue(old_position: number, new_position: number){
     //service call
-    
-    //on success call this function:
-    this.update_queue_ui(old_position, new_position)
+    let res: Response<number> | null = null;
+    this.queueService.reorder_queue(this.room_id, old_position, new_position).subscribe(data => {res = {...data}
+      console.log(res);
+      if(res === null || this.responseService.isError(res)){
+        console.log(res)
+        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
+      } else{
+        //on success:
+        this.update_queue_ui(old_position, new_position);
+        var resIndex: number | undefined = this.responseService.getContent(res);
+        if(this.queue && resIndex)
+          this.queue.index = resIndex;
+      }
+    });
   }
 
   remove_song_from_queue(){
-    console.log(this.getCheckedSongs())
     //service call that uses getCheckedSongs to remove all the selected songs.
+    var toRemove : number[] = this.getCheckedSongs();
+    let res: Response<number> | null = null;
+    this.queueService.remove_song_from_queue(this.room_id, toRemove).subscribe(data => {res = {...data}
+      console.log(res);
+      if(res === null || this.responseService.isError(res)){
+        console.log(res)
+        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
+      } else{
 
-    //on success calls this function:
-    //update index from reslut from service call
-    if(this.queue){
-      this.queue.index = 0 //remove this line
-      this.queue.songs_info_list = this.queue?.songs_info_list.filter(song => !song.checked)
-    }
-      
+        //on success:
+        var resIndex: number | undefined = this.responseService.getContent(res);
+        if(this.queue && resIndex){
+          this.queue.index = resIndex;
+          this.queue.songs_info_list = this.queue?.songs_info_list.filter(song => !song.checked)
+        }
+          
+      }
+    });      
   }
 
 }
