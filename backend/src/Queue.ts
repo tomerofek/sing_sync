@@ -132,7 +132,7 @@ export class Queue<T> {
 
     //moves the item at first index to be located in second_index (second_index of the old list)
     swap_elements(first_index : number, second_index : number) : number {
-      if(first_index < 0 || second_index < 0 || first_index >= this.size() || second_index >= this.size()){
+      if(first_index < 0 || second_index < 0 || first_index >= this.items.length || second_index >= this.items.length){
         throw new Error("Invalid song position");
       }
 
