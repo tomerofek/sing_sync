@@ -1,5 +1,10 @@
 import { RoomController } from './RoomController';
 
+// Decode function using Base64 decoding
+function decodeWithBase64(encodedText: string): string {
+  return Buffer.from(encodedText, 'base64').toString('utf8');
+}
+
 describe('RoomController', () => {
   let roomController: RoomController;
 
@@ -17,12 +22,30 @@ describe('RoomController', () => {
     const expectedRoomId = roomController.next_id[0];
 
     // Act
-    const acturalRoomId = await roomController.hostRoom(roomData);
+    let acturalRoomId = await roomController.hostRoom(roomData);
+    acturalRoomId = decodeWithBase64(acturalRoomId);
+    const parts: string[] = acturalRoomId.split("|");
     const acturalRoomIdNumber = parseInt(acturalRoomId, 10);
 
     // Assert
     expect(acturalRoomIdNumber).toBeDefined();
     expect(acturalRoomIdNumber).toBe(expectedRoomId);
+     
+  });
+
+  it('should generate unique room ID', async () => {
+    // Arrange
+    const roomData = {
+      name: 'Test Room',
+      // Add other room properties here
+    };
+
+    // Act
+    const roomId1 = await roomController.hostRoom(roomData);
+    const roomId2 = await roomController.hostRoom(roomData);
+
+    // Assert
+    expect(roomId1).not.toBe(roomId2);
      
   });
 
@@ -32,13 +55,14 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = await roomController.hostRoom(roomData);
+    let roomId = await roomController.hostRoom(roomData);
+   
 
     // Act
     const result = roomController.joinRoom(roomId);
 
     // Assert
-    expect(result).toBe('ok');
+    expect(result).toBe(true);
      
   });
 
@@ -56,7 +80,10 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
   
     // add song to the room
     const songData = {
@@ -101,7 +128,10 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
   
     // add song to the room
     const songData = {
@@ -143,8 +173,11 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
-  
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
+
     // add song to the room
     const songData = {
       name: ' (פסח) מה נשתנה',
@@ -189,7 +222,10 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
   
     // add song to the room
     const songData = {
@@ -234,8 +270,10 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
-  
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
     // add song to the room
     const songData_1 = {
       name: ' (פסח) מה נשתנה',
@@ -280,13 +318,17 @@ describe('RoomController', () => {
     expect(() => roomController.advance_song(invalidRoomId)).toThrowError('Invalid ID');
   });
 
+
   it('get_top_queue in the song', async () => {
     // Arrange
     const roomData = {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
   
     // add song to the room
     const songData_1 = {
@@ -341,7 +383,10 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
   
     // add song to the room
     const songData_1 = {
@@ -398,7 +443,10 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
   
     // add song to the room
     const songData_1 = {
@@ -472,7 +520,10 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
   
     const song_name = ' (פסח) מה נשתנה';
     const song_author = 'חגים ומועדים';
@@ -510,7 +561,10 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
   
     const url = 'https://www.nagnu.co.il/%D7%90%D7%A7%D7%95%D7%A8%D7%93%D7%99%D7%9D/%D7%97%D7%92%D7%99%D7%9D_%D7%95%D7%9E%D7%95%D7%A2%D7%93%D7%99%D7%9D/(%D7%A4%D7%A1%D7%97)_%D7%A9%D7%9E%D7%97%D7%94_%D7%A8%D7%91%D7%94';
 
@@ -544,7 +598,10 @@ describe('RoomController', () => {
       name: 'Test Room',
       // Add other room properties here
     };
-    const roomId = roomController.hostRoom(roomData);
+    let roomId = roomController.hostRoom(roomData);
+    roomId = decodeWithBase64(roomId);
+    const parts: string[] = roomId.split("|");
+    roomId = parts[0];
   
     const song_name = ' (פסח) מה נשתנה';
     const song_author = 'חגים ומועדים';
@@ -572,3 +629,5 @@ describe('RoomController', () => {
 
   // Add more tests here for other RoomController methods
 });
+
+
