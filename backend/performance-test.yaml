@@ -1,0 +1,21 @@
+config:
+  target: "http://localhost:5000"
+  phases:
+    - duration: 60
+      arrivalRate: 20
+scenarios:
+  - flow:
+      - get:
+          url: "/api/rooms/get_song_from_url"
+  - flow:
+      - post:
+          url: "/api/rooms/create"
+          json:
+            name: "Test Room"
+            password: "Test Password"
+      - think: 5
+      - get:
+          url: "/api/rooms"
+  - flow:
+      - get:
+          url: "/api/rooms/join_room/"
