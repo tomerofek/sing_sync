@@ -11,7 +11,6 @@ export class Song{
         this.song_name = name;
         this.song_author = author;
         this.song_body = body;
-        this.song_parted_body = [];
     }
 }
 

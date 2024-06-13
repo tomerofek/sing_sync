@@ -92,6 +92,13 @@ queue {
     flex-direction: column;
 }
 
+.song-content-container2 {
+    flex:2;
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+}
+
 .song-info {
     display: inline-block;
     flex: 1;

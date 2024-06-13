@@ -180,6 +180,10 @@ export class RoomViewComponent implements OnInit, OnChanges {
       else{
         const songResContent : Song | undefined = this.responseService.getContent(songRes);
         this.song = songResContent ? this.songService.separate_song_body(songResContent) : songResContent
+        console.log(songResContent)
+        console.log(this.song)
+        if(songResContent)
+          console.log(this.songService.separate_song_body(songResContent))
         if(songResContent)
           this.getCurrentSongPartIndex();
       }

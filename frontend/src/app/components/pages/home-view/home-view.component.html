@@ -10,7 +10,7 @@
         </div>
         <div [@toggleAnimation]="showJoin ? 'visible' : 'hidden'" class="join-slide">
           <div>
-            <input #s class="join-input" type="text" placeholder="room id"/>
+            <input #s class="join-input" type="text" placeholder="מספר חדר"/>
           </div>
           <div>
             <button class="host-button" role="button" (click)="goToRoom(s.value)">הצטרף</button>

@@ -1,14 +1,14 @@
 <div class="content">
     <div *ngIf="song" class="switch-div">
-        <div class="p1">show chords:&emsp;</div>
         <label class="switch">
             <input type="checkbox">
             <div class="slider" (click)="switchChords()"></div>
             <div class="slider-card">
-              <div class="slider-card-face slider-card-front"></div>
-              <div class="slider-card-face slider-card-back"></div>
+                <div class="slider-card-face slider-card-front"></div>
+                <div class="slider-card-face slider-card-back"></div>
             </div>
         </label>
+        <div class="p1" dir="rtl">הראה אקורדים:&emsp;</div>
     </div>
     <div *ngIf="song && song.song_parted_body && current_part_index != undefined" class="song-lines">
         <ul class="lines-ul">

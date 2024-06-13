@@ -83,8 +83,43 @@ export class SongService implements ISongService {
     return this.fake.advance_song(room_id);
   }
 
-  separate_song_body(song: Song): Song{
-    return this.real !== null ? this.real.separate_song_body(song) : this.fake.separate_song_body(song);
+  separate_song_body(song: Song): Song{   
+    console.log('called here')
+    if(song.song_parted_body || !song.song_body)
+      return song;
+    
+    let max_visible_lines = 12;
+    let min_visible_lines = 6;
+    song.song_parted_body = [];
+    
+    let current_part : SongLine[] = [];
+    let last_line : SongLine;
+    song.song_body.forEach(line => {
+      //should not add emplty lines at the start of a part
+      if(!(current_part.length == 0 && this.isEmptyLine(line))){
+        //can/should add the line to the current part
+        if(current_part.length < min_visible_lines || last_line.type == 'chords' ||
+        (!this.isEmptyLine(line) && current_part.length < max_visible_lines))
+        current_part.push(line);
+        
+        else{
+          song.song_parted_body?.push(current_part);
+          current_part = this.isEmptyLine(line) ? [] : [line];
+        }
+        
+        if(!this.isEmptyLine(line))
+          last_line = line;
+      }
+    });
+
+    if(current_part.length > 0)
+        song.song_parted_body?.push(current_part);
+      
+    return song;
+  }
+
+  private isEmptyLine(line: SongLine) : boolean{
+      return line.content == undefined || line.content == '';
   }
   
 
@@ -313,8 +348,42 @@ export class FakeSongService implements ISongService {
   }
 
   separate_song_body(song: Song): Song{
+    if(song.song_parted_body || !song.song_body)
+      return song;
+
+    let max_visible_lines = 12;
+    let min_visible_lines = 6;
+    song.song_parted_body = [];
+
+    let current_part : SongLine[] = [];
+    let last_line : SongLine;
+    song.song_body.forEach(line => {
+      //should not add emplty lines at the start of a part
+      if(!(current_part.length == 0 && this.isEmptyLine(line))){
+        //can/should add the line to the current part
+        if(current_part.length < min_visible_lines || last_line.type == 'chords' ||
+            (!this.isEmptyLine(line) && current_part.length < max_visible_lines))
+                current_part.push(line);
+                
+        else{
+            song.song_parted_body?.push(current_part);
+            current_part = this.isEmptyLine(line) ? [] : [line];
+        }
+
+        if(!this.isEmptyLine(line))
+            last_line = line;
+      }
+    });
+
+    if(current_part.length > 0)
+        song.song_parted_body?.push(current_part);
+      
     return song;
   }
+
+  private isEmptyLine(line: SongLine) : boolean{
+    return line.content == undefined || line.content == '';
+}
   
 
 
