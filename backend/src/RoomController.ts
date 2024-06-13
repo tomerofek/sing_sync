@@ -249,6 +249,13 @@ export class RoomController {
         
     }
 
+    close_room(room_id : string) : void {
+        if (this.rooms.has(room_id)){   
+            this.rooms.delete(room_id);
+        }
+        throw new Error("Invalid ID");
+    }
+
 }
 
 // Example usage

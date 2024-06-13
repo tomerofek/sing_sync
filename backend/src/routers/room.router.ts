@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { HOST_ROOM_URL, JOIN_ROOM_URL, buildUrl } from "./urls";
+import { CLOSE_ROOM_URL, HOST_ROOM_URL, JOIN_ROOM_URL, buildUrl } from "./urls";
 import { handle_get } from "./routerWrapper";
 import { roomController, io } from "../server";
 import asyncHandler from 'express-async-handler';
@@ -48,9 +48,18 @@ router.get(buildUrl(HOST_ROOM_URL), asyncHandler(
         }
     }
 ))
-
-
- 
+router.get(buildUrl(CLOSE_ROOM_URL,'room_id'), asyncHandler(
+    async (req, res) => {
+        try {
+            const room_id = req.params.room_id
+            roomController.close_room(room_id)
+            io.to(room_id).emit("closeRoom")
+            res.send(new Response('ok'))
+        } catch (error: any) {
+            res.send(new Response(undefined, error.message))
+        }
+    }
+))
 
 
 export default router;
