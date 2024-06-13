@@ -38,7 +38,6 @@ export class RoomViewComponent implements OnInit, OnChanges {
       });
     let res: Response<boolean> | null = null;
     var owner_key = this.CookieService.getCookie(this.room_id);
-    console.log(`owner_key: ${owner_key}`);
     var encodedStr = this.CookieService.encode_with_base64_room_and_host(this.room_id,owner_key);
     roomService.join_room(encodedStr).subscribe(data => {res = {...data}
       if(res === null || responseService.isError(res)){
@@ -49,7 +48,6 @@ export class RoomViewComponent implements OnInit, OnChanges {
       }
       var perm:boolean|undefined = responseService.getContent(res);
       this.owner_perm = perm !== undefined ? perm : false;
-      console.log(`owner permissions: ${this.owner_perm}`);
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -73,7 +71,6 @@ export class RoomViewComponent implements OnInit, OnChanges {
       this.socketService.songReceived.subscribe((song) => {
         if(song !== undefined && song !== null){
           this.song = this.songService.separate_song_body(song)
-          console.log('song after broadcast and separation', this.song)
         }
     });
 
@@ -133,15 +130,10 @@ export class RoomViewComponent implements OnInit, OnChanges {
     let songRes: Response<Song> | null = null;
     this.songService.advance_song(this.room_id).subscribe(data => {songRes = {...data}
       if(songRes === null || this.responseService.isError(songRes)){
-        console.log('error in getting song in next_song click');
-        console.log(songRes);
         this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
       }
       else{
         const newSong: Song | undefined = this.responseService.getContent(songRes);
-        if(newSong){
-          this.song = this.songService.separate_song_body(newSong);
-        }
         this.getCurrentSongPartIndex();
         this.getTopQ();
         this.update_has_next_song();
@@ -155,8 +147,6 @@ export class RoomViewComponent implements OnInit, OnChanges {
   }
 
   onSongAdd(){
-    console.log('about to update song');
-    console.log(this.song);
     if(!this.song){
       this.getSong();
     }
@@ -180,8 +170,6 @@ export class RoomViewComponent implements OnInit, OnChanges {
       else{
         const songResContent : Song | undefined = this.responseService.getContent(songRes);
         this.song = songResContent ? this.songService.separate_song_body(songResContent) : songResContent
-        console.log(songResContent)
-        console.log(this.song)
         if(songResContent)
           console.log(this.songService.separate_song_body(songResContent))
         if(songResContent)
