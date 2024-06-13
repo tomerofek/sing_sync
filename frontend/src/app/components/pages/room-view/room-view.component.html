@@ -42,7 +42,7 @@
                 </p>
             </div>
             <div class="main">
-                <queue (onSongAddEvent)="onSongAdd()" [topOfQ]="top_queue" [room_id]="room_id" [owner_perm]="owner_perm"></queue>
+                <queue (onSongAddEvent)="onSongAdd()" (queueChangedEvent)="updateHasNextPrev()" [topOfQ]="top_queue" [room_id]="room_id" [owner_perm]="owner_perm"></queue>
                 <div class="song-content-container">
                     <div class="song-info">
                         <div>
