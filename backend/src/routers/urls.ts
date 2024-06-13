@@ -1,6 +1,7 @@
 export const ROOMS_URL = '/api/rooms';
 export const JOIN_ROOM_URL = '/join_room';
 export const HOST_ROOM_URL = '/host_room';
+export const CLOSE_ROOM_URL = '/close_room';
 
 export const SONGS_URL = '/api/songs';
 export const GET_SONG_URL = '/get_song';
