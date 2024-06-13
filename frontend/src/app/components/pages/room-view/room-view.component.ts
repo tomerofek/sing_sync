@@ -256,4 +256,10 @@ export class RoomViewComponent implements OnInit, OnChanges {
     });
   }
 
+  updateHasNextPrev() {
+    console.log('room got event and updating')
+    this.update_has_next_song();
+    this.update_has_prev_song();
+  }
+
 }

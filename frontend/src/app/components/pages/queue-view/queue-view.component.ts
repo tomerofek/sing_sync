@@ -1,6 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationService } from 'src/app/services/notification.service';
 import { QueueService } from 'src/app/services/queue.service';
@@ -20,14 +20,17 @@ export class QueueViewComponent implements OnInit {
   queue?: QueueWithChecked;
   room_id!: string;
   editmode!: boolean;
+  changed_flag: boolean = false;
 
-  constructor(@Inject(MAT_DIALOG_DATA) room_id: any, private queueService: QueueService, private responseService: ResponseService,
+  constructor(public dialogRef: MatDialogRef<QueueViewComponent>,
+    @Inject(MAT_DIALOG_DATA) room_id: any, private queueService: QueueService, private responseService: ResponseService,
     private notificationService: NotificationService, private snackBar: MatSnackBar) {
     this.room_id = room_id;
     
   }
 
   ngOnInit(): void {
+    
     this.editmode = false;
     let res: Response<Queue> | null = null;
     this.queueService.get_all_queue(this.room_id).subscribe(data => {res = {...data}
@@ -78,6 +81,7 @@ export class QueueViewComponent implements OnInit {
         if(this.queue && resIndex != undefined){
           moveItemInArray(this.queue.songs_info_list, old_position, new_position);
           this.queue.index = resIndex;
+          this.changed_flag = true;
         }
           
       }
@@ -102,8 +106,16 @@ export class QueueViewComponent implements OnInit {
           this.queue.index = resIndex;
           this.queue.songs_info_list = this.queue.songs_info_list.filter(((song, index) => !toRemove.includes(index)))
           console.log('queue after remove:', this.queue);
+          this.changed_flag = true;
+
         }
       }
     });      
   }
+
+  onClose(){
+    this.dialogRef.close(this.changed_flag);
+  }
 }
+
+

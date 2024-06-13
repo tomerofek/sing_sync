@@ -16,6 +16,7 @@ export class QueueComponent implements OnInit, OnChanges {
   @Input() room_id!: string;
   @Input() owner_perm!: boolean;
   @Output() onSongAddEvent = new EventEmitter<void>();
+  @Output() queueChangedEvent = new EventEmitter<void>();
   firstInQ?: Song;
   secondInQ?: Song;
 
@@ -40,7 +41,12 @@ export class QueueComponent implements OnInit, OnChanges {
   }
 
   showQueueDialog(): void {
-    this.dialog.open(QueueViewComponent, {data:this.room_id});
+    const dialogRef = this.dialog.open(QueueViewComponent, {data:this.room_id});
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        this.queueChangedEvent.emit();
+      } 
+    })
   }
 
   showAddSongDialog(): void {
