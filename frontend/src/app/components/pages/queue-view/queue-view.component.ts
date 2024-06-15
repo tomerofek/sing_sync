@@ -30,7 +30,9 @@ export class QueueViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    this.dialogRef.backdropClick().subscribe(() => {
+      this.onClose();
+    });
     this.editmode = false;
     let res: Response<Queue> | null = null;
     this.queueService.get_all_queue(this.room_id).subscribe(data => {res = {...data}
