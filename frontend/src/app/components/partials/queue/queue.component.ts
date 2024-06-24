@@ -41,7 +41,12 @@ export class QueueComponent implements OnInit, OnChanges {
   }
 
   showQueueDialog(): void {
-    const dialogRef = this.dialog.open(QueueViewComponent, {data:this.room_id});
+    const dialogRef = this.dialog.open(QueueViewComponent, {
+      data: {
+        room_id: this.room_id,
+        owner_perm: this.owner_perm
+      }
+    });
     dialogRef.afterClosed().subscribe(result => {
       if(result){
         this.queueChangedEvent.emit();

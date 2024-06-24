@@ -1,5 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -15,18 +15,32 @@ import { SongWithChecked } from 'src/app/shared/models/SongWithChecked';
   templateUrl: './queue-view.component.html',
   styleUrls: ['./queue-view.component.css']
 })
-export class QueueViewComponent implements OnInit {
+export class QueueViewComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   queue?: QueueWithChecked;
   room_id!: string;
-  editmode!: boolean;
   changed_flag: boolean = false;
+  owner_perm!: boolean;
+  private _editmode!: boolean;
+  
+  get editmode(): boolean {
+    return this._editmode;
+  }
+
+  set editmode(value: boolean) {
+    this._editmode = value;
+    this.scrollPending = true; // Set flag to indicate scroll is needed
+    this.cdr.detectChanges(); // Trigger change detection
+  }
+
+  private scrollPending: boolean = false;
+
 
   constructor(public dialogRef: MatDialogRef<QueueViewComponent>,
-    @Inject(MAT_DIALOG_DATA) room_id: any, private queueService: QueueService, private responseService: ResponseService,
-    private notificationService: NotificationService, private snackBar: MatSnackBar) {
-    this.room_id = room_id;
-    
+    @Inject(MAT_DIALOG_DATA) public data:{room_id: string, owner_perm: boolean}, private queueService: QueueService, private responseService: ResponseService,
+    private notificationService: NotificationService, private snackBar: MatSnackBar, private cdr: ChangeDetectorRef) {
+    this.room_id = data.room_id;
+    this.owner_perm = data.owner_perm;
   }
 
   ngOnInit(): void {
@@ -34,6 +48,29 @@ export class QueueViewComponent implements OnInit {
       this.onClose();
     });
     this.editmode = false;
+    this.loadQueue();
+  }
+
+  ngAfterViewInit(): void {
+    // Initial scroll after view is initialized
+    this.scrollPending = true;
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.scrollPending) {
+      this.scrollPending = false; // Reset flag
+      this.scrollToIndex(this.queue ? this.queue.index : 0);
+    }
+  }
+
+  scrollToIndex(index: number){
+    const element = document.getElementById(`song${index}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  loadQueue(){
     let res: Response<Queue> | null = null;
     this.queueService.get_all_queue(this.room_id).subscribe(data => {res = {...data}
       console.log(res);
@@ -49,8 +86,10 @@ export class QueueViewComponent implements OnInit {
         else{
           this.queue = undefined;
         }
-        
-        console.log(this.queue);
+        //console.log(this.queue);
+        //console.log(`scroll: ${this.scrollPending}`);
+        this.scrollPending = true;
+        this.cdr.detectChanges();
       }
      });
   }

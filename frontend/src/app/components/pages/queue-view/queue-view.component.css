@@ -12,6 +12,8 @@ li{
 
 ol{
     padding: 0;
+    max-height: 400px;
+    overflow: auto;
 }
 
 

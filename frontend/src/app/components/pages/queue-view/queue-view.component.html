@@ -1,14 +1,14 @@
 <div class="content">
     <h1 class="title" dir="rtl">
         רשימת השמעה
-        <mat-icon *ngIf="!editmode" class="edit-btn" (click)="editmode = true">edit</mat-icon>
-        <mat-icon *ngIf="editmode" class="edit-btn" (click)="editmode = false">check_circle</mat-icon>
+        <mat-icon *ngIf="!editmode && owner_perm" class="edit-btn" (click)="editmode = true">edit</mat-icon>
+        <mat-icon *ngIf="editmode && owner_perm" class="edit-btn" (click)="editmode = false">check_circle</mat-icon>
     </h1>
     <div class="Q-notEmpty" *ngIf="queue && queue.songs_info_list.length>0">  
         <div *ngIf="editmode; then edit; else notEdit"></div>
         <ng-template #edit>
             <ol cdkDropList class="song_list" (cdkDropListDropped)="drop($event)"> 
-                <div class="list_item" *ngFor="let song of queue.songs_info_list; let i = index" dir="rtl" cdkDrag>
+                <div class="list_item" *ngFor="let song of queue.songs_info_list; let i = index" [id]="'song' + i" dir="rtl" cdkDrag>
                     <mat-icon>drag_indicator</mat-icon>
                     <li [ngClass]="{'currentSong': i === queue.index}" dir="rtl">
                         {{song.song_name}} - {{song.song_author}}
@@ -29,7 +29,7 @@
         </ng-template>
         <ng-template #notEdit>
             <ol>        
-                <li *ngFor="let song of queue.songs_info_list; let i = index" [ngClass]="{'currentSong': i === queue.index}" dir="rtl">{{song.song_name}} - {{song.song_author}}</li>
+                <li *ngFor="let song of queue.songs_info_list; let i = index" [ngClass]="{'currentSong': i === queue.index}" [id]="'song' + i" dir="rtl">{{song.song_name}} - {{song.song_author}}</li>
             </ol>
         </ng-template>
     </div>

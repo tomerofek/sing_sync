@@ -245,7 +245,18 @@ export class FakeQueueService implements IQueueService{
 
   get_all_queue(room_id:string): Observable<Response<Queue>>{
     
-    return of({status:'ok', content:{index:1,songs_info_list:[new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3'), new Song('שיר4','יוצר4'), new Song('שיר5','יוצר5')]}});
+    /*return of({status:'ok', content:{index:1,songs_info_list:[new Song('שיר1','יוצר1'),new Song('שיר2','יוצר2'), new Song('שיר3','יוצר3'), new Song('שיר4','יוצר4'), 
+      new Song('שיר5','יוצר5'), new Song('שיר6','יוצר6'), new Song('שיר7','יוצר7'), new Song('שיר8','יוצר8'), new Song('שיר9','יוצר9')]}});
+      */
+     return of({status:'ok', content:{index:10,songs_info_list:this.generate_queue(40)}});
+  }
+
+  generate_queue(num_of_songs:number): Song[]{
+    let songs: Song[] = [];
+    for(let i=1; i<=num_of_songs; i++){
+      songs.push(new Song(`שיר${i}`, `יוצר${i}`));
+    }
+    return songs;
   }
 
   reorder_queue(room_id:string, old_position:number, new_position:number): Observable<Response<number>>{
