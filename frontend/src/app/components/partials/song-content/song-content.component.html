@@ -11,28 +11,32 @@
         <div class="p1" dir="rtl">הראה אקורדים:&emsp;</div>
     </div>
     <div *ngIf="song && song.song_parted_body && current_part_index != undefined" class="song-lines">
-        <ul class="lines-ul">
-            <li *ngFor="let songLine of song.song_parted_body[current_part_index]">
-                <div *ngIf="songLine.type=='lyrics'; then LyricBlock; else ChordBlock"></div>
-                <ng-template #LyricBlock>
-                    <div *ngIf="!isEmptyLine(songLine); then NormalBlock; else EmptyBlock"></div>
-                    <ng-template #NormalBlock>
-                        <p class="lyrics" dir="rtl">{{songLine.content}}</p>
-                    </ng-template>
-                    <ng-template #EmptyBlock>
-                        <br>
-                        <br>
-                    </ng-template>
-                </ng-template>
-                <ng-template #ChordBlock>
-                    <div *ngIf="show_chords; then Chords; else Empty"></div>
-                    <ng-template #Chords>
-                        <p class="chords" dir="rtl">{{songLine.content}}</p>
-                    </ng-template>
-                    <ng-template #Empty>
-                        <p class="invisible-chords">{{songLine.content}}</p>
-                    </ng-template>
-                </ng-template>
+        <ul class="parts-ul">
+            <li class= part-li *ngFor="let part of song.song_parted_body; let i = index" [@partChange]="i === current_part_index ? 'active' : 'void'" [ngClass]="{ 'active-part': i === current_part_index }" [id]="'part' + i">
+                <ul class="lines-ul">
+                    <li *ngFor="let songLine of song.song_parted_body[i]">
+                        <div *ngIf="songLine.type=='lyrics'; then LyricBlock; else ChordBlock"></div>
+                        <ng-template #LyricBlock>
+                            <div *ngIf="!isEmptyLine(songLine); then NormalBlock; else EmptyBlock"></div>
+                            <ng-template #NormalBlock>
+                                <p class="lyrics" dir="rtl">{{songLine.content}}</p>
+                            </ng-template>
+                            <ng-template #EmptyBlock>
+                                <br>
+                                <br>
+                            </ng-template>
+                        </ng-template>
+                        <ng-template #ChordBlock>
+                            <div *ngIf="show_chords; then Chords; else Empty"></div>
+                            <ng-template #Chords>
+                                <p class="chords" dir="rtl">{{songLine.content}}</p>
+                            </ng-template>
+                            <ng-template #Empty>
+                                <p class="invisible-chords">{{songLine.content}}</p>
+                            </ng-template>
+                        </ng-template>
+                    </li>
+                </ul>
             </li>
         </ul>
     </div>
