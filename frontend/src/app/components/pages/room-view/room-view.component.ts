@@ -79,6 +79,12 @@ export class RoomViewComponent implements OnInit, OnChanges {
         this.top_queue = songs;
     });
 
+    this.socketService.listenForCloseRoom();
+      this.socketService.closeRoomRecievied.subscribe(() => {
+        if(!this.owner_perm)
+          this.notificationService.openSnackBar(this.snackBar, 'החדר נסגר על ידי מנהל החדר');
+        this.router.navigateByUrl('');
+      });
   }
 
   home() {
@@ -90,6 +96,24 @@ export class RoomViewComponent implements OnInit, OnChanges {
     const textToCopy = window.location.href;
     this.clipboard.copy(textToCopy);
     this.notificationService.openSnackBar(this.snackBar, 'קישור הועתק')
+  }
+
+  close_room(){
+    this.notificationService.openSnackBarWithAction(this.snackBar, 'יש לאשר את סגירת החדר', 'לחץ כדי לאשר', 
+      () => {
+        let res: Response<void> | null = null;
+        this.roomService.close_room(this.room_id).subscribe(data => {res = {...data}
+          if(res === null || this.responseService.isError(res)){
+            console.log('היתה בעיה בלסגור את החדר');
+            console.log(res);
+            this.notificationService.openSnackBarError(this.snackBar, res === null ? 'היתה בעיה בלסגור את החדר' : this.responseService.getError(res));
+          }
+          else{
+            this.notificationService.openSnackBar(this.snackBar, 'החדר נסגר בהצלחה' );
+          }
+        });
+      }
+    )
   }
 
   sendHello(message: string) {

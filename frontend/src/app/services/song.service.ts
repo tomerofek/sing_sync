@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { Song } from '../shared/models/Song';
 import { SongLine } from '../shared/models/SongLine';
 import { HttpClient } from '@angular/common/http';
 import { Response } from '../shared/models/Response';
 import { GET_SONG_URL, GET_POSITION, ADVANCE_POSITION, PREVIOUS_POSITION, ADVANCE_SONG, SEND_HELLO_URL } from '../shared/constants/url';
 import { Observable, of } from 'rxjs';
-import { DevmodeService } from './devmode.service';
 
 export interface ISongService{
   
@@ -33,8 +32,8 @@ export interface ISongService{
 export class SongService implements ISongService {
   private real: ISongService | null;
   private fake: ISongService;
-  constructor(private httpClient:HttpClient, devModeService: DevmodeService) {
-    this.real = devModeService.isDevMode() ? null : new RealSongService(httpClient);
+  constructor(private httpClient:HttpClient) {
+    this.real = isDevMode() ? null : new RealSongService(httpClient);
     this.fake = new FakeSongService();
    }
   

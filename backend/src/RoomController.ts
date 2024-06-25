@@ -253,7 +253,7 @@ export class RoomController {
         if (this.rooms.has(room_id)){   
             this.rooms.delete(room_id);
         }
-        throw new Error("Invalid ID");
+        else throw new Error("Invalid ID");
     }
 
 }

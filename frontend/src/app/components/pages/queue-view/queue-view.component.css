@@ -139,5 +139,23 @@ ol{
 }
 
 .edit-btn {
-    
+    background-color: rgba(0,0,0,0);
+    border-radius: 50%;
+    text-align: center;
+    color: #44474e;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+    overflow: visible;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+}
+
+.edit-btn:hover {
+    background: rgba(26,27,31,.08);
 }

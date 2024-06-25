@@ -5,7 +5,8 @@
         "start": "cd backend/built && node server.js",
         "prebuild": "cd backend && npm run build",
         "build": "cd frontend && npm run build",
-        "noder": "npm run prebuild && npm run build && npm run start"
+        "noder": "npm run prebuild && npm run build && npm run start",
+        "dev": "cd frontend && ng serve"
     },
     "engines": {
         "node": "16.20.2"

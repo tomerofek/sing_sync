@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ADD_CUSTOM_SONG, ADD_SONG_TO_QUEUE, GET_ALL_QUEUE, GET_SONG_FROM_URL, GET_TOP_QUEUE, HAS_NEXT_SONG, HAS_PREVIOUS_SONG, PREVIOUS_SONG, REMOVE_SONG_FROM_QUEUE, REORDER_QUEUE, SEARCH_SONG_FROM_DB } from '../shared/constants/url';
 import { Song } from '../shared/models/Song';
 import { Response } from '../shared/models/Response';
 import { Queue } from '../shared/models/Queue';
-import { DevmodeService } from './devmode.service';
 
 export interface IQueueService {
 
@@ -88,8 +87,8 @@ export interface IQueueService {
 export class QueueService implements IQueueService{
   private real: IQueueService | null;
   private fake: IQueueService;
-  constructor(private httpClient:HttpClient, devModeService: DevmodeService) {
-    this.real = devModeService.isDevMode() ? null : new RealQueueService(httpClient);
+  constructor(private httpClient:HttpClient) {
+    this.real = isDevMode() ? null : new RealQueueService(httpClient);
     this.fake = new FakeQueueService();
    }
 

@@ -24,6 +24,14 @@
                             </span>
                         </button>
                     </mat-list-item>
+                    <mat-list-item *ngIf="owner_perm" dir="rtl" class="in-menu-item">
+                        <button mat-icon-button class="in-menu-button" (click)="close_room()">
+                            <span class="in-menu-span">
+                                <mat-icon class="in-menu-icon">close</mat-icon>
+                                סגור חדר
+                            </span>
+                        </button>
+                    </mat-list-item>
                 </mat-list>
             </mat-sidenav>
             <!-- Body -->
