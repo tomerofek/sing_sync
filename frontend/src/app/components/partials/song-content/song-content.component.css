@@ -126,7 +126,7 @@
 
   .parts-ul {
     overflow: hidden;
-    height: 300px;
+    height: calc(100vh - 420px);
     scrollbar-width: 0;
     list-style-type: none;
   }

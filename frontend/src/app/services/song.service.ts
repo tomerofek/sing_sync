@@ -88,7 +88,7 @@ export class SongService implements ISongService {
       return song;
     
     let max_visible_lines = 12;
-    let min_visible_lines = 6;
+    let min_visible_lines = 4; //was 6
     song.song_parted_body = [];
     
     let current_part : SongLine[] = [];
