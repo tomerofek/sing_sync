@@ -35,7 +35,7 @@ export async function getSongNames(song_id : string): Promise<any> {
           resolve(song_id_pairs);
         } else {
           
-          const error = new Error('JSON object not found.');
+          const error = new Error('לא נמצא שיר במאגר');
           reject(error);
         }
       } catch (error) {
@@ -75,7 +75,7 @@ export class Queue<T> {
 
     move_to_prev(): T | undefined {
       if(this.index == 0){
-        throw new Error("there is no previous song");
+        throw new Error("לא קיים שיר קודם");
       }
       this.index = this.index - 1;
       //when we get prev we dont want to get current song we want to get prev song , so we use the reduced index unlike before
@@ -115,7 +115,7 @@ export class Queue<T> {
       for(let i = 0; i < indexes_to_remove.length; i++){
         //check for invalid indexes
         if(indexes_to_remove[i] < 0 || indexes_to_remove[i] >= this.items.length){
-          throw new Error("Invalid song position");
+          throw new Error("לא קיים שיר במיקום הזה בתור");
         }
         //update current index in queue
         if(indexes_to_remove[i] < this.index){
@@ -137,7 +137,7 @@ export class Queue<T> {
     //moves the item at first index to be located in second_index (second_index of the old list)
     swap_elements(first_index : number, second_index : number) : number {
       if(first_index < 0 || second_index < 0 || first_index >= this.items.length || second_index >= this.items.length){
-        throw new Error("Invalid song position");
+        throw new Error("מיקומי שירים לא חוקיים");
       }
       const songToMove = this.items[first_index];
 
@@ -194,7 +194,7 @@ export class SongsQueue{
             //TODO add here calledback to calling function - probably send to user side - probably send to user side
             return result;
         }).catch(error => {
-            throw new Error('An error occurred while processing the data');
+            throw new Error('שגיאה בחיפוש שיר');
     });
     }
 
@@ -259,7 +259,7 @@ export class SongsQueue{
     previous_position_in_song() : number {
       //returns the index which is the previous part in the song (might want to change to status)
       if(this.current_position_in_song <= 0)
-        throw new Error("there is no previous position");
+        throw new Error("לא קיים שיר קודם");
       
       return --this.current_position_in_song;
     }
@@ -291,7 +291,7 @@ export class SongsQueue{
         return this.songsQueue.remove(song_to_remove_position);
       } catch (error) {
           // If an error occurs during removal, throw a new error
-          throw new Error("Invalid position");
+          throw new Error("מיקום שיר לא חוקי");
       }
     }
 

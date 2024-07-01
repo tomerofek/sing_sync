@@ -76,9 +76,9 @@ export class RoomController {
 
                 }
                 //case that none host tries to join
-                throw new Error("Wrong host key");
+                throw new Error("מפתח מנהל חדר לא תקין");
             }
-            throw new Error("Invalid ID");
+            throw new Error("מספר חדר לא תקין");
         
         }else{
             console.log("attempt normal login")
@@ -90,7 +90,7 @@ export class RoomController {
 
             }
             console.log("no such room");
-            throw new Error("Invalid ID");
+            throw new Error("מספר חדר לא תקין");
         }
     }
 
@@ -99,7 +99,7 @@ export class RoomController {
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.get_current_position();
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     //returns the current song if undifined - error
@@ -107,7 +107,7 @@ export class RoomController {
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.get_current_song();
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
 
     }
 
@@ -116,7 +116,7 @@ export class RoomController {
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.advance_position();
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     //goes to the previous position in the currently played song and returns the current one - return -1 on error
@@ -124,7 +124,7 @@ export class RoomController {
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.previous_position();
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     //advances to the next song and returns the new song the needs to be played
@@ -132,7 +132,7 @@ export class RoomController {
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.advance_song();
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     //returns a json with the name and author of the first 2 songs in the queue
@@ -140,7 +140,7 @@ export class RoomController {
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.get_top_queue();
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     //returns a json with the name and author of all of the queue
@@ -154,7 +154,7 @@ export class RoomController {
             }
             return new ServiceQueue(songs_info_list,index);
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     //removes the item at index from the queue (remove current song is index 0)
@@ -162,11 +162,11 @@ export class RoomController {
         if (this.rooms.has(room_id)){      
             let new_current_index =  this.rooms.get(room_id)?.remove_song_from_queue(song_to_remove_position)
             if(new_current_index === undefined){
-                throw new Error("Invalid ID");
+                throw new Error("מספר חדר לא תקין");
             }
             return new_current_index;
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     //searches a song in the db returns the names and authors - as a list of json (each json is a tuple)
@@ -179,14 +179,14 @@ export class RoomController {
         //checks if the the room exists if yes add the song
         let room = this.rooms.get(room_id);
         if (!room) {
-            throw new Error("Room doesn't exist");
+            throw new Error("החדר אינו קיים");
         }
         //attempt to add the song to the room's queue
         let ret = room.add_song_to_queue(song_name, song_author);
         if(ret){
             return ret
         }
-        throw new Error("cannot add song to queue");
+        throw new Error("לא ניתן להוסיף את השיר אל החדר");
     }
 
     //adds a song to the queue using the url - concatanation of name and author and returns the added song
@@ -195,14 +195,14 @@ export class RoomController {
         //checks if the the room exists if yes add the song
         let room = this.rooms.get(room_id);
         if (!room) {
-            throw new Error("Room doesn't exist");
+            throw new Error("חדר אינו קיים");
         }
         //attempt to add the song to the room's queue with the given url
         let ret = room.add_song_from_url(url);
         if(ret){
             return ret
         }
-        throw new Error("cannot add song to queue from this url");
+        throw new Error("לא ניתן להוסיף שיר מן הקישור הזה");
     }
 
     
@@ -210,21 +210,21 @@ export class RoomController {
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.get_queue_len() ?? 0
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     previous_song(room_id: string): SongInfo | undefined{
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.previous_song();
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     swap_song(room_id: string, index1: number, index2: number): number | undefined {
         if (this.rooms.has(room_id)){      
             return this.rooms.get(room_id)?.swap_songs(index1, index2);;
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
     }
 
     has_next(room_id : string) : boolean {
@@ -234,7 +234,7 @@ export class RoomController {
                 return room_has_next;
             }
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
         
     }
   
@@ -245,7 +245,7 @@ export class RoomController {
                 return room_has_prev;
             }
         }
-        throw new Error("Invalid ID");
+        throw new Error("מספר חדר לא תקין");
         
     }
 
@@ -253,7 +253,7 @@ export class RoomController {
         if (this.rooms.has(room_id)){   
             this.rooms.delete(room_id);
         }
-        else throw new Error("Invalid ID");
+        else throw new Error("מספר חדר לא תקין");
     }
 
 }
