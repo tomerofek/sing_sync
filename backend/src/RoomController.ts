@@ -28,8 +28,8 @@ function generateRandomString(): string {
 
 
 export class ServiceQueue {
-    private songs_info_list : SongInfo[] | undefined
-    private index : number
+    songs_info_list : SongInfo[] | undefined
+    index : number
 
     constructor(song_info_list : SongInfo[], index : number){
         this.songs_info_list = song_info_list
