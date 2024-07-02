@@ -83,7 +83,6 @@ export class SongService implements ISongService {
   }
 
   separate_song_body(song: Song): Song{   
-    console.log('called here')
     if(song.song_parted_body || !song.song_body)
       return song;
     

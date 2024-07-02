@@ -73,10 +73,9 @@ export class QueueViewComponent implements OnInit, AfterViewInit, AfterViewCheck
   loadQueue(){
     let res: Response<Queue> | null = null;
     this.queueService.get_all_queue(this.room_id).subscribe(data => {res = {...data}
-      console.log(res);
       if(res === null || this.responseService.isError(res)){
-        console.log(res)
-        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
+        console.log('error in getting all queue:',res)
+        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'היתה בעיה בלקבל את רשימת ההשמעה' : this.responseService.getError(res))
       } else{
         
         var tempQueue = this.responseService.getContent(res);
@@ -96,7 +95,6 @@ export class QueueViewComponent implements OnInit, AfterViewInit, AfterViewCheck
 
   drop(event: CdkDragDrop<string[]>) {
     this.reorder_queue(event.previousIndex, event.currentIndex);
-    console.log(this.queue)
   }
 
   getCheckedSongs() : number[]{
@@ -112,10 +110,9 @@ export class QueueViewComponent implements OnInit, AfterViewInit, AfterViewCheck
     //service call
     let res: Response<number> | null = null;
     this.queueService.reorder_queue(this.room_id, old_position, new_position).subscribe(data => {res = {...data}
-      console.log(res);
       if(res === null || this.responseService.isError(res)){
-        console.log(res)
-        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
+        console.log('error in reorder_queue:',res)
+        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'היתה בעיה בלשנות את סדר רשימת ההשמעה' : this.responseService.getError(res))
       } else{
         //on success:
         var resIndex: number | undefined = this.responseService.getContent(res);
@@ -134,19 +131,16 @@ export class QueueViewComponent implements OnInit, AfterViewInit, AfterViewCheck
     var toRemove : number[] = this.getCheckedSongs();
     let res: Response<number> | null = null;
     this.queueService.remove_song_from_queue(this.room_id, toRemove).subscribe(data => {res = {...data}
-      console.log(res);
       if(res === null || this.responseService.isError(res)){
-        console.log(res)
-        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
+        console.log('error in remove song',res)
+        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'היתה בעיה למחוק את השירים מרשימת ההשמעה' : this.responseService.getError(res))
       } else{
 
         //on success:
         var resIndex: number | undefined = this.responseService.getContent(res);
-        console.log('queue:', this.queue, 'resIndex:', resIndex);
         if(this.queue && resIndex != undefined){
           this.queue.index = resIndex;
           this.queue.songs_info_list = this.queue.songs_info_list.filter(((song, index) => !toRemove.includes(index)))
-          console.log('queue after remove:', this.queue);
           this.changed_flag = true;
 
         }

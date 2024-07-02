@@ -37,7 +37,7 @@ export class CookieService {
   encode_with_base64_room_and_host(str1: string, str2?: string): string {
     const delimiter = "|"; // Choose a delimiter that won't occur in your strings
     let text = str2 ? `${str1}${delimiter}${str2}` : `${str1}`;
-    console.log(`text: ${text}`);
+    console.log(`Cookie Service: text: ${text}`);
     return Buffer.from(text).toString('base64');
   }
 

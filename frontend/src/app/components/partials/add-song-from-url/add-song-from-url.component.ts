@@ -32,11 +32,11 @@ export class AddSongFromUrlComponent implements OnInit {
       res = {...data}
       let song: Song | undefined = this.responseService.getContent(res)
       if(res === null || this.responseService.isError(res) || song == undefined){
-        console.log(res)
-        this.notificationService.openSnackBarError(this.snackBar, res==null ? 'null response' : this.responseService.getError(res));
+        console.log('error in get song from url:',res)
+        this.notificationService.openSnackBarError(this.snackBar, res==null ? 'היתה בעיה להבאת השיר מקישור' : this.responseService.getError(res));
         
       } else{
-        this.notificationService.openSnackBar(this.snackBar, `added ${song.song_name} - ${song.song_author}`);
+        this.notificationService.openSnackBar(this.snackBar, `הוסף ${song.song_name} - ${song.song_author}`);
         
       }
     });

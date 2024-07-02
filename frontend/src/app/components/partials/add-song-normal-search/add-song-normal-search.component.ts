@@ -47,8 +47,8 @@ export class AddSongNormalSearchComponent implements OnInit {
         this.results = [];
 
         //showing error msg
-        console.log(songRes)
-        this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
+        console.log('error in searcing songs:', songRes)
+        this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'היתה בעיה בחיפוש שירים' : this.responseService.getError(songRes))
       }
       else{
         //updating results
@@ -67,12 +67,12 @@ export class AddSongNormalSearchComponent implements OnInit {
     this.queueService.add_song_to_queue(this.room_id,song.song_name,song.song_author).subscribe(data => {
       res = {...data}
       if(res === null || this.responseService.isError(res)){
-        console.log(res)
-        this.notificationService.openSnackBarError(this.snackBar, res==null ? 'Error: null response' : `Error: ${this.responseService.getError(res)}`);
+        console.log('error in adding song to queue',res)
+        this.notificationService.openSnackBarError(this.snackBar, res==null ? 'היתה בעיה בלהוסיף את השיר לרשימת ההשמעה' : this.responseService.getError(res));
         
       } else{
         this.onSongAddEvent.emit();
-        this.notificationService.openSnackBar(this.snackBar, `added ${song.song_name} - ${song.song_author}`);
+        this.notificationService.openSnackBar(this.snackBar, `הוסף ${song.song_name} - ${song.song_author}`);
         
       }
     });

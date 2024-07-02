@@ -58,11 +58,9 @@ export class HomeViewComponent implements OnInit {
   hostRoom(): void {
     var res: Response<string> | null = null;
     this.roomService.host_room().subscribe(data => {res = {...data}
-      // TODO: show an error message
       if(res === null || this.responseService.isError(res)){
-        console.log(res)
-        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'result is null' : this.responseService.getError(res))
-        window.alert(res === null ? "response is null" : this.responseService.getContent(res));
+        console.log('error in host room:',res)
+        this.notificationService.openSnackBarError(this.snackBar, res === null ? 'היתה בעיה בליצור חדר' : this.responseService.getError(res))
       }
       else{
         var content = this.cookieService.decodeWithBase64(<string>this.responseService.getContent(res));
