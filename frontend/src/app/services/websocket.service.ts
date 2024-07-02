@@ -14,6 +14,7 @@ export class WebsocketService {
   public positionReceived = new EventEmitter<number>();
   public songReceived = new EventEmitter<Song>();
   public topOfQueueReceived = new EventEmitter<Song[]>();
+  public closeRoomRecievied = new EventEmitter<void>();
 
   constructor() {
     this.socket = null;
@@ -55,6 +56,15 @@ export class WebsocketService {
       this.socket.on('topOfQueue', (msg) => {
         console.log('Queue broadcast from server:', msg);
         this.topOfQueueReceived.emit(msg);
+      });
+    }
+  }
+
+  listenForCloseRoom() {
+    if (this.socket) {
+      this.socket.on('closeRoom', (msg) => {
+        console.log('close room broadcast from server:', msg);
+        this.closeRoomRecievied.emit();
       });
     }
   }

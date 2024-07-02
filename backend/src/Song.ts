@@ -1,31 +1,45 @@
-import { MongoClient, Db , ObjectId} from 'mongodb';
+import { MongoClient, Db , ObjectId, MongoServerError} from 'mongodb';
 import { Queue, SongInfo } from './Queue';
 import { WebScraper } from './WebScraper';
 // MongoDB connection URI
 //need to encrypt this password
 const uri = "mongodb+srv://final-project:dbpassword@noder.2cvtm9i.mongodb.net/";
 
-export async function add_song_to_db(songData : any) : Promise<any> {
+export async function add_song_to_db(songData: any): Promise<any> {
+  // Code here a bit messy because of changes in the web scraper format, but basically, the songData is a JSON object that contains song data that we insert to the db
+  console.log("---------------------adding song to db---------------------------");
+  console.log(songData['songData']);
+
   const client = new MongoClient(uri);
+  
   return new Promise(async (resolve, reject) => {
-    try {
-      await client.connect();
-      console.log('Connected to MongoDB');
-      const database: Db = client.db("SingSync");
-      const collection = database.collection("songs");
-      // Insert the JSON object into the collection
-      const result = await collection.insertOne(songData);
-      resolve(result.insertedId);
-    } catch (error) {
-      reject(error);
-    } finally {
-      // Close the connection when done
-      await client.close();
-      console.log('MongoDB connection closed');
-    }
+      try {
+          await client.connect();
+          console.log('Connected to MongoDB');
+          const database: Db = client.db("SingSync");
+          const collection = database.collection("songs");
+          
+          // Construct the custom _id
+          const customId = songData['songData']['song_name'] + "_" + songData['songData']['song_author'] ;
+
+          // Insert the JSON object into the collection with the custom _id
+          const result = await collection.insertOne({ _id: customId, ...songData['songData'] });
+          resolve(result.insertedId);
+      } catch (error) {
+          if (error instanceof MongoServerError && error.code === 11000) {
+                console.log('Ignoring duplicate key error: ' + error);
+                resolve("no update done"); // Resolve without rejecting
+            } else {
+                console.error('Promise rejected with error: ' + error);
+                reject(error);
+            }
+      } finally {
+          // Close the connection when done
+          await client.close();
+          console.log('MongoDB connection closed');
+      }
   });
 }
-
 
 //getting songs from the db as JSON object - returns a promise
 async function getSongJSON(id : string): Promise<any> {

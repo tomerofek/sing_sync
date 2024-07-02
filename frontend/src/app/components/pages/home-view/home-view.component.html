@@ -6,15 +6,19 @@
     <div class="center-container">
       <div class = "join-container">
         <div>
-          <input #s class="join-input" type="text" placeholder="room id"/>
+          <button class="join-button" (click)="toggleJoin()">כניסה לחדר</button>
         </div>
-        <div>
-          <button class="join-button" role="button" (click)="goToRoom(s.value)">Join</button>
+        <div [@toggleAnimation]="showJoin ? 'visible' : 'hidden'" class="join-slide">
+          <div>
+            <input #s class="join-input" type="text" placeholder="מספר חדר"/>
+          </div>
+          <div>
+            <button class="host-button" role="button" (click)="goToRoom(s.value)">הצטרף</button>
+          </div>
         </div>
       </div>
-      <button class="host-button" role="button" (click)="hostRoom()">Host</button>
+      <button class="host-button" role="button" (click)="hostRoom()">יצירת חדר</button>
       <!-- TODO: add the fire icon to the link-->
-      <p classs="stats" (click)="goToStats">view our hits</p>
     </div>
   </div>
 </div>

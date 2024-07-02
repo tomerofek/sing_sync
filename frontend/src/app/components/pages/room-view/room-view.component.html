@@ -1,37 +1,119 @@
 <div class="back">
     <div class="content">
-        <div class="top">
-            <h1 class="roomid">
-                #{{room_id}}
-            </h1>
-            <div class="song-info">
-                <div>
-                    <h1 class="song-title" *ngIf="song && song.song_name">
-                        {{song.song_name}}
-                    </h1>
+        <mat-sidenav-container class="sidenav-container">
+            <mat-sidenav #sidenav mode="over" closed>
+                <button mat-icon-button class="menu-button" (click)="sidenav.close()">
+                    <span class="menu-span">
+                        <mat-icon>close</mat-icon>
+                    </span>
+                </button>
+                <mat-list>
+                    <mat-list-item dir="rtl" class="in-menu-item">
+                        <button mat-icon-button class="in-menu-button" (click)="home()">
+                            <span class="in-menu-span">
+                                <mat-icon class="in-menu-icon">home</mat-icon>
+                                מסך הבית
+                            </span>
+                        </button>
+                    </mat-list-item>
+                    <mat-list-item dir="rtl" class="in-menu-item">
+                        <button mat-icon-button class="in-menu-button" (click)="share()">
+                            <span class="in-menu-span">
+                                <mat-icon class="in-menu-icon">share</mat-icon>
+                                הזמן אנשים לחדר
+                            </span>
+                        </button>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="owner_perm" dir="rtl" class="in-menu-item">
+                        <button mat-icon-button class="in-menu-button" (click)="close_room()">
+                            <span class="in-menu-span">
+                                <mat-icon class="in-menu-icon">close</mat-icon>
+                                סגור חדר
+                            </span>
+                        </button>
+                    </mat-list-item>
+                </mat-list>
+            </mat-sidenav>
+            <!-- Body -->
+            
+            <div class="top">
+                <div class="top-sidebar">
+                    <button mat-icon-button class="menu-button" (click)="sidenav.toggle()">
+                        <span class="menu-span">
+                            <mat-icon>menu</mat-icon>
+                        </span>
+                    </button>
+                    <p class="singsync">SingSync</p>
                 </div>
-                <div>
-                    <p class="song-author" *ngIf="song && song.song_author">
-                        {{song.song_author}}
-                    </p>
+                <p class="roomid" dir="rtl">
+                    מספר חדר: {{room_id}}
+                </p>
+            </div>
+            <div class="main">
+                <queue (onSongAddEvent)="onSongAdd()" (queueChangedEvent)="updateHasNextPrev()" [topOfQ]="top_queue" [room_id]="room_id" [owner_perm]="owner_perm"></queue>
+                <div class="song-content-container">
+                    <div class="song-info">
+                        <div>
+                            <h1 class="song-title" *ngIf="song && song.song_name">
+                                {{song.song_name}}
+                            </h1>
+                        </div>
+                        <div>
+                            <p class="song-author" *ngIf="song && song.song_author">
+                                {{song.song_author}}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="main">
-            <queue (onSongAddEvent)="onSongAdd()" [topOfQ]="top_queue" [room_id]="room_id" [owner_perm]="owner_perm"></queue>
-            <song-content (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song"></song-content>
-        </div>
-
-        <div *ngIf="song && owner_perm" class="navigation">
-            <div class="filler"></div>
-            <div class="buttons">
-                <mat-icon *ngIf="current_song_part_index!=0" class="prev-page-btn" (click)="prev_lines()">chevron_left</mat-icon>
-                <mat-icon *ngIf="!is_last_song_part" class="next-page-btn" (click)="next_lines()">chevron_right</mat-icon>
-                <mat-icon *ngIf="has_next_song()" class="next-song-btn" (click)="next_song()">last_page</mat-icon>
+            <div class="song-content-container2">
+                <song-content *ngIf="song" (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song"></song-content>
+                <div class="empty-room" *ngIf="!song && owner_perm" dir="rtl">עוד לא הוספתם שירים לחדר, אתם יכולים להוסיף שירים דרך כפתור הוספת השירים במסגרת בצד שמאל למעלה</div>
+                <div class="empty-room" *ngIf="!song && !owner_perm" dir="rtl">מנהל החדר עוד לא הוסיף שיר</div>
             </div>
-        </div>
-
+        
+            <div class="navigation-container">
+                <div *ngIf="owner_perm" class="navigation">
+                    <button id="prev_song_btn" class="nav_btn" [disabled]="!has_prev_song" (click)="prev_song()">
+                        <mat-icon class="nav_btn_icon">skip_previous</mat-icon>
+                        <p class="nav_btn_text" dir="rtl">
+                            לשיר
+                            <br>
+                            הקודם
+                        </p>
+                    </button>
+                    
+                    <button id="prev_part_btn" class="nav_btn" [disabled]="current_song_part_index==0 || !song" (click)="prev_lines()">
+                        <mat-icon class="nav_btn_icon">keyboard_arrow_left</mat-icon>
+                        <p class="nav_btn_text" dir="rtl">
+                        לחלק
+                        <br>
+                        הקודם
+                        </p>
+                    </button>
+                    
+                    <button id="next_part_btn" class="nav_btn" [disabled]="is_last_song_part || !song" (click)="next_lines()">
+                        <mat-icon class="nav_btn_icon">keyboard_arrow_right</mat-icon>
+                        <p class="nav_btn_text" dir="rtl">
+                        לחלק
+                        <br> 
+                        הבא
+                        </p>
+                    </button>
+                    
+                    <button id="next_song_btn" class="nav_btn" [disabled]="!has_next_song" (click)="next_song()">
+                        <mat-icon class="nav_btn_icon">skip_next</mat-icon>
+                        <p class="nav_btn_text" dir="rtl">
+                        העבר
+                        <br> 
+                        שיר
+                        </p>
+                    </button>
+                    
+                </div>
+            </div>
+        </mat-sidenav-container>
+    
     </div>
 </div>
 

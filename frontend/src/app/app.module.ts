@@ -27,6 +27,13 @@ import { AddSongNormalSearchComponent } from './components/partials/add-song-nor
 import { AddSongFromUrlComponent } from './components/partials/add-song-from-url/add-song-from-url.component';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { HighlightPipe } from './pipes/highlight.pipe'
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 
@@ -40,7 +47,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     QueueViewComponent,
     AddSongViewComponent,
     AddSongNormalSearchComponent,
-    AddSongFromUrlComponent
+    AddSongFromUrlComponent,
+    HighlightPipe
     // HeaderComponent,
     // HomeComponent,
     // SearchComponent,
@@ -61,7 +69,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatDialogModule,
     MatTabsModule,
     FormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    BrowserAnimationsModule,
+    MatSidenavModule,
+    MatListModule,
+    ClipboardModule,
+    DragDropModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

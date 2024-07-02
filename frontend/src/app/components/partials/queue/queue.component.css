@@ -1,5 +1,10 @@
 .content {
-    margin-right: 20px
+    /*margin-right: 20px;*/
+    margin-left: 20px;
+    /*border: 3px solid rgba(0, 0, 0, 0.4);*/
+    box-shadow:  inset 0px 0px 2px 3px rgba(198, 99, 114, 1), rgba(198, 99, 114, 0.6) -5px 5px, rgba(198, 99, 114, 0.4) -10px 10px, rgba(198, 99, 114, 0.2) -15px 15px;
+    padding: 10px;         /* Optional: Add some padding inside the border */
+    border-radius: 10%;    /* Optional: Rounded corners */
 }
 
 
@@ -28,3 +33,12 @@ p {
 .add-icon {
     float: right;
 }
+
+.add-icon:hover{
+    cursor: pointer;
+}
+
+.queue-view-icon:hover{
+    cursor: pointer;
+}
+

@@ -415,11 +415,12 @@ describe('RoomController', () => {
   
      // Assert
       expect(all_queue).toBeDefined();
-      if (all_queue) {
-        expect(all_queue[0].song_author).toBe(songData_1.athuor);
-        expect(all_queue[0].song_name).toBe(songData_1.name);
-        expect(all_queue[1].song_author).toBe(songData_2.athuor);
-        expect(all_queue[1].song_name).toBe(songData_2.name);
+      expect(all_queue?.songs_info_list).toBeDefined();
+      if (all_queue && all_queue.songs_info_list) {
+        expect(all_queue.songs_info_list[0].song_author).toBe(songData_1.athuor);
+        expect(all_queue.songs_info_list[0].song_name).toBe(songData_1.name);
+        expect(all_queue.songs_info_list[1].song_author).toBe(songData_2.athuor);
+        expect(all_queue.songs_info_list[1].song_name).toBe(songData_2.name);
       } else {
         throw new Error('all_queue is undefined');
       }
@@ -471,15 +472,16 @@ describe('RoomController', () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
       // Act
-      roomController.remove_song_from_queue(roomId,0);
+      roomController.remove_song_from_queue(roomId,[0]);
       const all_queue = roomController.get_all_queue(roomId);
   
      // Assert
-      expect(all_queue).toBeDefined();
-      if (all_queue) {
-        expect(all_queue[0].song_author).toBe(songData_2.athuor);
-        expect(all_queue[0].song_name).toBe(songData_2.name);
-        expect(all_queue.length).toBe(1);
+     expect(all_queue).toBeDefined();
+     expect(all_queue?.songs_info_list).toBeDefined();
+     if (all_queue && all_queue.songs_info_list) {
+        expect(all_queue.songs_info_list[0].song_author).toBe(songData_2.athuor);
+        expect(all_queue.songs_info_list[0].song_name).toBe(songData_2.name);
+        expect(all_queue.songs_info_list.length).toBe(1);
       } else {
         throw new Error('all_queue is undefined');
       }
@@ -494,7 +496,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.remove_song_from_queue(invalidRoomId,0)).toThrowError('Invalid ID');
+    expect(() => roomController.remove_song_from_queue(invalidRoomId,[0])).toThrowError('Invalid ID');
   });
 
   it('search_song_from_db in the song', async () => {
@@ -503,7 +505,7 @@ describe('RoomController', () => {
     const song_author = 'חגים ומועדים';
   
     // Act
-    const result = await roomController.search_song_from_db(song_name,song_author);
+    const result = await roomController.search_song_from_db(song_name);
     // wait for the song to be searched
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -536,9 +538,10 @@ describe('RoomController', () => {
     // Assert
     const all_queue = roomController.get_all_queue(roomId);
     expect(all_queue).toBeDefined();
-    if (all_queue) {
-      expect(all_queue[0].song_author).toBe(song_author);
-      expect(all_queue[0].song_name).toBe(song_name);
+    expect(all_queue?.songs_info_list).toBeDefined();
+    if (all_queue && all_queue.songs_info_list) {
+      expect(all_queue.songs_info_list[0].song_author).toBe(song_author);
+      expect(all_queue.songs_info_list[0].song_name).toBe(song_name);
     } else {
       throw new Error('all_queue is undefined');
     }

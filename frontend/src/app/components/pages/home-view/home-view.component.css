@@ -44,6 +44,8 @@
 .content {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   max-width: 500px;
   height: 100%;
 }
@@ -51,14 +53,16 @@
 .center-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-top: 150px;
+  flex-grow: 1;
 }
 
 .join-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   margin-bottom: 50px;
 }
   
@@ -72,6 +76,7 @@
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.15);
   margin-bottom: 10px;
+  margin-top: 10px;
 }
   
 input {
@@ -160,7 +165,6 @@ h1 {
   -webkit-user-select: none;
   vertical-align: middle;
   width: 150px;
-  margin-bottom: 100px;
 }
 
 .host-button:hover,
@@ -181,5 +185,9 @@ h1 {
 }
 
 .stats {
-  align-self: flex-end;
+  margin-bottom: 10px;
+}
+
+.join-slide {
+  margin-top: 10px;
 }

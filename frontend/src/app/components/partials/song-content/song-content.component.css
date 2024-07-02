@@ -119,3 +119,18 @@
   input:checked ~ .slider {
     background-color: #ec9999;
   }
+
+  .active-part {
+    font-weight: bold;
+  }
+
+  .parts-ul {
+    overflow: hidden;
+    height: calc(100vh - 420px);
+    scrollbar-width: 0;
+    list-style-type: none;
+  }
+
+  .parts-ul::-webkit-scrollbar {
+    display: none;
+  }

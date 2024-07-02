@@ -52,7 +52,7 @@ export class WebScraper {
                 
                 resolve(song_dict);
             } catch (error) {
-                reject(error);
+                reject(new Error('כשל ביבוא שיר מהאתר, אנא בדקו את הקישור'));
             }});
     }
     

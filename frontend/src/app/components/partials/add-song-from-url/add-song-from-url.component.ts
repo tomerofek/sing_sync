@@ -15,6 +15,8 @@ export class AddSongFromUrlComponent implements OnInit {
 
   @Input() room_id!: string;
 
+  url: string = '';
+
   constructor(private queueService: QueueService, private responseService: ResponseService, private notificationService: NotificationService,
     private snackBar: MatSnackBar
   ) { }
@@ -22,17 +24,19 @@ export class AddSongFromUrlComponent implements OnInit {
   ngOnInit(): void {
   }
   
-  importSongFromURL(url: string): void{
+  importSongFromURL(): void{
+    if(this.url.length == 0) return;
+
     let res: Response<Song> | null = null;
-    this.queueService.get_song_from_url(this.room_id, encodeURIComponent(url)).subscribe(data => {
+    this.queueService.get_song_from_url(this.room_id, encodeURIComponent(this.url)).subscribe(data => {
       res = {...data}
       let song: Song | undefined = this.responseService.getContent(res)
       if(res === null || this.responseService.isError(res) || song == undefined){
-        console.log(res)
-        this.notificationService.openSnackBarError(this.snackBar, res==null ? 'null response' : this.responseService.getError(res));
+        console.log('error in get song from url:',res)
+        this.notificationService.openSnackBarError(this.snackBar, res==null ? 'היתה בעיה להבאת השיר מקישור' : this.responseService.getError(res));
         
       } else{
-        this.notificationService.openSnackBar(this.snackBar, `added ${song.song_name} - ${song.song_author}`);
+        this.notificationService.openSnackBar(this.snackBar, `הוסף ${song.song_name} - ${song.song_author}`);
         
       }
     });

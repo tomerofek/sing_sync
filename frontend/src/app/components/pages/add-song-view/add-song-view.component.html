@@ -1,9 +1,8 @@
-<mat-tab-group color="accent">
-    <mat-tab label="normal search" class="normal-search"> 
-        <add-song-normal-search [room_id]="room_id" (onSongAddEvent)="onSongAdd()"></add-song-normal-search>
+<mat-tab-group color="accent" class="tab-group">
+    <mat-tab label="חיפוש" class="normal-search"> 
+        <add-song-normal-search [room_id]="room_id" (onSongAddEvent)="onSongAdd()" (moveToUrlTabEvent)="onMoveToUrlTabEvent()"></add-song-normal-search>
     </mat-tab>
-    <mat-tab label="from url">
+    <mat-tab label="הבאה מקישור">
         <add-song-from-url [room_id]="room_id"></add-song-from-url>
     </mat-tab>
-    <mat-tab label="custom song">coming soon!</mat-tab>
 </mat-tab-group>

@@ -9,10 +9,10 @@
 .url-input {
     width: 100%;
     border: 3px solid #c66372ff;
-    border-right: none;
+    border-left: none;
     padding: 5px;
     height: 30px;
-    border-radius: 5px 0 0 5px;
+    border-radius: 0 5px 5px 0;
     outline: none;
 }
   
@@ -25,14 +25,17 @@
     text-align: center;
     justify-items: center;
     color: #fff;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
+    border-radius: 5px 0 0 5px;
     font-size: 20px;
+}
+
+.import-btn:not(:disabled):hover {
+    cursor: pointer;
 }
 
   
 .input-wrap{
-    width: 70%;
+    width: 90%;
     position: relative;
     left: 50%;
     transform: translate(-50%, 0);
@@ -51,16 +54,21 @@ ul {
 
 
 p {
-    font-size: small;
+    font-size: medium;
     margin-bottom: 0%;
 }
 
 a {
     color: #c66372ff;
-    font-size: small;
+    font-size: medium;
 }
 
 a:hover {
     cursor: pointer;
     text-decoration: underline;
+}
+
+li {
+    text-align: right;
+    margin-right: 27px;
 }

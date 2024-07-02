@@ -6,13 +6,9 @@ import {spawnSync } from "child_process";
 //a simple queue implementation
 const uri = "mongodb+srv://final-project:dbpassword@noder.2cvtm9i.mongodb.net/";
 
-export async function getSongNames(song_name : string ,song_author : string): Promise<any> {
+export async function getSongNames(song_id : string): Promise<any> {
     return new Promise(async (resolve, reject) => {
 
-      //legth check
-      if(song_name.length < 2 && song_author.length < 2){
-          reject(new Error("not enough characters to seach"));
-      }
 
       const client = new MongoClient(uri);
       
@@ -22,16 +18,16 @@ export async function getSongNames(song_name : string ,song_author : string): Pr
         const database: Db = client.db("SingSync");
         const collection = database.collection("songs");
         //easy to see that this is trivial to add to our code
-        const escapedSongName = song_name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const escapedSongAuthor = song_author.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const escapedSong_id = song_id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
         //the query i sent to mongo db (trivial)
         
         const array_of_songs = await collection.find({
-            $and: [
-                { song_name: { $regex: new RegExp(`.*${escapedSongName}.*`, 'i') } },
-                { song_author: { $regex: new RegExp(`.*${escapedSongAuthor}.*`, 'i') } }
-                ]
-            }).toArray();
+          $or: [
+            { song_name: { $regex: escapedSong_id, $options: 'i' } }, // Case-insensitive search for song_name
+            { song_author: { $regex: escapedSong_id, $options: 'i' } } // Case-insensitive search for song_author
+          ]
+        }).toArray(); // Convert cursor to array
         if (array_of_songs) {
           const song_id_pairs = array_of_songs.map(song => {
             return {song_name : song.song_name, song_author : song.song_author};
@@ -39,7 +35,7 @@ export async function getSongNames(song_name : string ,song_author : string): Pr
           resolve(song_id_pairs);
         } else {
           
-          const error = new Error('JSON object not found.');
+          const error = new Error('לא נמצא שיר במאגר');
           reject(error);
         }
       } catch (error) {
@@ -61,34 +57,47 @@ export async function getSongNames(song_name : string ,song_author : string): Pr
   //replace this class with thread safe one
 export class Queue<T> {
     private items: T[];
+    private index : number;
 
     constructor() {
         this.items = [];
+        this.index = 0;
     }
 
     enqueue(item: T): void {
         this.items.push(item);
     }
 
-    dequeue(): T | undefined {
-        return this.items.shift();
+    move_to_next(): T | undefined {
+        this.index = this.index + 1;
+        return this.items[this.index - 1];
     }
 
+    move_to_prev(): T | undefined {
+      if(this.index == 0){
+        throw new Error("לא קיים שיר קודם");
+      }
+      this.index = this.index - 1;
+      //when we get prev we dont want to get current song we want to get prev song , so we use the reduced index unlike before
+      return this.items[this.index];
+  }
+
+
     isEmpty(): boolean {
-        return this.items.length === 0;
+        return this.items.length - this.index === 0;
     }
 
     peek(): T | undefined {
-        return this.items.length > 0 ? this.items[0] : undefined;
+        return this.items.length - this.index > 0 ? this.items[this.index] : undefined;
     }
 
     peek2and3Element(): T[] | undefined {
       let top2Song : any[] = []
       if(this.size() >= 3){
-        top2Song.push(this.items[1])
-        top2Song.push(this.items[2])
+        top2Song.push(this.items[this.index + 1])
+        top2Song.push(this.items[this.index + 2])
       }else if(this.size() == 2){
-        top2Song.push(this.items[1])
+        top2Song.push(this.items[this.index + 1])
       }
       return top2Song
     }
@@ -98,15 +107,72 @@ export class Queue<T> {
     }
 
     size(): number {
-        return this.items.length;
+        return this.items.length - this.index;
     }
 
-    remove(index : number): void {
-        if (index !== -1) {
-            this.items.splice(index, 1);
+    remove(indexes_to_remove : number[]): number {
+      indexes_to_remove = indexes_to_remove.sort()
+      for(let i = 0; i < indexes_to_remove.length; i++){
+        //check for invalid indexes
+        if(indexes_to_remove[i] < 0 || indexes_to_remove[i] >= this.items.length){
+          throw new Error("לא קיים שיר במיקום הזה בתור");
         }
+        //update current index in queue
+        if(indexes_to_remove[i] < this.index){
+          this.index--;
+        }
+        //remove the song from the queue
+        this.items.splice(indexes_to_remove[i],1);
+        for(let i = 0; i < indexes_to_remove.length; i++){
+          indexes_to_remove[i]--;
+        }
+      }
+      return this.index
     }
+
+    getIndex(): number {
+      return this.index;
+    }
+
+    //moves the item at first index to be located in second_index (second_index of the old list)
+    swap_elements(first_index : number, second_index : number) : number {
+      if(first_index < 0 || second_index < 0 || first_index >= this.items.length || second_index >= this.items.length){
+        throw new Error("מיקומי שירים לא חוקיים");
+      }
+      const songToMove = this.items[first_index];
+
+      // Remove the song from the old position
+      this.items.splice(first_index, 1);
+      // Insert the song at the new position
+      this.items.splice(second_index, 0, songToMove);
+
+    //moving a song that is after the one playing before the one playing
+  if(first_index > this.index && second_index <= this.index){
+    this.index++;
+    }
+    
+    //moving a song that is before the one playing after the one playing
+    else if(first_index < this.index && second_index >= this.index){
+      this.index--;
+    }
+    
+    //moving the song that is currently playing
+    else if(first_index == this.index){
+      this.index = second_index
+    }
+    return this.getIndex();
+  }
+
+  has_next() : boolean {
+    return this.items.length  > this.getIndex() + 1;
+    
+  }
+
+  has_prev() : boolean {
+    return 0 < this.getIndex();
+  }
 }
+
 //the queue of songs uses the Queue implementation
 export class SongsQueue{
     private songsQueue: Queue<Song>;
@@ -123,12 +189,12 @@ export class SongsQueue{
     }
     
     //for user search function - return the list of results to user
-    search_song(song_name : string, author_name : string) : any {
-        return getSongNames(song_name,author_name).then((result) => {
+    search_song(song_id : string) : any {
+        return getSongNames(song_id).then((result) => {
             //TODO add here calledback to calling function - probably send to user side - probably send to user side
             return result;
         }).catch(error => {
-            throw new Error('An error occurred while processing the data');
+            throw new Error('שגיאה בחיפוש שיר');
     });
     }
 
@@ -178,7 +244,7 @@ export class SongsQueue{
       //reset the current position in the song
       this.current_position_in_song = 0;
       //dequeue the current song
-      this.songsQueue.dequeue();
+      this.songsQueue.move_to_next();
       //return the next song in the queue
       return this.songsQueue.peek();
       //TODO broadcast notification to the other users using express
@@ -193,7 +259,7 @@ export class SongsQueue{
     previous_position_in_song() : number {
       //returns the index which is the previous part in the song (might want to change to status)
       if(this.current_position_in_song <= 0)
-        throw new Error("there is no previous position");
+        throw new Error("לא קיים שיר קודם");
       
       return --this.current_position_in_song;
     }
@@ -219,13 +285,13 @@ export class SongsQueue{
     }
 
     //removes song at position from the queue
-    remove_song_from_queue(song_to_remove_position : number) : void {
+    remove_song_from_queue(song_to_remove_position : number[]) : number {
       try {
         // Attempt to remove the song from the queue
-        this.songsQueue.remove(song_to_remove_position);
+        return this.songsQueue.remove(song_to_remove_position);
       } catch (error) {
           // If an error occurs during removal, throw a new error
-          throw new Error("Failed to remove song from queue");
+          throw new Error("מיקום שיר לא חוקי");
       }
     }
 
@@ -260,4 +326,28 @@ export class SongsQueue{
       return this.songsQueue.size()
     } 
 
+    get_index(): number{
+      return this.songsQueue.getIndex()
+    }
+
+    previous_song() : SongInfo | undefined{
+      //reset the current position in the song
+      this.current_position_in_song = 0;
+      //return the previous song info
+      return this.songsQueue.move_to_prev()?.getSongInfoWithBody();
+
+    }
+
+    //swap songs in the queue will put item at old_position at new position
+    swap_songs(old_position : number, new_position : number) : number {
+      return this.songsQueue.swap_elements(old_position,new_position);
+    }
+
+    has_next() : boolean {
+      return this.songsQueue.has_next();
+    }
+
+    has_prev() : boolean {
+      return this.songsQueue.has_prev();
+    }
   }
