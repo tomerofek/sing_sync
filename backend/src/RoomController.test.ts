@@ -71,7 +71,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.joinRoom(invalidRoomId)).toThrowError('Invalid ID');
+    expect(() => roomController.joinRoom(invalidRoomId)).toThrowError("מספר חדר לא תקין");
   });
 
   it('should get current position in the song', async () => {
@@ -119,7 +119,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.get_current_position(invalidRoomId)).toThrowError('Invalid ID');
+    expect(() => roomController.get_current_position(invalidRoomId)).toThrowError("מספר חדר לא תקין");
   });
 
   it('should get current song', async () => {
@@ -164,7 +164,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.get_current_song(invalidRoomId)).toThrowError('Invalid ID');
+    expect(() => roomController.get_current_song(invalidRoomId)).toThrowError("מספר חדר לא תקין");
   });
 
   it('advance_position in the song', async () => {
@@ -213,7 +213,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.advance_position(invalidRoomId)).toThrowError('Invalid ID');
+    expect(() => roomController.advance_position(invalidRoomId)).toThrowError("מספר חדר לא תקין");
   });
 
   it('previous_position in the song', async () => {
@@ -261,7 +261,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.previous_position(invalidRoomId)).toThrowError('Invalid ID');
+    expect(() => roomController.previous_position(invalidRoomId)).toThrowError("מספר חדר לא תקין");
   });
 
   it('advance_song in the song', async () => {
@@ -315,7 +315,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.advance_song(invalidRoomId)).toThrowError('Invalid ID');
+    expect(() => roomController.advance_song(invalidRoomId)).toThrowError("מספר חדר לא תקין");
   });
 
 
@@ -374,7 +374,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.get_top_queue(invalidRoomId)).toThrowError('Invalid ID');
+    expect(() => roomController.get_top_queue(invalidRoomId)).toThrowError("מספר חדר לא תקין");
   });
 
   it('get_all_queue in the song', async () => {
@@ -435,7 +435,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.get_all_queue(invalidRoomId)).toThrowError('Invalid ID');
+    expect(() => roomController.get_all_queue(invalidRoomId)).toThrowError("מספר חדר לא תקין");
   });
 
   it('remove_song_from_queue in the song', async () => {
@@ -496,7 +496,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.remove_song_from_queue(invalidRoomId,[0])).toThrowError('Invalid ID');
+    expect(() => roomController.remove_song_from_queue(invalidRoomId,[0])).toThrowError("מספר חדר לא תקין");
   });
 
   it('search_song_from_db in the song', async () => {
@@ -555,7 +555,7 @@ describe('RoomController', () => {
     const song_author = 'חגים ומועדים';
 
     // Act & Assert
-    expect(() => roomController.add_song_to_queue(invalidRoomId, song_name,song_author)).toThrowError('Room doesn\'t exist');
+    expect(() => roomController.add_song_to_queue(invalidRoomId, song_name,song_author)).toThrowError("החדר אינו קיים");
   });
 
   it('get_song_from_url in the song', async () => {
@@ -592,7 +592,7 @@ describe('RoomController', () => {
     const url = 'https://www.nagnu.co.il/%D7%90%D7%A7%D7%95%D7%A8%D7%93%D7%99%D7%9D/%D7%97%D7%92%D7%99%D7%9D_%D7%95%D7%9E%D7%95%D7%A2%D7%93%D7%99%D7%9D/(%D7%A4%D7%A1%D7%97)_%D7%A9%D7%9E%D7%97%D7%94_%D7%A8%D7%91%D7%94';
 
     // Act & Assert
-    expect(() => roomController.get_song_from_url(invalidRoomId, url)).toThrowError('Room doesn\'t exist');
+    expect(() => roomController.get_song_from_url(invalidRoomId, url)).toThrowError("חדר אינו קיים");
   });
 
   it('get_queue_len in the song', async () => {
@@ -626,7 +626,7 @@ describe('RoomController', () => {
     const invalidRoomId = 'invalid-room-id';
 
     // Act & Assert
-    expect(() => roomController.get_queue_len(invalidRoomId)).toThrowError('Invalid ID');
+    expect(() => roomController.get_queue_len(invalidRoomId)).toThrowError("מספר חדר לא תקין");
   });
 
 
