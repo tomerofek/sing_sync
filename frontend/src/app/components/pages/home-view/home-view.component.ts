@@ -49,7 +49,6 @@ export class HomeViewComponent implements OnInit {
   }
 
   goToRoom(room_id: string): void {
-    //console.log(room_id)
     if(room_id){
       this.router.navigateByUrl('/room/' + room_id);
     }
@@ -64,9 +63,7 @@ export class HomeViewComponent implements OnInit {
       }
       else{
         var content = this.cookieService.decodeWithBase64(<string>this.responseService.getContent(res));
-        console.log(content);
         const { var1, var2 } = this.cookieService.splitString(content);
-        console.log(var1, var2);
         this.cookieService.setCookie(var1,var2,7);
         this.router.navigateByUrl('/room/' + var1);
       }

@@ -185,8 +185,7 @@ export class RoomViewComponent implements OnInit, OnChanges {
     this.songService.get_song(this.room_id).subscribe(data => {songRes = {...data}
 
       if(songRes === null || this.responseService.isError(songRes)){
-        console.log('error in getting position');
-        console.log(songRes);
+        console.log('error in getting position', songRes);
         this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
       }
       else{

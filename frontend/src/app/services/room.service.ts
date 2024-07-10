@@ -50,7 +50,6 @@ export class RealRoomService implements IRoomService{
   constructor(private http_client:HttpClient) { }
 
   close_room(room_id: string): Observable<Response<void>> {
-    console.log('client sending GET: ', CLOSE_ROOM_URL + room_id);
     return this.http_client.get<Response<void>>(CLOSE_ROOM_URL + room_id);
   }
 
