@@ -25,6 +25,7 @@ export class SongContentComponent implements OnInit, OnChanges {
   @Input() current_part_index?: number;
   @Input() song?: Song;
   @Output() onLastPartEvent = new EventEmitter<void>();
+  @Input() owner_perm!: boolean;
 
   constructor(activatedRoute:ActivatedRoute, songService:SongService,
           private router: Router) {
