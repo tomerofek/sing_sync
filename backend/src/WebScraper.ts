@@ -40,6 +40,14 @@ export class WebScraper {
     }
 
     async getSongData(url: string): Promise<ScrapedSong> {
+        const parsedUrl = new URL(url);
+
+        // Extracting the pathname part of the URL
+        const pathname = parsedUrl.pathname;
+        if(url.includes('מילים_לשירים'))
+            throw new Error('קישור לא נתמך, אנא הזינו שיר עם אקורדים');
+        if(pathname.includes('מילים_לשירים'))
+            throw new Error('קישור לא נתמך, אנא הזינו שיר עם אקורדים');
         return new Promise(async (resolve, reject) => {
             try{
                 const response = await axios.get(url);
