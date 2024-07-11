@@ -25,6 +25,8 @@ export class SongContentComponent implements OnInit, OnChanges {
   @Input() current_part_index?: number;
   @Input() song?: Song;
   @Output() onLastPartEvent = new EventEmitter<void>();
+  @Input() owner_perm!: boolean;
+
 
   constructor(activatedRoute:ActivatedRoute, songService:SongService,
           private router: Router) {
@@ -39,14 +41,7 @@ export class SongContentComponent implements OnInit, OnChanges {
     if(changes['current_part_index']){
       this.emitIfLastPart();
       this.scrollToIndex(this.current_part_index ?? 0)
-    }
-      
-    if(changes['song']){
-      //console.log('ngOnChanges in SongContentComponent', changes);
-      //console.log('song changes:');
-      //console.log(this.song);
-    }
-      
+    }  
   }
 
   ngOnInit(): void {
@@ -54,7 +49,6 @@ export class SongContentComponent implements OnInit, OnChanges {
 
   switchChords():void{
     this.show_chords = !this.show_chords;
-    //console.log(this.show_chords);
   }
 
 
@@ -72,9 +66,7 @@ export class SongContentComponent implements OnInit, OnChanges {
   scrollToIndex(index: number){
     const element = document.getElementById(`part${index}`);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      element.scrollIntoView({ behavior: 'auto', block: 'start' });
     }
   }
-
-
 }

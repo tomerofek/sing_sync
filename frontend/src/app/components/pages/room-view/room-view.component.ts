@@ -155,7 +155,7 @@ export class RoomViewComponent implements OnInit, OnChanges {
       }
       else{
         //the song will be updated in the broadcast
-        const newSong: Song | undefined = this.responseService.getContent(songRes);
+        this.is_last_song_part = false;
         this.getCurrentSongPartIndex();
         this.getTopQ();
         this.update_has_next_song();
@@ -185,8 +185,7 @@ export class RoomViewComponent implements OnInit, OnChanges {
     this.songService.get_song(this.room_id).subscribe(data => {songRes = {...data}
 
       if(songRes === null || this.responseService.isError(songRes)){
-        console.log('error in getting position');
-        console.log(songRes);
+        console.log('error in getting position', songRes);
         this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'result is null' : this.responseService.getError(songRes))
       }
       else{
@@ -235,10 +234,8 @@ export class RoomViewComponent implements OnInit, OnChanges {
         this.notificationService.openSnackBarError(this.snackBar, songRes === null ? 'היתה בעיה בחזור לשיר הקודם' : this.responseService.getError(songRes))
       }
       else{
-        const newSong: Song | undefined = this.responseService.getContent(songRes);
-        if(newSong){
-          this.song = this.songService.separate_song_body(newSong);
-        }
+        //the song will be updated in the broadcast
+        this.is_last_song_part = false;
         this.getCurrentSongPartIndex();
         this.getTopQ();
         this.update_has_next_song();

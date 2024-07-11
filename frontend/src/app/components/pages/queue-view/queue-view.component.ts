@@ -85,8 +85,6 @@ export class QueueViewComponent implements OnInit, AfterViewInit, AfterViewCheck
         else{
           this.queue = undefined;
         }
-        //console.log(this.queue);
-        //console.log(`scroll: ${this.scrollPending}`);
         this.scrollPending = true;
         this.cdr.detectChanges();
       }

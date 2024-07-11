@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="song-content-container2">
-                <song-content *ngIf="song" (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song"></song-content>
+                <song-content *ngIf="song" (onLastPartEvent)="onLastSongPart()" [current_part_index]="current_song_part_index" [song]="song" [owner_perm]="owner_perm"></song-content>
                 <div class="empty-room" *ngIf="!song && owner_perm" dir="rtl">עוד לא הוספתם שירים לחדר, אתם יכולים להוסיף שירים דרך כפתור הוספת השירים במסגרת בצד שמאל למעלה</div>
                 <div class="empty-room" *ngIf="!song && !owner_perm" dir="rtl">מנהל החדר עוד לא הוסיף שיר</div>
             </div>
