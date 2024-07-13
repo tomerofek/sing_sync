@@ -29,12 +29,9 @@ html, body {
     width: 100%;
     max-width: 600px;
     height: 100%;
-    padding: 0 10px; /* Add padding for internal spacing */
+    padding: 0 10px; 
     box-sizing: border-box;
-    
-    /*background: linear-gradient(to right, rgba(68, 71, 78, 1) 0%, rgba(255, 255, 255, 1) 2%, rgba(255, 255, 255, 1) 98%, rgba(68, 71, 78, 1) 100%); /* Gradient from white to transparent*/
 }
-
 .sidenav-container {
     display: flex;
     flex-direction: column;
@@ -42,38 +39,31 @@ html, body {
     width: 100%;
     background: white;
 }
-
 .top {
     display: flex;
-    align-items: flex-start; /* Correct alignment from 'top' to 'flex-start' */
+    align-items: flex-start;
     width: 100%;
     box-sizing: border-box;
 }
-
 .top-sidebar {
-    align-items: center; /* Correct alignment from 'top' to 'flex-start' */
+    align-items: center;
     flex: 1;
     display: flex;
     box-sizing: border-box;
 }
-
 .singsync {
     vertical-align: top;
     font-size: 1.5rem;
 }
-
 .roomid {
     display: inline-block;
     flex: 1;
     vertical-align: top;
     font-size: 1.5rem;
 }
-
-
 .song-author {
     vertical-align: top;
 }
-
 .main {
     display: flex;
     flex-direction: row;
@@ -81,49 +71,40 @@ html, body {
     box-sizing: border-box;
     padding: 10px; /* Add padding to prevent content from touching the edges */
 }
-
 queue {
     flex: 2;
     display: inline-block;
 }
-
 .song-content-container {
     flex:3;
     display: flex;
     flex-direction: column;
 }
-
 .song-content-container2 {
     flex:2;
     display: flex;
     flex-direction: column;
     padding: 0 10px;
 }
-
 .song-info {
     display: inline-block;
     flex: 1;
     vertical-align: top;
     text-align: right;
 }
-
 song-content {
     display: inline-block;
 }
-
-
 .filler {
     display: inline-block;
     flex: 1;
 }
-
 .buttons {
     display: flex;
     flex: 2;
     flex-direction: row;
     justify-content: flex-end;
 }
-
 .menu-button{
     background-color: rgba(0,0,0,0);
     border-radius: 50%;
@@ -141,7 +122,6 @@ song-content {
     height: 40px;
     padding: 8px;
 }
-
 .menu-span{
     border-radius: 50%;
     text-align: center;
@@ -149,11 +129,9 @@ song-content {
     width: 40px;
     height: 40px;
 }
-
 .menu-button:hover{
     background: rgba(26,27,31,.08);
 }
-
 .in-menu-button{
     background-color: rgba(0,0,0,0);
     text-align: center;
@@ -169,17 +147,12 @@ song-content {
     width: 100%;
     height: 100%;
 }
-
 .in-menu-span{
     display: flex;
     align-items: center;
     font-family: Arial;
     font-size: 1.1rem;
-    /*border-radius: 50%;
-    width: 40px;
-    height: 40px;*/
 }
-
 .in-menu-icon {
     font-size: 2rem;
     height: 2rem;
@@ -187,60 +160,53 @@ song-content {
     margin-left: 10px;
     margin-right: 10px;
 }
-
 .in-menu-item {
     background: white;
 }
-
 .in-menu-item:hover {
     background: rgba(26,27,31,.08);
 }
-
 ::ng-deep mat-list-item {
-    padding: 0 !important; /* Remove all padding */
+    padding: 0 !important;
 }
-  
 ::ng-deep mat-list-item .mat-list-item-content {
-    padding: 0 !important; /* Remove padding from the content */
+    padding: 0 !important;
 }
-
-
 mat-sidenav {
     display: flex;
     align-items: center;
     white-space: nowrap;
     width: 250px;
 }
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
+@media (max-width: 500px) {
     .content, .top, .main, .navigation {
-        padding: 5px; /* Adjust padding for small screens */
+        padding: 5px;
     }
-
     .song-info, .song-author, queue, song-content {
-        font-size: 14px; /* Adjust font size for better readability on small screens */
+        font-size: 14px; 
+    }
+    queue {
+        flex: 3
+    }
+    .p1 {
+        width: 70px;
     }
 }
-
-/*new navigation*/
-
-/* Ensure the container has the same maximum width as the content div */
 .navigation-container {
     position: fixed;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 20px); /* Adjusted to account for padding */
-    max-width: 600px; /* Same maximum width as the .content div */
-    padding: 10px; /* Add padding to ensure no content touches the edges */
+    width: calc(100% - 20px); 
+    max-width: 600px; 
+    padding: 10px; 
     box-sizing: border-box;
-    z-index: 1000; /* Ensure the navigation bar is above other content */
+    z-index: 1000;
 }
 
 .navigation {
     display: flex;
-    justify-content: space-between; /* Distribute buttons evenly */
+    justify-content: space-between;
     width: 100%;
 }
 
@@ -271,23 +237,16 @@ mat-sidenav {
     margin-top: 5px;
     font-family: Arial, sans-serif;
 }
-
-/* Adjusted hover effect for non-disabled nav buttons */
 .nav_btn:not([disabled]):hover {
     background: rgba(26,27,31,.08);
     cursor: pointer;
 }
-
-/* Add transition for smooth effect */
 .nav_btn:not([disabled]) {
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
-
-/* Effect after clicking on a nav button */
 .nav_btn:not([disabled]):active {
-    transform: translateY(3px); /* Increase the transform distance */
+    transform: translateY(3px);
 }
-
 .empty-room {
     position: fixed;
     left: 50%;
@@ -299,8 +258,4 @@ mat-sidenav {
     max-width: 500px;
     width: 80%;
     top: 50vh;
-
 }
-
-
-

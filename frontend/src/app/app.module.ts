@@ -34,6 +34,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HighlightPipe } from './pipes/highlight.pipe'
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ChordsSwitchComponent } from './components/partials/chords-switch/chords-switch.component';
 
 
 
@@ -48,7 +49,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     AddSongViewComponent,
     AddSongNormalSearchComponent,
     AddSongFromUrlComponent,
-    HighlightPipe
+    HighlightPipe,
+    ChordsSwitchComponent
     // HeaderComponent,
     // HomeComponent,
     // SearchComponent,

@@ -28,6 +28,7 @@ export class RoomViewComponent implements OnInit, OnChanges {
   top_queue?: Song[];
   has_next_song!: boolean;
   has_prev_song!: boolean
+  show_chords!: boolean;
 
   constructor(activatedRoute:ActivatedRoute, private roomService:RoomService, private responseService:ResponseService,
     private songService:SongService, private queueService:QueueService, private router: Router,
@@ -48,6 +49,8 @@ export class RoomViewComponent implements OnInit, OnChanges {
       var perm:boolean|undefined = responseService.getContent(res);
       this.owner_perm = perm !== undefined ? perm : false;
     });
+
+    this.show_chords = false;
   }
   ngOnChanges(changes: SimpleChanges): void {
     
@@ -273,6 +276,11 @@ export class RoomViewComponent implements OnInit, OnChanges {
   updateHasNextPrev() {
     this.update_has_next_song();
     this.update_has_prev_song();
+  }
+
+  
+  switchChords():void{
+    this.show_chords = !this.show_chords;
   }
 
 }

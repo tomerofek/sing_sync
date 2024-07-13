@@ -1,17 +1,6 @@
 <div class="content">
-    <div *ngIf="song" class="switch-div">
-        <label class="switch">
-            <input type="checkbox">
-            <div class="slider" (click)="switchChords()"></div>
-            <div class="slider-card">
-                <div class="slider-card-face slider-card-front"></div>
-                <div class="slider-card-face slider-card-back"></div>
-            </div>
-        </label>
-        <div class="p1" dir="rtl">הראה אקורדים:&emsp;</div>
-    </div>
     <div *ngIf="song && song.song_parted_body && current_part_index != undefined" class="song-lines">
-        <ul class="parts-ul" [ngStyle]="{'height': owner_perm ? 'calc(100vh - 460px)' : 'calc(100vh - 355px)'}">
+        <ul class="parts-ul" [ngClass]="{'owner-perm': owner_perm}">
             <li class= part-li *ngFor="let part of song.song_parted_body; let i = index" [@partChange]="i === current_part_index ? 'active' : 'void'" [ngClass]="{ 'active-part': i === current_part_index }" [id]="'part' + i">
                 <ul class="lines-ul">
                     <li *ngFor="let songLine of song.song_parted_body[i]">
