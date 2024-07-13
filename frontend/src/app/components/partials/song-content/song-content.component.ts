@@ -19,9 +19,8 @@ import { SongLine } from 'src/app/shared/models/SongLine';
 })
 export class SongContentComponent implements OnInit, OnChanges {
   //song?:Song;
-  show_chords:boolean = false;
   is_last_part?:boolean;
-  
+  @Input() show_chords!: boolean;
   @Input() current_part_index?: number;
   @Input() song?: Song;
   @Output() onLastPartEvent = new EventEmitter<void>();
@@ -45,10 +44,6 @@ export class SongContentComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-  }
-
-  switchChords():void{
-    this.show_chords = !this.show_chords;
   }
 
 
