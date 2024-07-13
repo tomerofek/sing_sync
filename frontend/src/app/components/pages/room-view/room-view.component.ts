@@ -110,6 +110,7 @@ export class RoomViewComponent implements OnInit, OnChanges {
             this.notificationService.openSnackBarError(this.snackBar, res === null ? 'היתה בעיה בלסגור את החדר' : this.responseService.getError(res));
           }
           else{
+            this.CookieService.deleteCookie(this.room_id); /* deleting the owner cookie */
             this.notificationService.openSnackBar(this.snackBar, 'החדר נסגר בהצלחה' );
           }
         });
