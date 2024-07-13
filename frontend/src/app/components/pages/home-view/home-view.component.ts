@@ -64,7 +64,7 @@ export class HomeViewComponent implements OnInit {
       else{
         var content = this.cookieService.decodeWithBase64(<string>this.responseService.getContent(res));
         const { var1, var2 } = this.cookieService.splitString(content);
-        this.cookieService.setCookie(var1,var2,7);
+        this.cookieService.setCookie(var1,var2,1 /* deleting cookies after 24h*/);
         this.router.navigateByUrl('/room/' + var1);
       }
     });
